@@ -1,0 +1,255 @@
+{
+    "defaultCSSFile":"default.css",
+    "direction": "horizental",
+    "tileBoxStyle": "display: inline-block; position: relative; left: 0%; top: 0%; width: 100%; height: 5%;",
+    "pageBoxStyle": "display: inline-block; position: relative; left: 0%; top: 0%; width: 100%; height: 90%;",
+    "indicatorBoxStyle": "display: inline-block; position: relative; left: 0%; top: 0%; width: 100%; height: 5%;",
+    "page": [
+        {
+            "id": "1",
+            "title": {
+                "en": "page 1",
+                "zh_CN": "SCENE控件 1"
+            },
+            "windowLayoutStyles": null,
+            "runners": [
+                {
+                    "name": "scene",
+                    "type": "exec",
+                    "entry": "scene1.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                }]
+        },
+        {
+            "id": "2",
+            "title": {
+                "en": "page 2",
+                "zh_CN": "RGB-W控件 1"
+            },
+            "windowLayoutStyles": null,
+            "runners": [
+                {
+                    "name": "rgbw",
+                    "type": "exec",
+                    "entry": "rgbw1.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                }]
+        },
+        {
+            "id": "3",
+            "title": { 
+                "en": "page 3",
+                "zh_CN": "控件"
+            },
+            "windowLayoutStyles": "display: grid; grid-template-columns: 25% 25% 25% 25%; grid-template-rows: 25% 25% 25% 25%; width: 100%; height: 90%",
+            "runners": [
+                {
+                    "name": "scene",
+                    "type": "exec",
+                    "entry": "scene4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:1; grid-row-end:2;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "rgbw",
+                    "type": "exec",
+                    "entry": "rgbw4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:1; grid-row-end:2;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "scene",
+                    "type": "exec",
+                    "entry": "scene4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:1; grid-row-end:2;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "rgbw",
+                    "type": "exec",
+                    "entry": "rgbw4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:1; grid-row-end:2;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                
+                {
+                    "name": "rgbw",
+                    "type": "exec",
+                    "entry": "rgbw4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:2; grid-row-end:3;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "scene",
+                    "type": "exec",
+                    "entry": "scene4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:2; grid-row-end:3;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "rgbw",
+                    "type": "exec",
+                    "entry": "rgbw4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:2; grid-row-end:3;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "scene",
+                    "type": "exec",
+                    "entry": "scene4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:2; grid-row-end:3;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                
+                {
+                    "name": "scene",
+                    "type": "exec",
+                    "entry": "scene4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:3; grid-row-end:4;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "rgbw",
+                    "type": "exec",
+                    "entry": "rgbw4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:3; grid-row-end:4;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "scene",
+                    "type": "exec",
+                    "entry": "scene4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:3; grid-row-end:4;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "rgbw",
+                    "type": "exec",
+                    "entry": "rgbw4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:3; grid-row-end:4;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+
+                {
+                    "name": "rgbw",
+                    "type": "exec",
+                    "entry": "rgbw4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:4; grid-row-end:5;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "scene",
+                    "type": "exec",
+                    "entry": "scene4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:4; grid-row-end:5;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "rgbw",
+                    "type": "exec",
+                    "entry": "rgbw4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:4; grid-row-end:5;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                },
+                {
+                    "name": "scene",
+                    "type": "exec",
+                    "entry": "scene4.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:4; grid-row-end:5;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                }]
+        }
+  ]
+}
