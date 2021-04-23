@@ -85,6 +85,7 @@ extern "C" {
 // for hibus
 #define SOCKET_PATH                 "/var/tmp/hibus.sock"
 #define HIBUS_HISHELL_NAME          "cn.fmsoft.hybridos.hishell"
+#define HIBUS_HISHELL_MGINIT_NAME   "mginit"
 
 typedef struct tag_Global_Param
 {

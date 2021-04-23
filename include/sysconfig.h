@@ -62,7 +62,8 @@
 #ifndef _SYSTEM_CONFIG
 #define _SYSTEM_CONFIG
 
-// for hibus
+// for hibus, remote procedure
+#define HIBUS_PROCEDURE_CONFIG_CHANGE   "configChange"
 #define HIBUS_PROCEDURE_QUIT            "quitApp"
 #define HIBUS_PROCEDURE_LAUNCHAPP       "launchApp"
 #define HIBUS_PROCEDURE_LAUNCHRUNNER    "launchRunner"
@@ -72,35 +73,13 @@
 
 // Customer subscribe require Id
 #define REQ_SUBMIT_PID_HWND         0   // inform mginit, the pid and main hwnd of hijs
-#define REQ_GET_TOPMOST_TITLE       1   // get topmost normal window title
-#define REQ_SUBMIT_TOGGLE           2   // toggle the application
-#define REQ_SHOW_PAGE               3   // show target page
-#define REQ_SUBMIT_TOPMOST          4   // set the window to topmost
-#define REQ_SUBMIT_CHANGE_CONFIG    5   // change configure file
 
 // user define message
 #define MSG_MAINWINDOW_CHANGE       (MSG_USER + 1)
 #define MSG_CONFIG_CHANGE           (MSG_USER + 2)
 
-
-
-
-
-
 // configuration file
 #define SYSTEM_CONFIG_FILE  "hybridos.cfg"  // configuration file
-
-#define MSG_DYBKGND_DO_ANIMATION    (MSG_USER + 2)
-#define MSG_BROWSER_SHOW            (MSG_USER + 3)
-#define MSG_WIFI_CHANGED            (MSG_USER + 4)
-
-
-// max number of targets
-#define MAX_TARGET_NUMBER           9   // max number of targets
-#define MAX_TARGET_NAME_LEN         64  // the max number of target name
-
-// Customer compositor name
-#define MIME_COMPOSITOR         "mine-compositor"
 
 
 typedef struct tagRequestInfo 

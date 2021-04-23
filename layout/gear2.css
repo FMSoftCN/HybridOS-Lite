@@ -4,17 +4,17 @@
     position: relative; 
     left: 5%; 
     top: 10%; 
-    width: 40%; 
+    width: 90%; 
     height: 10%; 
-    font-size:30px;
+    font-size:20px;
 }
 
 #icon
 {
-    display:inline-block; 
+    display:block; 
     position: relative; 
-    left: 84%; 
-    top: 25%; 
+    left: 42%; 
+    top: 35%; 
     width: 16%; 
     height: 16%;
 }

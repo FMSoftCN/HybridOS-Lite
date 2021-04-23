@@ -396,14 +396,18 @@ static LRESULT ChgConfigWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         {
             int x = LOSWORD(lParam);
             int y = HISWORD(lParam);
+            char * endpoint = NULL;
 
             if(PtInRect (&global_param.icon_rect[0], x, y))
             {
+                endpoint = hibus_assemble_endpoint_name_alloc(HIBUS_LOCALHOST, HIBUS_HISHELL_NAME, HIBUS_HISHELL_MGINIT_NAME);
+                hibus_call_procedure(global_param.hibus_context, endpoint, HIBUS_PROCEDURE_CONFIG_CHANGE, "{\"device\":\"wlp5s0\"}", 1000, NULL);
             }
             else if(PtInRect (&global_param.icon_rect[1], x, y))
             {
+                endpoint = hibus_assemble_endpoint_name_alloc(HIBUS_LOCALHOST, HIBUS_HISHELL_NAME, HIBUS_HISHELL_MGINIT_NAME);
+                hibus_call_procedure(global_param.hibus_context, endpoint, HIBUS_PROCEDURE_CONFIG_CHANGE, "{\"device\":\"wlp5s0\"}", 1000, NULL);
             }
-
         }
             break;
 

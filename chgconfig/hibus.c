@@ -81,7 +81,7 @@ extern Global_Param global_param;
 
 static char * quitApp(hibus_conn* conn, const char* from_endpoint, const char* to_method, const char* method_param, int *err_code)
 {
-    printf("========================================quit rgbw: %s\n", method_param);
+    fprintf(stderr, "quit chgconfig: %s\n", method_param);
     if(global_param.main_hwnd)
         PostMessage(global_param.main_hwnd, MSG_CLOSE, 0, 0);
     return NULL;
@@ -94,14 +94,14 @@ int start_hibus(hibus_conn ** context, const char * id)
     int ret_code = 0;
     char runner_name[32] = {0};
     
-    sprintf(runner_name, "rgbw%s", id);
+    sprintf(runner_name, "chgconfig%s", id);
     while(ret_code < 10)
     {
         // connect to hibus server
         fd_socket = hibus_connect_via_unix_socket(SOCKET_PATH, HIBUS_HISHELL_NAME, runner_name, &hibus_context);
         if(fd_socket <= 0)
         {
-            fprintf(stderr, "mginit hibus: connect to HIBUS server error!\n");
+            fprintf(stderr, "chgconfig: connect to HIBUS server error!\n");
             sleep(1);
             ret_code ++;
         }
@@ -118,7 +118,7 @@ int start_hibus(hibus_conn ** context, const char * id)
     ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_QUIT, NULL, NULL, quitApp);
     if(ret_code)
     {
-        fprintf(stderr, "mginit hibus: Error for register procedure %s, %s.\n", HIBUS_PROCEDURE_LAUNCHAPP, hibus_get_err_message(ret_code));
+        fprintf(stderr, "chgconfig: Error for register procedure %s, %s.\n", HIBUS_PROCEDURE_LAUNCHAPP, hibus_get_err_message(ret_code));
         return -1;
     }
 

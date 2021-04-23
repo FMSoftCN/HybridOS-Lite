@@ -64,6 +64,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
+#include <libgen.h>
 
 #include <minigui/common.h>
 #include <minigui/minigui.h>
@@ -76,16 +77,65 @@
 
 #include "../include/sysconfig.h"
 #include "config.h"
+#include "tools.h"
+#include "parsemanifest.h"
+#include "hibus.h"
+
+extern OS_Global_struct __os_global_struct;
 
 static char * launchApp(hibus_conn* conn, const char* from_endpoint, const char* to_method, const char* method_param, int *err_code)
 {
-    printf("========================================launch application: %s\n", method_param);
+    fprintf(stderr, "launch application: %s\n", method_param);
     return NULL;
 }
 
 static char * launchRunner(hibus_conn* conn, const char* from_endpoint, const char* method_name, const char* method_param, int *err_code)
 {
-    printf("========================================launch runner: %s\n", method_param);
+    fprintf(stderr, "launch runner: %s\n", method_param);
+    return NULL;
+}
+
+static char * configChange(hibus_conn* conn, const char* from_endpoint, const char* method_name, const char* method_param, int *err_code)
+{
+    char manifest_path[HISHELL_MAX_PATH] = {0};
+    char new_path[HISHELL_MAX_PATH] = {0};
+    char temp_path[HISHELL_MAX_PATH] = {0};
+    page_struct * page = NULL;
+    char layer_name[16];
+printf("=========================================================================== get the message\n");
+    // change configure file
+    readlink("/proc/self/exe", manifest_path, HISHELL_MAX_PATH);
+    sprintf(new_path, "%s", manifest_path);
+    sprintf(temp_path, "%s", manifest_path);
+    sprintf(manifest_path, "%s/layout/manifest.json", dirname(manifest_path));
+
+    sprintf(temp_path, "%s/layout/temp.json", dirname(temp_path));
+    sprintf(new_path, "%s/layout/newconfig.json", dirname(new_path));
+
+    rename(manifest_path, temp_path);
+    rename(new_path, manifest_path);
+    rename(temp_path, new_path);
+
+    end_apps();
+    parse_manifest();
+    page = __os_global_struct.page;
+    while(page)
+    {
+        sprintf(layer_name, "layer%d", page->id - 1);
+        page->layer = ServerCreateLayer(layer_name, 0, 0);
+        page = page->next;
+    }
+    page = find_page_by_id(__os_global_struct.current_page + 1);
+    ServerSetTopmostLayer(page->layer);
+
+    start_apps();
+    if(__os_global_struct.hIndicatorBar)
+        PostMessage(__os_global_struct.hIndicatorBar, MSG_CONFIG_CHANGE, 0, 0);
+    if(__os_global_struct.hDescriptionBar)
+        PostMessage(__os_global_struct.hDescriptionBar, MSG_CONFIG_CHANGE, 0, 0);
+    if(__os_global_struct.hTitleBar)
+        PostMessage(__os_global_struct.hTitleBar, MSG_CONFIG_CHANGE, 0, 0);
+
     return NULL;
 }
 
@@ -94,6 +144,7 @@ int start_hibus(hibus_conn ** context)
     hibus_conn * hibus_context = NULL;
     int fd_socket = -1;
     int ret_code = 0;
+    char * endpoint = NULL;
     
     while(ret_code < 10)
     {
@@ -112,7 +163,7 @@ int start_hibus(hibus_conn ** context)
     if(ret_code == 10)
         return -1;
 
-    // register procedure
+    // register hibus procedure
     ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_LAUNCHAPP, NULL, NULL, launchApp);
     if(ret_code)
     {
@@ -127,7 +178,29 @@ int start_hibus(hibus_conn ** context)
         return -1;
     }
 
+    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_CONFIG_CHANGE, NULL, NULL, configChange);
+    if(ret_code)
+    {
+        fprintf(stderr, "mginit hibus: Error for register procedure %s, %s.\n", HIBUS_PROCEDURE_CONFIG_CHANGE, hibus_get_err_message(ret_code));
+        return -1;
+    }
+
+#if 0
+    // subscribe hibus event
+printf("##################################### subscribe event\n");
+    endpoint = hibus_assemble_endpoint_name_alloc(HIBUS_LOCALHOST, HIBUS_HISHELL_NAME, "chgconfig0");
+    ret_code = hibus_subscribe_event(hibus_context, endpoint, HIBUS_EVENT_CONFIG_CHANGE, change_configure_handler);
+    if(ret_code)
+    {
+        fprintf(stderr, "mginit hibus: Error for subscribe event %s, %s.\n", HIBUS_EVENT_CONFIG_CHANGE, hibus_get_err_message(ret_code));
+        return -1;
+    }
+#endif
+
     *context = hibus_context;
+
+    if(endpoint)
+        free(endpoint);
 
     return fd_socket;
 }
@@ -137,6 +210,10 @@ void end_hibus(hibus_conn * context)
 {
     hibus_revoke_procedure(context, HIBUS_PROCEDURE_LAUNCHRUNNER);
     hibus_revoke_procedure(context, HIBUS_PROCEDURE_LAUNCHAPP);
+    hibus_revoke_procedure(context, HIBUS_PROCEDURE_CONFIG_CHANGE);
+#if 0
+    hibus_revoke_event(context, HIBUS_EVENT_CONFIG_CHANGE);
+#endif
 
     hibus_disconnect(context);
 }
