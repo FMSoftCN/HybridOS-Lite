@@ -73,6 +73,7 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 #include <mgeff/mgeff.h>
+#include <hibus.h>
 
 #include <cairo/cairo.h>
 #include <cairo/cairo-minigui.h>
@@ -83,7 +84,6 @@
 
 #include <glib.h>
 #include <libhirsvg/rsvg.h>
-#include <hibus.h>
 
 #include "../include/sysconfig.h"
 #include "config.h"
@@ -97,6 +97,8 @@
 #define UNSELECT_COLOR  "#C0C0C0"
 #define UNSELECT_RATIO  1.5       // select raius / unselect radius
 
+typedef void (* CC_TRANSIT_TO_LAYER) (CompositorCtxt* ctxt, MG_Layer* to_layer);
+
 typedef struct tagIndicator
 {
     int start;          // indicate the index of start point
@@ -104,8 +106,9 @@ typedef struct tagIndicator
 } Indicator;
 
 extern OS_Global_struct __os_global_struct;
-
+extern CompositorCtxt * cc_context;
 static Indicator indicator;
+
 static cairo_t *cr[2];
 static cairo_surface_t *surface[2];
 static RsvgStylePair button_color_pair[2];
@@ -153,6 +156,10 @@ static void paint(HWND hwnd, HDC hdc, int square_number, RECT * rect)
         HDC csdc = create_memdc_from_image_surface(surface[select]);
         if (csdc != HDC_SCREEN && csdc != HDC_INVALID)
         {
+            SetBrushColor (hdc, RGB2Pixel (hdc, BK_COLOR_R, BK_COLOR_G, BK_COLOR_B));
+            FillBox(hdc, (rect + i)->left, (rect + i)->top, \
+                           RECTWP(rect + i), RECTHP(rect + i));
+
             if(select == 0)
             {
                 SetMemDCColorKey(csdc, MEMDC_FLAG_SRCCOLORKEY,
@@ -164,8 +171,8 @@ static void paint(HWND hwnd, HDC hdc, int square_number, RECT * rect)
                 SetMemDCColorKey(csdc, MEMDC_FLAG_SRCCOLORKEY,
                         MakeRGB(BK_COLOR_R * alpha, BK_COLOR_G * alpha, BK_COLOR_B * alpha));
                 BitBlt(csdc, 0, 0, SQUARE_LENGTH / UNSELECT_RATIO, SQUARE_LENGTH / UNSELECT_RATIO, hdc, \
-                    (rect + i)->left + SQUARE_LENGTH  * (1.0 - (1.0 / (float)UNSELECT_RATIO)) / 2.0, \
-                    (rect + i)->top + SQUARE_LENGTH *  (1.0 - (1.0 / (float)UNSELECT_RATIO)) / 2.0, 0);
+                                (rect + i)->left + SQUARE_LENGTH  * (1.0 - (1.0 / (float)UNSELECT_RATIO)) / 2.0, \
+                                (rect + i)->top + SQUARE_LENGTH *  (1.0 - (1.0 / (float)UNSELECT_RATIO)) / 2.0, 0);
             }
         }
         DeleteMemDC(csdc);
@@ -301,8 +308,7 @@ static void loadSVGFromFile(const char* file, int index)
     }
     else
     {
-        surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
-                                SQUARE_LENGTH / UNSELECT_RATIO, SQUARE_LENGTH / UNSELECT_RATIO);
+        surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, SQUARE_LENGTH / UNSELECT_RATIO, SQUARE_LENGTH / UNSELECT_RATIO);
         factor_width = (double)SQUARE_LENGTH / (double)dimensions.width / (double)UNSELECT_RATIO;
         factor_height = (double)SQUARE_LENGTH / (double)dimensions.height / (double)UNSELECT_RATIO;
     }
@@ -331,6 +337,7 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
     HDC hdc;
     static RECT rect[MAX_SQUARE];
     static int square_number = 0;
+    static BOOL pressed = FALSE;
 
     switch (message) 
     {
@@ -369,16 +376,14 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             readlink("/proc/self/exe", path, HISHELL_MAX_PATH);
             sprintf(path, "%s/res/circle.svg", dirname(path));
 
-            surface[0] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, (int)SQUARE_LENGTH, \
-                                                                        (int)SQUARE_LENGTH);
+            surface[0] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, (int)SQUARE_LENGTH, (int)SQUARE_LENGTH);
             cr[0] = cairo_create (surface[0]);
             button_color_pair[0].name = "color";
             button_color_pair[0].value = SELECT_COLOR;
             button_color_pair[0].important = 0;
             loadSVGFromFile(path, 0);
 
-            surface[1] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, (int)SQUARE_LENGTH, \
-                                                                        (int)SQUARE_LENGTH);
+            surface[1] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, (int)SQUARE_LENGTH, (int)SQUARE_LENGTH);
             cr[1] = cairo_create (surface[1]);
             button_color_pair[1].name = "color";
             button_color_pair[1].value = UNSELECT_COLOR;
@@ -387,13 +392,200 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
         }
             break;
 
-        case MSG_LBUTTONUP:
+        case MSG_CONFIG_CHANGE:
+        {
+            int i = 0;
+            int startx = 0;
+            int starty = 0;
+            int width = 0;
+            RECT window_rect;
+
+            square_number = __os_global_struct.page_number < MAX_SQUARE ? \
+                        __os_global_struct.page_number: MAX_SQUARE;
+            width = square_number * SQUARE_LENGTH + (square_number - 1) * SQUARE_INTERVAL;
+
+            GetWindowRect(hWnd, &window_rect);
+            startx = (RECTWP(&window_rect) - width) / 2;
+            starty = (RECTHP(&window_rect) - SQUARE_LENGTH) / 2;
+
+            // calculate rect array.
+            for(i = 0; i < square_number; i++)
+            {
+                rect[i].left = startx + i * (SQUARE_LENGTH + SQUARE_INTERVAL);
+                rect[i].top = starty;
+                rect[i].right = rect[i].left + SQUARE_LENGTH;
+                rect[i].bottom = rect[i].top + SQUARE_LENGTH;
+            }
+            calculate_points();
+            InvalidateRect(hWnd, NULL, TRUE);
+        }
+            break;
+
+        case MSG_LBUTTONDOWN:
+        {
+            int i = 0;
+            int j = 0;
+            int x = LOWORD (lParam);
+            int y = HIWORD (lParam);
+            page_struct * page = NULL;
+            CompositorOps* fallback_ops = (CompositorOps*)ServerGetCompositorOps (COMPSOR_NAME_FALLBACK);
+            COMBPARAMS_FALLBACK cpf;
+            MG_Layer * layers[2];
+
+            if(square_number == 0)
+                break;
+
+            // 是否是当前范围
+            for(i = 0; i < square_number; i++)
+            {
+                if(PtInRect ((rect + i), x, y))
+                    break;
+            }
+
+            if(i < square_number)   // 在当前范围内
+            {
+                pressed = TRUE;
+                if(indicator.select == i)   // 是当前页
+                {
+                    page = find_page_by_id(__os_global_struct.current_page + 1);
+                    layers[0] = mgTopmostLayer;
+                    layers[1] = page->layer;
+
+                    cpf.method = FCM_HORIZONTAL | FCM_SCALE;
+                    cpf.percent = 100.0;
+                    cpf.scale = 0.95;
+
+                    for(i = 0; i < 4; i++)
+                    {
+                        cpf.scale -= 0.05;
+                        fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+                        usleep (20 * 1000);
+                    }
+                }
+                else                        // 不是当前页
+                {
+                    CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
+
+                    // 当前页缩小
+                    page = find_page_by_id(__os_global_struct.current_page + 1);
+                    layers[0] = mgTopmostLayer;
+                    layers[1] = page->layer;
+
+                    cpf.method = FCM_HORIZONTAL | FCM_SCALE;
+                    cpf.percent = 100.0;
+                    cpf.scale = 0.95;
+
+                    for(j = 0; j < 4; j++)
+                    {
+                        cpf.scale -= 0.05;
+                        fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+                        usleep (20 * 1000);
+                    }
+
+                    // 切换当前页
+                    layers[0] = page->layer;
+
+                    indicator.select = i;
+                    __os_global_struct.current_page = indicator.start + i;
+                    page = find_page_by_id(__os_global_struct.current_page + 1);
+
+                    // 动画，page切换，但是page不能恢复原来大小
+                    if(page)
+                    {
+                        layers[1] = page->layer;
+
+                        cpf.method = FCM_HORIZONTAL | FCM_SCALE;
+                        cpf.percent = 95.0;
+                        cpf.scale = 0.80;
+
+                        for(i = 0; i < 20; i++)
+                        {
+                            cpf.percent -= 5.0; 
+                            fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+                            usleep (20 * 1000);
+                        }
+                        fallback_ops->transit_to_layer = my_transit_to_layer;
+                        ServerSetTopmostLayer(page->layer);
+                        fallback_ops->transit_to_layer = old_transit_to_lay;
+
+                        hdc = GetClientDC(hWnd);
+                        paint(hWnd, hdc, square_number, rect);
+                        ReleaseDC(hdc);
+
+                        // 要变化成 0.8 的倍率
+
+                        layers[0] = mgTopmostLayer;
+                        layers[1] = page->layer;
+
+                        cpf.method = FCM_HORIZONTAL | FCM_SCALE;
+                        cpf.percent = 100.0;
+                        cpf.scale = 0.80;
+                        fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+                    }
+
+                    // 改变点点，并切换标题
+//                    InvalidateRect(hWnd, NULL, TRUE);
+                    if(__os_global_struct.hTitleBar)
+                        SendMessage(__os_global_struct.hTitleBar, MSG_MAINWINDOW_CHANGE, 0, 0);
+                }
+            }
+        }
+            break;
+
+        case MSG_MOUSEMOVE:
         {
             int i = 0;
             int x = LOWORD (lParam);
             int y = HIWORD (lParam);
             page_struct * page = NULL;
+            CompositorOps* fallback_ops = (CompositorOps*)ServerGetCompositorOps (COMPSOR_NAME_FALLBACK);
+            COMBPARAMS_FALLBACK cpf;
+            MG_Layer * layers[2];
+            RECT field;
 
+            if(square_number == 0)
+                break;
+
+            // 如故考虑按下动画操作，此处要判断是否在动画状态
+            if(!pressed)
+                break;
+
+            field.left = (rect + 0)->left - 10;
+            field.top = (rect + 0)->top;
+            field.right = (rect + square_number - 1)->right + 10;
+            field.bottom = (rect + square_number - 1)->bottom;
+            
+            // 超出界限，按左键抬起处理
+            if(!PtInRect (&field, x, y))
+            {
+                CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
+
+                page = find_page_by_id(__os_global_struct.current_page + 1);
+                layers[0] = mgTopmostLayer;
+                layers[1] = page->layer;
+
+                cpf.method = FCM_HORIZONTAL | FCM_SCALE;
+                cpf.percent = 100.0;
+                cpf.scale = 0.85;
+
+                for(i = 0; i < 4; i++)
+                {
+                    cpf.scale += 0.05;
+                    fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+                    usleep (20 * 1000);
+                }
+
+                fallback_ops->transit_to_layer = my_transit_to_layer;
+                ServerSetTopmostLayer(page->layer);
+                fallback_ops->transit_to_layer = old_transit_to_lay;
+                fallback_ops->refresh(cc_context);;
+                
+                pressed = FALSE;
+
+                break;
+            }
+
+            // 判断在哪个点点里
             for(i = 0; i < square_number; i++)
             {
                 if(PtInRect ((rect + i), x, y))
@@ -407,38 +599,165 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
                 }
                 else
                 {
+                    CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
+                    page = find_page_by_id(__os_global_struct.current_page + 1);
+                    layers[0] = page->layer;
+
                     indicator.select = i;
                     __os_global_struct.current_page = indicator.start + i;
                     page = find_page_by_id(__os_global_struct.current_page + 1);
                     if(page)
+                    {
+                        fallback_ops->transit_to_layer = my_transit_to_layer;
                         ServerSetTopmostLayer(page->layer);
-                    InvalidateRect(hWnd, NULL, TRUE);
+                        fallback_ops->transit_to_layer = old_transit_to_lay;
+
+                        hdc = GetClientDC(hWnd);
+                        paint(hWnd, hdc, square_number, rect);
+                        ReleaseDC(hdc);
+
+                        // 要变化成 0.8 的倍率，没有下面的，就不对
+                        layers[0] = mgTopmostLayer;
+                        layers[1] = page->layer;
+
+                        cpf.method = FCM_HORIZONTAL | FCM_SCALE;
+                        cpf.percent = 100.0;
+                        cpf.scale = 0.80;
+                        fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+                    }
+
+//                    InvalidateRect(hWnd, NULL, TRUE);
                     if(__os_global_struct.hTitleBar)
                         SendMessage(__os_global_struct.hTitleBar, MSG_MAINWINDOW_CHANGE, 0, 0);
-                    if(__os_global_struct.hDescriptionBar)
-                        SendMessage(__os_global_struct.hDescriptionBar, MSG_MAINWINDOW_CHANGE, 0, 0);
                 }
             }
             else
             {
-                i = __os_global_struct.current_page;
-                if(x <= rect[indicator.select].left)
-                    calculate_pre(TRUE);
-                else if(x >= rect[indicator.select].right)
-                    calculate_next(TRUE);
+                // 最左边和最右边的都不用管
+                if((x < rect[0].left) || (x > rect[square_number - 1].right))
+                    break;
 
-                if(i != __os_global_struct.current_page)
+                // 判断在哪两个点之间
+                for(i = 0; i < square_number - 1; i++)
                 {
+                    if((x > rect[i].right) && (x < rect[i + 1].left))
+                        break;
+                }
+
+                if(i < (square_number - 1))
+                {
+                    int internal = rect[i + 1].left - rect[i].right;
+                    float percent = (float)(x - rect[i].right) * 100.0 / (float)internal;
+
+                    page = find_page_by_id(i + 1);
+                    layers[0] = page->layer;
+
+                    page = find_page_by_id(i + 1 + 1);
+                    layers[1] = page->layer;
+
+                    cpf.method = FCM_HORIZONTAL | FCM_SCALE;
+                    cpf.percent = 100.0f - percent;
+                    cpf.scale = 0.80;
+
+                    fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+                }
+            }
+        }   
+
+            break;
+
+        case MSG_LBUTTONUP:
+        {
+            int i = 0;
+            int x = LOWORD (lParam);
+            int y = HIWORD (lParam);
+            page_struct * page = NULL;
+            CompositorOps* fallback_ops = (CompositorOps*)ServerGetCompositorOps (COMPSOR_NAME_FALLBACK);
+            COMBPARAMS_FALLBACK cpf;
+            MG_Layer * layers[2];
+
+            if(square_number == 0)
+                break;
+
+            // 如故考虑按下动画操作，此处要判断是否在动画状态
+            if(!pressed)
+                break;
+
+            // 判断在哪个点点里
+            for(i = 0; i < square_number; i++)
+            {
+                if(PtInRect ((rect + i), x, y))
+                    break;
+            }
+
+            if(i < square_number)
+            {
+                if(indicator.select == i)
+                {
+                    CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
+
                     page = find_page_by_id(__os_global_struct.current_page + 1);
+                    layers[0] = mgTopmostLayer;
+                    layers[1] = page->layer;
+
+                    cpf.method = FCM_HORIZONTAL | FCM_SCALE;
+                    cpf.percent = 100.0;
+                    cpf.scale = 0.85;
+
+                    for(i = 0; i < 4; i++)
+                    {
+                        cpf.scale += 0.05;
+                        fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+                        usleep (20 * 1000);
+                    }
+
+                    fallback_ops->transit_to_layer = my_transit_to_layer;
+                    ServerSetTopmostLayer(page->layer);
+                    fallback_ops->transit_to_layer = old_transit_to_lay;
+                    fallback_ops->refresh(cc_context);;
+                }
+#if 0
+                else
+                {
+
+                    indicator.select = i;
+                    __os_global_struct.current_page = indicator.start + i;
+                    page = find_page_by_id(__os_global_struct.current_page + 1);
+
                     if(page)
-                        ServerSetTopmostLayer(page->layer);
+                    {
+                    }
                     InvalidateRect(hWnd, NULL, TRUE);
                     if(__os_global_struct.hTitleBar)
                         SendMessage(__os_global_struct.hTitleBar, MSG_MAINWINDOW_CHANGE, 0, 0);
-                    if(__os_global_struct.hDescriptionBar)
-                        SendMessage(__os_global_struct.hDescriptionBar, MSG_MAINWINDOW_CHANGE, 0, 0);
                 }
+#endif
             }
+            else
+            {
+                CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
+
+                page = find_page_by_id(__os_global_struct.current_page + 1);
+                layers[0] = mgTopmostLayer;
+                layers[1] = page->layer;
+
+                cpf.method = FCM_HORIZONTAL | FCM_SCALE;
+                cpf.percent = 100.0;
+                cpf.scale = 0.85;
+
+                for(i = 0; i < 4; i++)
+                {
+                    cpf.scale += 0.05;
+                    fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+                    usleep (20 * 1000);
+                }
+
+                fallback_ops->transit_to_layer = my_transit_to_layer;
+                ServerSetTopmostLayer(page->layer);
+                fallback_ops->transit_to_layer = old_transit_to_lay;
+                fallback_ops->refresh(cc_context);;
+            }
+            pressed = FALSE;
         }   
             break;
 
@@ -489,8 +808,7 @@ HWND create_indicator_bar(void)
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
 
-    __os_global_struct.hIndicatorBar = CreateMainWindowEx2 (&CreateInfo, 0L, NULL, \
-                                NULL, ST_PIXEL_ARGB8888,
+    __os_global_struct.hIndicatorBar = CreateMainWindowEx2 (&CreateInfo, 0L, NULL, NULL, ST_PIXEL_ARGB8888,
                                 MakeRGBA (BK_COLOR_R, BK_COLOR_G, BK_COLOR_B, BK_TRANSPARENT),
                                 CT_ALPHAPIXEL, 0xFF);
     if (__os_global_struct.hIndicatorBar == HWND_INVALID)

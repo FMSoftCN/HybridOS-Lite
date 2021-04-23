@@ -10,79 +10,17 @@
             "id": "1",
             "title": {
                 "en": "page 1",
-                "zh_CN": "RGB-W控件 1"
+                "zh_CN": "change configuration 1"
             },
             "windowLayoutStyles": null,
             "runners": [
                 {
-                    "name": "rgbw",
+                    "name": "chgconfig",
                     "type": "exec",
-                    "entry": "rgbw1.ini",
+                    "entry": "chgconfig1.ini",
                     "runas": "window, default",
                     "class": "",
-                    "dependencies": ["hibusd"],
-                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
-                }]
-        },
-        {
-            "id": "2",
-            "title": {
-                "en": "page 2",
-                "zh_CN": "SCENE控件 1"
-            },
-            "windowLayoutStyles": null,
-            "runners": [
-                {
-                    "name": "scene",
-                    "type": "exec",
-                    "entry": "scene1.ini",
-                    "runas": "window, default",
-                    "class": "",
-                    "dependencies": ["hibusd"],
-                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
-                }]
-        },
-        {
-            "id": "3",
-            "title": { 
-                "en": "page 3",
-                "zh_CN": "SCENE控件 2"
-            },
-            "windowLayoutStyles": null,
-            "runners": [
-                {
-                    "name": "scene",
-                    "type": "exec",
-                    "entry": "scene2.ini",
-                    "runas": "window, default",
-                    "class": "",
-                    "dependencies": ["hibusd"],
-                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
-                }]
-        },
-        {
-            "id": "4",
-            "title": {
-                "en": "page 4",
-                "zh_CN": "SCENE控件 3"
-            },
-            "windowLayoutStyles": null,
-            "runners": [
-                {
-                    "name": "scene",
-                    "type": "exec",
-                    "entry": "scene3.ini",
-                    "runas": "window, default",
-                    "class": "",
+                    "CSSFile": "chgconfig1.css",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
                     "intent": {

@@ -4,16 +4,6 @@
 sudo apt-get install libgdk-pixbuf2.0-dev
 sudo apt-get install libglib2.0-dev
 
-# hidrm
-git cline git4os@gitlab.fmsoft.cn:hybridos/hidrm.git
-cd hidrm
-./autogen.sh
-./configure
-make -j4
-sudo make install
-cd ..
-
-
 # Step 2: build MiniGUI
 # gvfb
 git clone https://github.com/VincentWei/gvfb.git
@@ -24,7 +14,7 @@ sudo make install
 cd ..
 
 # MiniGUI
-git clone git4os@gitlab.fmsoft.cn:VincentWei/minigui.git -b rel-5-0
+git clone https://gitlab.fmsoft.cn/VincentWei/minigui.git -b rel-5-0
 cd minigui
 ./autogen.sh
 ./configure --enable-procs --enable-compositing --enable-virtualwindow --disable-Werror --disable-static --disable-gtk-doc --enable-videodrm
@@ -33,7 +23,7 @@ sudo make install
 cd ..
 
 # mgplus
-git clone git4os@gitlab.fmsoft.cn:VincentWei/mgplus.git
+git clone https://gitlab.fmsoft.cn/VincentWei/mgplus.git -b rel-5-0
 cd mgplus
 ./autogen.sh
 ./configure
@@ -42,7 +32,7 @@ sudo make install
 cd ..
 
 # mgeff
-git clone git4os@gitlab.fmsoft.cn:VincentWei/mgeff.git -b rel-5-0
+git clone https://gitlab.fmsoft.cn/VincentWei/mgeff.git -b rel-5-0
 cd mgeff
 ./autogen.sh
 ./configure
@@ -51,7 +41,7 @@ sudo make install
 cd ..
 
 # minigui-res
-git clone git4os@gitlab.fmsoft.cn:VincentWei/minigui-res.git -b rel-5-0
+git clone https://gitlab.fmsoft.cn/VincentWei/minigui-res.git -b rel-5-0
 cd minigui-res
 ./autogen.sh
 ./configure
@@ -62,7 +52,7 @@ cd ..
 
 # Step 3: build software packages
 # hicairo
-git clone ssh://git4os@gitlab.fmsoft.cn/hybridos/hicairo -b minigui-backend
+git clone https://gitlab.fmsoft.cn/hybridos/hicairo.git -b minigui-backend
 cd hicairo
 ./autogen.sh
 ./configure
@@ -71,7 +61,7 @@ sudo make install
 cd ..
 
 # hirsvg
-git clone ssh://git4os@gitlab.fmsoft.cn/hybridos/hirsvg -b minigui-backend
+git clone https://gitlab.fmsoft.cn/hybridos/hirsvg.git -b minigui-backend
 cd hicairo
 ./autogen.sh
 ./configure
@@ -80,7 +70,7 @@ sudo make install
 cd ..
 
 # hibox
-git clone git4os@gitlab.fmsoft.cn:hybridos/hibox.git
+git clone https://gitlab.fmsoft.cn/hybridos/hibox.git
 cd hibox
 cmake .
 make -j4
@@ -88,7 +78,7 @@ sudo make install
 cd ..
 
 # hibus
-git clone git4os@gitlab.fmsoft.cn:hybridos/hibus.git -b rel-1-0
+git clone https://gitlab.fmsoft.cn/hybridos/hibus.git -b rel-1-0
 cd hibus
 cmake .
 make -j4
@@ -96,7 +86,7 @@ sudo make install
 cd ..
 
 # hidomlayout
-git clone https://gitlab.fmsoft.cn/hybridos/hidomlayout.git -b dev
+git clone https://gitlab.fmsoft.cn/hybridos/hidomlayout.git -b master 
 cd hidomlayout
 cmake .
 make -j4

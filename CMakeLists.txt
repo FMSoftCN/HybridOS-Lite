@@ -20,15 +20,14 @@ set(MGEFF_INCLUDE_DIRS ${mGEff_INCLUDE_DIRS})
 # copy the necessary resource files to /bin/res
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/res)
-file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/deploy)
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/config)
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/layout)
 
 list(APPEND HISHELL_RES_FILES
     "${PROJECT_SOURCE_DIR}/mginit/res/circle.svg"
     "${PROJECT_SOURCE_DIR}/scene/1.svg"
-    "${PROJECT_SOURCE_DIR}/rgbw/bright.svg"
-    "${PROJECT_SOURCE_DIR}/rgbw/rgb.svg"
-    "${PROJECT_SOURCE_DIR}/rgbw/white-black.svg"
+    "${PROJECT_SOURCE_DIR}/chgconfig/res/single.svg"
+    "${PROJECT_SOURCE_DIR}/chgconfig/res/multiple.svg"
 )
 
 file(COPY ${HISHELL_RES_FILES} DESTINATION ${PROJECT_SOURCE_DIR}/bin/res)
@@ -37,7 +36,10 @@ file(COPY "${PROJECT_SOURCE_DIR}/layout/hybridos.cfg" DESTINATION ${PROJECT_SOUR
 file(COPY "${PROJECT_SOURCE_DIR}/layout/manifest.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
 file(COPY "${PROJECT_SOURCE_DIR}/layout/default_layout.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
 file(COPY "${PROJECT_SOURCE_DIR}/layout/newconfig.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "deploy" DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
+file(COPY "${PROJECT_SOURCE_DIR}/layout/chgconfig1.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/layout/chgconfig2.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/layout/newconfig.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/config" DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
 
 # set output path
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
@@ -46,7 +48,7 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 add_subdirectory(mginit)
 add_subdirectory(wallpaper)
 add_subdirectory(scene)
-add_subdirectory(rgbw)
+add_subdirectory(chgconfig)
 
 #install(FILES "MiniGUI.cfg" DESTINATION ${CMAKE_INSTALL_PREFIX}/libexec/)
 #install(FILES "hybridos.cfg" DESTINATION ${CMAKE_INSTALL_PREFIX}/libexec/)

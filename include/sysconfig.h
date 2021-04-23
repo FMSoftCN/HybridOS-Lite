@@ -70,12 +70,13 @@
 // Customer Require Id
 #define FORMAT_REQID                (MAX_SYS_REQID + 1)
 
-// Customer sub require Id
+// Customer subscribe require Id
 #define REQ_SUBMIT_PID_HWND         0   // inform mginit, the pid and main hwnd of hijs
 #define REQ_GET_TOPMOST_TITLE       1   // get topmost normal window title
 #define REQ_SUBMIT_TOGGLE           2   // toggle the application
 #define REQ_SHOW_PAGE               3   // show target page
 #define REQ_SUBMIT_TOPMOST          4   // set the window to topmost
+#define REQ_SUBMIT_CHANGE_CONFIG    5   // change configure file
 
 // user define message
 #define MSG_MAINWINDOW_CHANGE       (MSG_USER + 1)

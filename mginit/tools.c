@@ -186,7 +186,7 @@ int find_clientId_by_pid(pid_t pid)
     return i;
 }
 
-static pid_t exec_abb_runner(char * app, char* layer, char * hibus_id, char* entry)
+static pid_t exec_lite_runner(char * app, char* layer, char * hibus_id, char* entry, char * css_file)
 {
     pid_t pid = 0;
     char buff [PATH_MAX + NAME_MAX + 1] = {0};
@@ -198,7 +198,7 @@ static pid_t exec_abb_runner(char * app, char* layer, char * hibus_id, char* ent
     else if (pid == 0) {
         readlink("/proc/self/exe", buff, PATH_MAX + NAME_MAX + 1);
         sprintf(buff, "%s/%s", dirname(buff), app);
-        execl (buff, app, layer, hibus_id, entry, NULL);
+        execl (buff, app, layer, hibus_id, entry, css_file, NULL);
         perror ("execl");
         _exit (1);
     }
@@ -233,7 +233,7 @@ void start_apps()
             {
                 sprintf(layer, "%d", id - 1);
                 sprintf(hibus, "%d", hibus_id);
-                runner->pid = exec_abb_runner(runner->name, layer, hibus, runner->entry);
+                runner->pid = exec_lite_runner(runner->name, layer, hibus, runner->entry, runner->css_file);
                 runner->hibus_id = hibus_id;
                 hibus_id ++;
 
@@ -285,6 +285,8 @@ void end_apps(void)
                 free(runner->entry);
             if(runner->css_class)
                 free(runner->css_class);
+            if(runner->css_file)
+                free(runner->css_file);
             if(runner->styles)
                 free(runner->styles);
             if(runner->intent)

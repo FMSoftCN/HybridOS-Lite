@@ -84,9 +84,9 @@
 typedef void (* CC_TRANSIT_TO_LAYER) (CompositorCtxt* ctxt, MG_Layer* to_layer);
 
 extern OS_Global_struct __os_global_struct;                     // global variable for system
-static CompositorCtxt * cc_context = NULL;                      // CompositorCtxt for composite_layers
+CompositorCtxt * cc_context = NULL;                             // CompositorCtxt for composite_layers
 static MSGHOOK m_OldMouseHook = NULL;                           // mouse hook function
-static MoseSpeed mouseinfo;                                            // for drag screen
+static MoseSpeed mouseinfo;                                     // for drag screen
 
 
 static BOOL check_runner_flag(void)
@@ -398,6 +398,12 @@ static int MouseHook(void* context, HWND dst_wnd, UINT msg, WPARAM wparam, LPARA
         }
 
         if(PtInRect (&__os_global_struct.rect_indicator, x, y))
+        {
+            mouseinfo.goon = TRUE;
+            return HOOK_GOON;
+        }
+
+        if(PtInRect (&__os_global_struct.rect_description, x, y))
         {
             mouseinfo.goon = TRUE;
             return HOOK_GOON;

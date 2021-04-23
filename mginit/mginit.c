@@ -144,6 +144,52 @@ static int format_request(int cli, int clifd, void* buff, size_t len)
             page = page->next;
         }
     }
+    else if(requestInfo->id == REQ_SUBMIT_CHANGE_CONFIG)
+    {
+        char manifest_path[HISHELL_MAX_PATH] = {0};
+        char new_path[HISHELL_MAX_PATH] = {0};
+        char temp_path[HISHELL_MAX_PATH] = {0};
+        page_struct * page = NULL;
+        char layer_name[16];
+
+        // send reply
+        replyInfo.id = REQ_SUBMIT_PID_HWND;
+        ServerSendReply(clifd, &replyInfo, sizeof(replyInfo));
+
+        // change configure file
+        readlink("/proc/self/exe", manifest_path, HISHELL_MAX_PATH);
+        sprintf(new_path, "%s", manifest_path);
+        sprintf(temp_path, "%s", manifest_path);
+        sprintf(manifest_path, "%s/layout/manifest.json", dirname(manifest_path));
+
+        sprintf(temp_path, "%s/layout/temp.json", dirname(temp_path));
+        sprintf(new_path, "%s/layout/newconfig.json", dirname(new_path));
+
+        rename(manifest_path, temp_path);
+        rename(new_path, manifest_path);
+        rename(temp_path, new_path);
+
+        end_apps();
+        parse_manifest();
+        page = __os_global_struct.page;
+        while(page)
+        {
+            sprintf(layer_name, "layer%d", page->id - 1);
+            page->layer = ServerCreateLayer(layer_name, 0, 0);
+            page = page->next;
+        }
+        page = find_page_by_id(__os_global_struct.current_page + 1);
+        ServerSetTopmostLayer(page->layer);
+
+        start_apps();
+        if(__os_global_struct.hIndicatorBar)
+            PostMessage(__os_global_struct.hIndicatorBar, MSG_CONFIG_CHANGE, 0, 0);
+        if(__os_global_struct.hDescriptionBar)
+            PostMessage(__os_global_struct.hDescriptionBar, MSG_CONFIG_CHANGE, 0, 0);
+        if(__os_global_struct.hTitleBar)
+            PostMessage(__os_global_struct.hTitleBar, MSG_CONFIG_CHANGE, 0, 0);
+    }
+
     return 0;
 }
 
