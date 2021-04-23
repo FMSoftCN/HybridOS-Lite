@@ -93,13 +93,13 @@ typedef struct tag_Global_Param
 
     // rect for element
     RECT         caption_rect;
-    RECT         icon_rect[2];
+    RECT         icon_rect;
 
     // for draw icon
-    char button_color[2][32];
-    RsvgStylePair color_pair [2];
-    cairo_t * icon_cr[2];
-    cairo_surface_t * icon_surface[2];
+    char button_color[32];
+    RsvgStylePair color_pair;
+    cairo_t * icon_cr;
+    cairo_surface_t * icon_surface;
 
     // for hibus
     hibus_conn * hibus_context;

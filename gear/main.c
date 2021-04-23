@@ -58,6 +58,7 @@
 Global_Param global_param;
 static const char * config_file = NULL;
 static const char * css_file = NULL;
+static void create_animation(HWND hWnd);
 
 // get css file content
 static char * get_file_content(char * path, int *length)
@@ -131,22 +132,13 @@ static BOOL parse_config(const char * file_name, const char * css_file, \
         GetValueFromEtcFile(file_path, "AppConfigData", "caption", \
                                     global_param.caption, MAX_NAME_LENGTH);
 
-        memset(global_param.button_color[0], 0, 32);
-        if(GetValueFromEtcFile(file_path, "AppConfigData", "icon0_color", \
-                                    global_param.button_color[0], 32) == ETC_OK)
+        memset(global_param.button_color, 0, 32);
+        if(GetValueFromEtcFile(file_path, "AppConfigData", "icon_color", \
+                                    global_param.button_color, 32) == ETC_OK)
         {
-            global_param.color_pair[0].name = "color";
-            global_param.color_pair[0].value = global_param.button_color[0];
-            global_param.color_pair[0].important = 0;
-        }
-
-        memset(global_param.button_color[1], 0, 32);
-        if(GetValueFromEtcFile(file_path, "AppConfigData", "icon1_color", \
-                                    global_param.button_color[1], 32) == ETC_OK)
-        {
-            global_param.color_pair[1].name = "color";
-            global_param.color_pair[1].value = global_param.button_color[1];
-            global_param.color_pair[1].important = 1;
+            global_param.color_pair.name = "color";
+            global_param.color_pair.value = global_param.button_color;
+            global_param.color_pair.important = 0;
         }
     }
 
@@ -183,15 +175,12 @@ static BOOL parse_config(const char * file_name, const char * css_file, \
     HLDomElementNode* caption = hilayout_element_node_create("div");
     hilayout_element_node_set_id(caption, "caption");
 
-    HLDomElementNode* icon0 = hilayout_element_node_create("div");
-    hilayout_element_node_set_id(icon0, "icon0");
+    HLDomElementNode* icon = hilayout_element_node_create("div");
+    hilayout_element_node_set_id(icon, "icon");
 
-    HLDomElementNode* icon1 = hilayout_element_node_create("div");
-    hilayout_element_node_set_id(icon1, "icon1");
 
     hilayout_element_node_append_as_last_child(caption, root);
-    hilayout_element_node_append_as_last_child(icon0, root);
-    hilayout_element_node_append_as_last_child(icon1, root);
+    hilayout_element_node_append_as_last_child(icon, root);
 
     hilayout_do_layout(&hl_media, css, root);
 
@@ -205,19 +194,12 @@ static BOOL parse_config(const char * file_name, const char * css_file, \
     text = hilayout_element_node_get_used_text_value(caption);
     global_param.font_size = text->font_size;
 
-    // icon0 
-    box = hilayout_element_node_get_used_box_value(icon0);
-    global_param.icon_rect[0].left = (int)box->x;
-    global_param.icon_rect[0].top = (int)box->y;
-    global_param.icon_rect[0].right = (int)(box->x + box->w);
-    global_param.icon_rect[0].bottom = (int)(box->y +box->h);
-
-    // icon1 
-    box = hilayout_element_node_get_used_box_value(icon1);
-    global_param.icon_rect[1].left = (int)box->x;
-    global_param.icon_rect[1].top = (int)box->y;
-    global_param.icon_rect[1].right = (int)(box->x + box->w);
-    global_param.icon_rect[1].bottom = (int)(box->y +box->h);
+    // icon 
+    box = hilayout_element_node_get_used_box_value(icon);
+    global_param.icon_rect.left = (int)box->x;
+    global_param.icon_rect.top = (int)box->y;
+    global_param.icon_rect.right = (int)(box->x + box->w);
+    global_param.icon_rect.bottom = (int)(box->y +box->h);
 
     hilayout_css_destroy(css);
 
@@ -225,10 +207,8 @@ static BOOL parse_config(const char * file_name, const char * css_file, \
         hilayout_element_node_destroy(root);
     if(caption)
         hilayout_element_node_destroy(caption);
-    if(icon0)
-        hilayout_element_node_destroy(icon0);
-    if(icon1)
-        hilayout_element_node_destroy(icon1);
+    if(icon)
+        hilayout_element_node_destroy(icon);
 
     if(css_content)
         free(css_content);
@@ -272,70 +252,71 @@ static HDC destroy_memdc_for_image_surface(HDC hdc,
     DeleteMemDC (hdc);
 }
 
-static void loadSVGFromFile(const char* file, int index)
+static void loadSVGFromFile(const char* file)
 {
     RsvgHandle *handle;
     GError *error = NULL;
     RsvgDimensionData dimensions;
     double factor_width = 0.0f;
     double factor_height = 0.0f;
-    int width = RECTWP(&global_param.icon_rect[index]);
+    int width = RECTWP(&global_param.icon_rect);
     int height = width;
 
     // read file from svg file
     handle = rsvg_handle_new_from_file(file, &error);
     if(error)
     {
-        global_param.icon_surface[index] = NULL;
-        global_param.icon_cr[index] = NULL;
+        global_param.icon_surface = NULL;
+        global_param.icon_cr = NULL;
         return;
     }
     rsvg_handle_get_dimensions(handle, &dimensions);
 
     // create cairo_surface_t and cairo_t for one picture
-    global_param.icon_surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
+    global_param.icon_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
                                                                         width, height);
     factor_width = (double)width / (double)dimensions.width;
     factor_height = (double)height / (double)dimensions.height;
-    global_param.icon_cr[index] = cairo_create(global_param.icon_surface[index]);
+    global_param.icon_cr = cairo_create(global_param.icon_surface);
 
-    cairo_save(global_param.icon_cr[index]);
+    cairo_save(global_param.icon_cr);
     factor_width = (factor_width > factor_height) ? factor_width : factor_height;
-    cairo_scale(global_param.icon_cr[index], factor_width, factor_width);
+    cairo_scale(global_param.icon_cr, factor_width, factor_width);
 
     float r = 0.0;
     float g = 0.0;
     float b = 0.0;
     float alpha = 1.0;
 
-    cairo_set_source_rgb(global_param.icon_cr[index],  r * alpha, g * alpha, b * alpha);
-    cairo_paint(global_param.icon_cr[index]);
-    rsvg_handle_render_cairo_style(handle, global_param.icon_cr[index], \
-                                            &global_param.color_pair[index], 1);
-    cairo_restore(global_param.icon_cr[index]);
+    cairo_set_source_rgb(global_param.icon_cr,  r * alpha, g * alpha, b * alpha);
+    cairo_paint(global_param.icon_cr);
+    rsvg_handle_render_cairo_style(handle, global_param.icon_cr, \
+                                            &global_param.color_pair, 1);
+    cairo_restore(global_param.icon_cr);
 
     g_object_unref (handle);
 }
 
-static void paint_svg(HWND hwnd, HDC hdc, int index)
+
+static void paint_svg(HWND hwnd, HDC hdc)
 {
     float alpha = 1.0;
-    int width = RECTWP(&global_param.icon_rect[index]);
+    int width = RECTWP(&global_param.icon_rect);
     int height = width;
 
-    HDC csdc = create_memdc_from_image_surface(global_param.icon_surface[index]);
+    HDC csdc = create_memdc_from_image_surface(global_param.icon_surface);
     if (csdc != HDC_SCREEN && csdc != HDC_INVALID)
     {
         SetMemDCColorKey(csdc, MEMDC_FLAG_SRCCOLORKEY,
                 MakeRGB(255 * alpha, 255 * alpha, 255 * alpha));
         BitBlt(csdc, 0, 0, width, height, hdc, \
-                    global_param.icon_rect[index].left, global_param.icon_rect[index].top, 0);
+                    global_param.icon_rect.left, global_param.icon_rect.top, 0);
     }
     DeleteMemDC(csdc);
     return;
 }
 
-static LRESULT ChgConfigWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     char string[MAX_NAME_LENGTH];
@@ -354,8 +335,7 @@ static LRESULT ChgConfigWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
                 DrawText (hdc, global_param.caption, strlen((char *)global_param.caption), \
                         &global_param.caption_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
-            paint_svg(hWnd, hdc, 0);
-            paint_svg(hWnd, hdc, 1);
+            paint_svg(hWnd, hdc);
 
             EndPaint (hWnd, hdc);
             return 0;
@@ -370,13 +350,8 @@ static LRESULT ChgConfigWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 
             // load svg file
             readlink("/proc/self/exe", path, HISHELL_MAX_PATH);
-            sprintf(path, "%s/res/single.svg", dirname(path));
-            loadSVGFromFile(path, 0);
-
-            memset(path, 0, HISHELL_MAX_PATH);
-            readlink("/proc/self/exe", path, HISHELL_MAX_PATH);
-            sprintf(path, "%s/res/multiple.svg", dirname(path));
-            loadSVGFromFile(path, 1);
+            sprintf(path, "%s/res/gear.svg", dirname(path));
+            loadSVGFromFile(path);
 
             if(global_param.font_size == 0)
                 global_param.font_size = CAPTION_FONT;
@@ -392,28 +367,13 @@ static LRESULT ChgConfigWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         }
             break;
 
-        case MSG_LBUTTONUP:
-        {
-            int x = LOSWORD(lParam);
-            int y = HISWORD(lParam);
-
-            if(PtInRect (&global_param.icon_rect[0], x, y))
-            {
-            }
-            else if(PtInRect (&global_param.icon_rect[1], x, y))
-            {
-            }
-
-        }
-            break;
-
         case MSG_CLOSE:
             if(hmapdc)
                 DeleteMemDC(hmapdc);
-            cairo_surface_destroy(global_param.icon_surface[0]);
-            cairo_surface_destroy(global_param.icon_surface[1]);
-            cairo_destroy(global_param.icon_cr[0]);
-            cairo_destroy(global_param.icon_cr[1]);
+
+            cairo_surface_destroy(global_param.icon_surface);
+            cairo_destroy(global_param.icon_cr);
+
             DestroyLogFont(font_caption);
 
             DestroyMainWindow (hWnd);
@@ -445,8 +405,9 @@ int MiniGUIMain (int argc, const char* argv[])
         css_file = argv[4];
 
 #ifdef _MGRM_PROCESSES
-    JoinLayer(layer , "chgconfig" , 0 , 0);
+    JoinLayer(layer , "gear" , 0 , 0);
 #endif
+    mGEffInit();
 
     CreateInfo.dwStyle = WS_VISIBLE;
     CreateInfo.dwExStyle = WS_EX_AUTOPOSITION;
@@ -454,7 +415,7 @@ int MiniGUIMain (int argc, const char* argv[])
     CreateInfo.hMenu = 0;
     CreateInfo.hCursor = GetSystemCursor(0);
     CreateInfo.hIcon = 0;
-    CreateInfo.MainWindowProc = ChgConfigWinProc;
+    CreateInfo.MainWindowProc = GearWinProc;
     CreateInfo.lx = 0;
     CreateInfo.ty = 0;
     CreateInfo.rx = g_rcScr.right;
@@ -505,6 +466,8 @@ int MiniGUIMain (int argc, const char* argv[])
 
     MainWindowThreadCleanup (hMainWnd);
     end_hibus(global_param.hibus_context);
+    mGEffDeinit();
+
     return 0;
 }
 

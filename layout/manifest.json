@@ -27,6 +27,28 @@
                                 "parameter": {"index":0}
                               }
                 }]
+        },
+        {
+            "id": "2",
+            "title": {
+                "en": "page 2",
+                "zh_CN": "gear running"
+            },
+            "windowLayoutStyles": null,
+            "runners": [
+                {
+                    "name": "gear",
+                    "type": "exec",
+                    "entry": "gear1.ini",
+                    "runas": "window, default",
+                    "class": "",
+                    "CSSFile": "gear1.css",
+                    "dependencies": ["hibusd"],
+                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
+                    "intent": {
+                                "parameter": {"index":0}
+                              }
+                }]
         }
   ]
 }

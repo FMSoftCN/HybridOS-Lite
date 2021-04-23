@@ -11,11 +11,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 /**
- * \file config.h
+ * \file hibus.c
  * \author Gengyue <gengyue@minigui.org>
  * \date 2020/09/16
  *
- * \brief This file includes some interfaces used by system manager process.
+ * \brief This file implements status bar in system manager process.
  *
  \verbatim
 
@@ -54,65 +54,80 @@
  */
 
 /*
- * $Id: config.h 13674 2020-09-16 06:45:01Z Gengyue $
+ * $Id: hibus.c 13674 2021-03-11 11:40:00Z Gengyue $
  *
  *      HybridOS for Linux, VxWorks, NuCleus, OSE.
  */
 
-#ifndef _CONFIG_H
-#define _CONFIG_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <time.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
+#include <minigui/common.h>
+#include <minigui/minigui.h>
+#include <minigui/gdi.h>
+#include <minigui/window.h>
+#include <minigui/control.h>
+#include <mgeff/mgeff.h>
+#include <hibus.h>
+#include <hibox/json.h>
 
-#include <cairo/cairo.h>
-#include <cairo/cairo-minigui.h>
+#include "../include/sysconfig.h"
+#include "config.h"
 
-#ifdef CAIRO_HAS_DRM_SURFACE
-#include <cairo/cairo-drm.h>
-#endif
+extern Global_Param global_param;
 
-#include <glib.h>
-#include <libhirsvg/rsvg.h>
-
-// for strength length
-#define MAX_NAME_LENGTH     64
-#define HISHELL_MAX_PATH    256
-
-#define CAPTION_FONT        25 
-
-// for hibus
-#define SOCKET_PATH                 "/var/tmp/hibus.sock"
-#define HIBUS_HISHELL_NAME          "cn.fmsoft.hybridos.hishell"
-
-typedef struct tag_Global_Param
+static char * quitApp(hibus_conn* conn, const char* from_endpoint, const char* to_method, const char* method_param, int *err_code)
 {
-    // caption
-    unsigned char caption[MAX_NAME_LENGTH];
-
-    // rect for element
-    RECT         caption_rect;
-    RECT         icon_rect[2];
-
-    // for draw icon
-    char button_color[2][32];
-    RsvgStylePair color_pair [2];
-    cairo_t * icon_cr[2];
-    cairo_surface_t * icon_surface[2];
-
-    // for hibus
-    hibus_conn * hibus_context;
-    HWND         main_hwnd;
-
-    // font size
-    int          font_size;
-} Global_Param;
-
-
-
-#ifdef __cplusplus
+    if(global_param.main_hwnd)
+        PostMessage(global_param.main_hwnd, MSG_CLOSE, 0, 0);
+    return NULL;
 }
-#endif  /* __cplusplus */
 
-#endif /* _CONFIG_h */
+int start_hibus(hibus_conn ** context, const char * id)
+{
+    hibus_conn * hibus_context = NULL;
+    int fd_socket = -1;
+    int ret_code = 0;
+    char runner_name[32] = {0};
+    
+    sprintf(runner_name, "gear%s", id);
+    while(ret_code < 10)
+    {
+        // connect to hibus server
+        fd_socket = hibus_connect_via_unix_socket(SOCKET_PATH, HIBUS_HISHELL_NAME, runner_name, &hibus_context);
+        if(fd_socket <= 0)
+        {
+            fprintf(stderr, "mginit hibus: connect to HIBUS server error!\n");
+            sleep(1);
+            ret_code ++;
+        }
+        else
+            break;
+    }
+
+    if(ret_code == 10)
+        return -1;
+
+    *context = hibus_context;
+
+    // register procedure
+    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_QUIT, NULL, NULL, quitApp);
+    if(ret_code)
+    {
+        fprintf(stderr, "mginit hibus: Error for register procedure %s, %s.\n", HIBUS_PROCEDURE_LAUNCHAPP, hibus_get_err_message(ret_code));
+        return -1;
+    }
+
+    return fd_socket;
+}
+
+
+void end_hibus(hibus_conn * context)
+{
+    hibus_revoke_procedure(context, HIBUS_PROCEDURE_QUIT);
+
+    hibus_disconnect(context);
+}
