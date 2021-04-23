@@ -2,7 +2,7 @@
 
 本文是 MiniGUI 社区参与中科院软件所和 openEuler 社区共同主办发起的“开源软件供应链点亮计划-暑期 2021”活动的项目说明。  
 
-![SUMMER 2021](figures/summer2021.jpeg)
+![SUMMER 2021](figures/summer2021.png)
 
 
 若希望参与项目开发，请访问如下链接获得报名指南:  
