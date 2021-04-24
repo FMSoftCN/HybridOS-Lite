@@ -90,6 +90,121 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 - 仓库：<https://github.com/FMSoftCN/hibus>
 -  hiBus 协议：<https://github.com/FMSoftCN/hybridos/blob/master/docs/design/hybridos-data-bus-zh.md>  
 
+## 合璧操作系统设备端应用通过数据总线 hiBus 操作硬件设备  
+  
+【项目标题】合璧操作系统设备端应用通过数据总线 hiBus 操作硬件设备  
+ 
+【项目描述】合璧操作系统是数据驱动的，而hiBus 是合璧操作系统提出的一个设备端数据总线技术。用户界面通过 hiBus 总线，与守护进程通信，发送指令。守护进程操作硬件设备。  
+  
+用户交互与设备操控的分离，是合璧操作系统的基本编程思想。而 hibus 总线，则将两部分有效组织起来，完成预定的功能。  
+  
+【项目难度】中  
+
+【项目社区导师】魏永明  
+
+【导师联系方式】summer2021@minigui.com  
+
+【项目产出要求】  
+- 明确硬件设备的操作，设定硬件操作的预期行为，并编写操作硬件设备的守护进程
+
+  开发者根据自己的硬件设备，明确操作设备的行为。比如 LED 的开关，或者是 GPIO 的高低。然后编写该操控该硬件的守护进程；
+
+- 定义 hiBus 数据传输协议 
+
+  使用 hibus 总线，通过用户交互界面，操作硬件设备，可以通过发送事件，或者远程过程调用的方式完成。具体使用哪种方式，由开发者自行决定。但无论哪种方式，必须首先明确 hibus 中的数据传输协议。
+
+  hibus 的数据传输协议，必须符合 hibus 规范。  
+
+- 用户交互界面应用（行者）
+
+  通过用户交互界面（基于 MiniGUI 的进程），可操控具体的硬件设备。并且在用户界面上，能用图像、图形方式，客观反映出硬件状态的变化。
+
+【项目技术要求】  
+
+- Linux开发环境及 C/C++ 编程
+- MiniGUI 
+- hibus 协议  
+
+【相关的开源软件仓库列表】  
+
+- 仓库：<https://github.com/FMSoftCN/hibus>
+-  hiBus 协议：<https://github.com/FMSoftCN/hybridos/blob/master/docs/design/hybridos-data-bus-zh.md>  
+
+## 合璧操作系统设备端，硬件设备通过 hiBus 总线与用户界面通信  
+  
+【项目标题】合璧操作系统设备端，硬件设备通过 hiBus 总线与用户界面通信  
+ 
+【项目描述】合璧操作系统是数据驱动的，而hiBus 是合璧操作系统提出的一个设备端数据总线技术。当守护进程侦知硬件设备状态发生变化时，通过 hiBus 总线向用户界面发送数据。用户界面能及时发应硬件状态的变化。  
+  
+用户交互与设备操控的分离，是合璧操作系统的基本编程思想。而 hibus 总线，则将两部分有效组织起来，完成预定的功能。  
+  
+【项目难度】中  
+
+【项目社区导师】魏永明  
+
+【导师联系方式】summer2021@minigui.com  
+
+【项目产出要求】  
+- 明确硬件设备的操作，编写硬件设备操作的守护进程
+
+  开发者根据自己的硬件设备，明确操作设备的行为。比如开发板上的按键，或者是通信串口的输入数据。然后编写该操控该硬件的守护进程；
+
+- 定义 hiBus 数据传输协议 
+
+  硬件设备状态的变化，通过 hibus 总线，发往用户界面。可以通过发送事件，或者远程过程调用的方式完成。具体使用哪种方式，由开发者自行决定。但无论哪种方式，必须首先明确 hibus 中的数据传输协议。
+
+  hibus 的数据传输协议，必须符合 hibus 规范。  
+
+- 用户交互界面应用（行者）
+
+  通过用户交互界面（基于 MiniGUI 的进程），能用图像、图形的方式，客观反映出硬件状态的变化。
+
+【项目技术要求】  
+
+- Linux开发环境及 C/C++ 编程
+- MiniGUI 
+- hibus 协议  
+
+【相关的开源软件仓库列表】  
+
+- 仓库：<https://github.com/FMSoftCN/hibus>
+-  hiBus 协议：<https://github.com/FMSoftCN/hybridos/blob/master/docs/design/hybridos-data-bus-zh.md>  
+
+## 合璧操作系统设备端基于rsvg技术的动画实现  
+  
+【项目标题】合璧操作系统设备端基于rsvg技术的动画实现  
+ 
+【项目描述】在合璧操作系统中，整合了 rsvg 矢量图形技术，消除了图像显示的毛边、锯齿，提供了更好的用户体验。利用 rsvg 和 MiniGUI 提供的 MGEFF_ANIMATION 类型，完成 rsvg 图片的动画效果。  
+  
+【项目难度】中  
+
+【项目社区导师】魏永明  
+
+【导师联系方式】summer2021@minigui.com  
+
+【项目产出要求】  
+- 使用多个 rsvg 图片，分别完成旋转、平移、缩放三种动画效果； 
+
+- 使用 mgeff 所提供的 MGEFF_ANIMATION 类型及相关操作，用以实现各帧之间的时间间隔处理；  
+
+- 两个 MiniGUI 应用程序，完成相同的动画效果，分别使用 MGEFF_ANIMATION 的同步、异步操作完成。  
+
+【项目技术要求】  
+
+- Linux开发环境及 C/C++ 编程
+- MiniGUI 
+- meeff 
+- hirsvg 
+
+
+【相关的开源软件仓库列表】  
+
+- 仓库：
+  <https://gitlab.fmsoft.cn/VincentWei/minigui.git -b rel-5-0>  
+  <https://gitlab.fmsoft.cn/VincentWei/mgeff.git -b rel-5-0>
+  <https://gitlab.fmsoft.cn/hybridos/hicairo.git -b minigui-backend>
+  <https://gitlab.fmsoft.cn/hybridos/hirsvg.git -b minigui-backend>
+
 ## HybridOS 图形栈增强
 
 【项目标题】HybridOS 图形栈增强
