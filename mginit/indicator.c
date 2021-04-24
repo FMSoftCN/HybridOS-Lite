@@ -156,21 +156,28 @@ static void paint(HWND hwnd, HDC hdc, int square_number, RECT * rect)
         HDC csdc = create_memdc_from_image_surface(surface[select]);
         if (csdc != HDC_SCREEN && csdc != HDC_INVALID)
         {
-            SetBrushColor (hdc, RGB2Pixel (hdc, BK_COLOR_R, BK_COLOR_G, BK_COLOR_B));
+            SetBrushColor (hdc, RGB2Pixel (hdc, BK_COLOR_R, BK_COLOR_G, \
+                                                            BK_COLOR_B));
             FillBox(hdc, (rect + i)->left, (rect + i)->top, \
                            RECTWP(rect + i), RECTHP(rect + i));
 
             if(select == 0)
             {
                 SetMemDCColorKey(csdc, MEMDC_FLAG_SRCCOLORKEY,
-                        MakeRGB(BK_COLOR_R * alpha, BK_COLOR_G * alpha, BK_COLOR_B * alpha));
-                BitBlt(csdc, 0, 0, SQUARE_LENGTH, SQUARE_LENGTH, hdc, (rect + i)->left, (rect + i)->top, 0);
+                                        MakeRGB(BK_COLOR_R * alpha, \
+                                                BK_COLOR_G * alpha, \
+                                                BK_COLOR_B * alpha));
+                BitBlt(csdc, 0, 0, SQUARE_LENGTH, SQUARE_LENGTH, hdc, \
+                                    (rect + i)->left, (rect + i)->top, 0);
             }
             else
             {
                 SetMemDCColorKey(csdc, MEMDC_FLAG_SRCCOLORKEY,
-                        MakeRGB(BK_COLOR_R * alpha, BK_COLOR_G * alpha, BK_COLOR_B * alpha));
-                BitBlt(csdc, 0, 0, SQUARE_LENGTH / UNSELECT_RATIO, SQUARE_LENGTH / UNSELECT_RATIO, hdc, \
+                                        MakeRGB(BK_COLOR_R * alpha, \
+                                                BK_COLOR_G * alpha, \
+                                                BK_COLOR_B * alpha));
+                BitBlt(csdc, 0, 0, SQUARE_LENGTH / UNSELECT_RATIO, \
+                                SQUARE_LENGTH / UNSELECT_RATIO, hdc, \
                                 (rect + i)->left + SQUARE_LENGTH  * (1.0 - (1.0 / (float)UNSELECT_RATIO)) / 2.0, \
                                 (rect + i)->top + SQUARE_LENGTH *  (1.0 - (1.0 / (float)UNSELECT_RATIO)) / 2.0, 0);
             }
@@ -302,13 +309,15 @@ static void loadSVGFromFile(const char* file, int index)
     // create cairo_surface_t and cairo_t for one picture
     if(index == 0)
     {
-        surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, SQUARE_LENGTH, SQUARE_LENGTH);
+        surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
+                                            SQUARE_LENGTH, SQUARE_LENGTH);
         factor_width = (double)SQUARE_LENGTH / (double)dimensions.width;
         factor_height = (double)SQUARE_LENGTH / (double)dimensions.height;
     }
     else
     {
-        surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, SQUARE_LENGTH / UNSELECT_RATIO, SQUARE_LENGTH / UNSELECT_RATIO);
+        surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
+            SQUARE_LENGTH / UNSELECT_RATIO, SQUARE_LENGTH / UNSELECT_RATIO);
         factor_width = (double)SQUARE_LENGTH / (double)dimensions.width / (double)UNSELECT_RATIO;
         factor_height = (double)SQUARE_LENGTH / (double)dimensions.height / (double)UNSELECT_RATIO;
     }
@@ -376,14 +385,16 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             readlink("/proc/self/exe", path, HISHELL_MAX_PATH);
             sprintf(path, "%s/res/circle.svg", dirname(path));
 
-            surface[0] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, (int)SQUARE_LENGTH, (int)SQUARE_LENGTH);
+            surface[0] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, \
+                                    (int)SQUARE_LENGTH, (int)SQUARE_LENGTH);
             cr[0] = cairo_create (surface[0]);
             button_color_pair[0].name = "color";
             button_color_pair[0].value = SELECT_COLOR;
             button_color_pair[0].important = 0;
             loadSVGFromFile(path, 0);
 
-            surface[1] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, (int)SQUARE_LENGTH, (int)SQUARE_LENGTH);
+            surface[1] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, \
+                                    (int)SQUARE_LENGTH, (int)SQUARE_LENGTH);
             cr[1] = cairo_create (surface[1]);
             button_color_pair[1].name = "color";
             button_color_pair[1].value = UNSELECT_COLOR;
@@ -626,7 +637,6 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
                         fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
                     }
 
-//                    InvalidateRect(hWnd, NULL, TRUE);
                     if(__os_global_struct.hTitleBar)
                         SendMessage(__os_global_struct.hTitleBar, MSG_MAINWINDOW_CHANGE, 0, 0);
                 }
@@ -716,22 +726,6 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
                     fallback_ops->transit_to_layer = old_transit_to_lay;
                     fallback_ops->refresh(cc_context);;
                 }
-#if 0
-                else
-                {
-
-                    indicator.select = i;
-                    __os_global_struct.current_page = indicator.start + i;
-                    page = find_page_by_id(__os_global_struct.current_page + 1);
-
-                    if(page)
-                    {
-                    }
-                    InvalidateRect(hWnd, NULL, TRUE);
-                    if(__os_global_struct.hTitleBar)
-                        SendMessage(__os_global_struct.hTitleBar, MSG_MAINWINDOW_CHANGE, 0, 0);
-                }
-#endif
             }
             else
             {
@@ -808,9 +802,11 @@ HWND create_indicator_bar(void)
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
 
-    __os_global_struct.hIndicatorBar = CreateMainWindowEx2 (&CreateInfo, 0L, NULL, NULL, ST_PIXEL_ARGB8888,
-                                MakeRGBA (BK_COLOR_R, BK_COLOR_G, BK_COLOR_B, BK_TRANSPARENT),
-                                CT_ALPHAPIXEL, 0xFF);
+    __os_global_struct.hIndicatorBar = CreateMainWindowEx2 (&CreateInfo, \
+                                        0L, NULL, NULL, ST_PIXEL_ARGB8888,
+                                        MakeRGBA (BK_COLOR_R, BK_COLOR_G, \
+                                                  BK_COLOR_B, BK_TRANSPARENT),\
+                                        CT_ALPHAPIXEL, 0xFF);
     if (__os_global_struct.hIndicatorBar == HWND_INVALID)
         return HWND_INVALID;
 

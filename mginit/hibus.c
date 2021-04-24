@@ -83,26 +83,29 @@
 
 extern OS_Global_struct __os_global_struct;
 
-static char * launchApp(hibus_conn* conn, const char* from_endpoint, const char* to_method, const char* method_param, int *err_code)
+static char * launchApp(hibus_conn* conn, const char* from_endpoint, \
+        const char* to_method, const char* method_param, int *err_code)
 {
     fprintf(stderr, "launch application: %s\n", method_param);
     return NULL;
 }
 
-static char * launchRunner(hibus_conn* conn, const char* from_endpoint, const char* method_name, const char* method_param, int *err_code)
+static char * launchRunner(hibus_conn* conn, const char* from_endpoint, \
+        const char* method_name, const char* method_param, int *err_code)
 {
     fprintf(stderr, "launch runner: %s\n", method_param);
     return NULL;
 }
 
-static char * configChange(hibus_conn* conn, const char* from_endpoint, const char* method_name, const char* method_param, int *err_code)
+static char * configChange(hibus_conn* conn, const char* from_endpoint, \
+        const char* method_name, const char* method_param, int *err_code)
 {
     char manifest_path[HISHELL_MAX_PATH] = {0};
     char new_path[HISHELL_MAX_PATH] = {0};
     char temp_path[HISHELL_MAX_PATH] = {0};
     page_struct * page = NULL;
     char layer_name[16];
-printf("=========================================================================== get the message\n");
+
     // change configure file
     readlink("/proc/self/exe", manifest_path, HISHELL_MAX_PATH);
     sprintf(new_path, "%s", manifest_path);
@@ -129,10 +132,13 @@ printf("========================================================================
     ServerSetTopmostLayer(page->layer);
 
     start_apps();
+
     if(__os_global_struct.hIndicatorBar)
         PostMessage(__os_global_struct.hIndicatorBar, MSG_CONFIG_CHANGE, 0, 0);
+
     if(__os_global_struct.hDescriptionBar)
         PostMessage(__os_global_struct.hDescriptionBar, MSG_CONFIG_CHANGE, 0, 0);
+
     if(__os_global_struct.hTitleBar)
         PostMessage(__os_global_struct.hTitleBar, MSG_CONFIG_CHANGE, 0, 0);
 
@@ -149,7 +155,8 @@ int start_hibus(hibus_conn ** context)
     while(ret_code < 10)
     {
         // connect to hibus server
-        fd_socket = hibus_connect_via_unix_socket(SOCKET_PATH, HIBUS_HISHELL_NAME, HIBUS_HISHELL_MGINIT_NAME, &hibus_context);
+        fd_socket = hibus_connect_via_unix_socket(SOCKET_PATH, HIBUS_HISHELL_NAME, \
+                                        HIBUS_HISHELL_MGINIT_NAME, &hibus_context);
         if(fd_socket <= 0)
         {
             fprintf(stderr, "mginit hibus: connect to HIBUS server error!\n");
@@ -164,38 +171,32 @@ int start_hibus(hibus_conn ** context)
         return -1;
 
     // register hibus procedure
-    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_LAUNCHAPP, NULL, NULL, launchApp);
+    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_LAUNCHAPP, \
+                                                            NULL, NULL, launchApp);
     if(ret_code)
     {
-        fprintf(stderr, "mginit hibus: Error for register procedure %s, %s.\n", HIBUS_PROCEDURE_LAUNCHAPP, hibus_get_err_message(ret_code));
+        fprintf(stderr, "mginit hibus: Error for register procedure %s, %s.\n", \
+                        HIBUS_PROCEDURE_LAUNCHAPP, hibus_get_err_message(ret_code));
         return -1;
     }
 
-    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_LAUNCHRUNNER, NULL, NULL, launchRunner);
+    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_LAUNCHRUNNER, \
+                                                        NULL, NULL, launchRunner);
     if(ret_code)
     {
-        fprintf(stderr, "mginit hibus: Error for register procedure %s, %s.\n", HIBUS_PROCEDURE_LAUNCHRUNNER, hibus_get_err_message(ret_code));
+        fprintf(stderr, "mginit hibus: Error for register procedure %s, %s.\n", \
+                    HIBUS_PROCEDURE_LAUNCHRUNNER, hibus_get_err_message(ret_code));
         return -1;
     }
 
-    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_CONFIG_CHANGE, NULL, NULL, configChange);
+    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_CONFIG_CHANGE, \
+                                                        NULL, NULL, configChange);
     if(ret_code)
     {
-        fprintf(stderr, "mginit hibus: Error for register procedure %s, %s.\n", HIBUS_PROCEDURE_CONFIG_CHANGE, hibus_get_err_message(ret_code));
+        fprintf(stderr, "mginit hibus: Error for register procedure %s, %s.\n", \
+                    HIBUS_PROCEDURE_CONFIG_CHANGE, hibus_get_err_message(ret_code));
         return -1;
     }
-
-#if 0
-    // subscribe hibus event
-printf("##################################### subscribe event\n");
-    endpoint = hibus_assemble_endpoint_name_alloc(HIBUS_LOCALHOST, HIBUS_HISHELL_NAME, "chgconfig0");
-    ret_code = hibus_subscribe_event(hibus_context, endpoint, HIBUS_EVENT_CONFIG_CHANGE, change_configure_handler);
-    if(ret_code)
-    {
-        fprintf(stderr, "mginit hibus: Error for subscribe event %s, %s.\n", HIBUS_EVENT_CONFIG_CHANGE, hibus_get_err_message(ret_code));
-        return -1;
-    }
-#endif
 
     *context = hibus_context;
 
@@ -211,9 +212,6 @@ void end_hibus(hibus_conn * context)
     hibus_revoke_procedure(context, HIBUS_PROCEDURE_LAUNCHRUNNER);
     hibus_revoke_procedure(context, HIBUS_PROCEDURE_LAUNCHAPP);
     hibus_revoke_procedure(context, HIBUS_PROCEDURE_CONFIG_CHANGE);
-#if 0
-    hibus_revoke_event(context, HIBUS_EVENT_CONFIG_CHANGE);
-#endif
 
     hibus_disconnect(context);
 }
