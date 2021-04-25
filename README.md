@@ -4,13 +4,15 @@ This instruction assumes that you are using Ubuntu Linux 18.04/20.04 LTS.
 
 HybridOS has two versions. One is for intricate applications with a full-featured browser. Of course the system requirement is a little higher, such as over 256M storage, and over 1G RAM. But in IoT devices, no spare resources support this version, because of the limitation of hardware. So, another version, HybridOS Lite is the best chioce.
 
-## Feature of HybridOS Lite  
+The codes in this repositroy tell you how to program applications with HybridOS Lite.
+
+## Features of HybridOS Lite  
 
 
-## Architecture of director  
+## Architecture of this directory  
 
 ```
-hybridos-lit/
+hybridos-lite/
 ├── build-lib
 │   ├── fetch-all.sh
 │   └── build-all.sh
@@ -33,11 +35,10 @@ hybridos-lit/
 │         ├── gear2.ini
 │         ├── chgconfig1.ini
 │         └── chgconfig2.ini
-├── cmake 
-└── summer2021
+└── cmake 
 ```
 
-In the feature above, only displays the key files. They are:
+In the feature above, only displays the key directories and files. They are:
 
 - `cmake/` the directory for cmake to find necessary libraries;
 - `build-lib/` the directory for building dependent library;
@@ -54,7 +55,11 @@ In the feature above, only displays the key files. They are:
     - `newconfig.json` the alternative layout file for change manifest.json;
     - `default_layout.css` contains default css for every dom element;
     - `gearx.css` css files for gear when runns with different width and height;
-    - `chgconfigx.css` css files for chgconfig when runns with different width and height;
+    - `chgconfigx.css` css files for chgconfig when runns with different width and height.
 
+## How to building the samples  
+
+
+## How to run the samples  
 
 
