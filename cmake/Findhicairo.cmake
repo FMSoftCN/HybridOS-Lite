@@ -58,7 +58,7 @@ set(HICairo_VERSION ${PC_HICAIRO_VERSION})
 find_path(HICairo_INCLUDE_DIR
     NAMES cairo.h
     HINTS ${PC_HICAIRO_INCLUDEDIR} ${PC_HICAIRO_INCLUDE_DIR}
-    PATH_SUFFIXES hicairo
+    PATH_SUFFIXES cairo
 )
 
 find_library(HICairo_LIBRARY

@@ -24,30 +24,27 @@ file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/config)
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/layout)
 
 list(APPEND HISHELL_RES_FILES
-    "${PROJECT_SOURCE_DIR}/mginit/res/circle.svg"
-    "${PROJECT_SOURCE_DIR}/chgconfig/res/single.svg"
-    "${PROJECT_SOURCE_DIR}/chgconfig/res/multiple.svg"
-    "${PROJECT_SOURCE_DIR}/gear/res/gear.svg"
+    "${PROJECT_SOURCE_DIR}/src/mginit/res/circle.svg"
+    "${PROJECT_SOURCE_DIR}/src/chgconfig/res/single.svg"
+    "${PROJECT_SOURCE_DIR}/src/chgconfig/res/multiple.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/gear.svg"
 )
 
 file(COPY ${HISHELL_RES_FILES} DESTINATION ${PROJECT_SOURCE_DIR}/bin/res)
-file(COPY "${PROJECT_SOURCE_DIR}/layout/MiniGUI.cfg" DESTINATION ${PROJECT_SOURCE_DIR}/bin)
-file(COPY "${PROJECT_SOURCE_DIR}/layout/hybridos.cfg" DESTINATION ${PROJECT_SOURCE_DIR}/bin)
-file(COPY "${PROJECT_SOURCE_DIR}/layout/manifest.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "${PROJECT_SOURCE_DIR}/layout/default_layout.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "${PROJECT_SOURCE_DIR}/layout/newconfig.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "${PROJECT_SOURCE_DIR}/layout/chgconfig1.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "${PROJECT_SOURCE_DIR}/layout/chgconfig2.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "${PROJECT_SOURCE_DIR}/layout/newconfig.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "${PROJECT_SOURCE_DIR}/layout/gear1.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "${PROJECT_SOURCE_DIR}/layout/gear2.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "${PROJECT_SOURCE_DIR}/config" DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/MiniGUI.cfg" DESTINATION ${PROJECT_SOURCE_DIR}/bin)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/hybridos.cfg" DESTINATION ${PROJECT_SOURCE_DIR}/bin)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/manifest.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/default_layout.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/newconfig.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/chgconfig1.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/chgconfig2.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/newconfig.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/gear1.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/gear2.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/config" DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
 
 # set output path
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 # set sub-directory
-add_subdirectory(mginit)
-add_subdirectory(wallpaper)
-add_subdirectory(gear)
-add_subdirectory(chgconfig)
+add_subdirectory(src)
