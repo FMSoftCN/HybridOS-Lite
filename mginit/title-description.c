@@ -84,7 +84,7 @@
 #include "../include/sysconfig.h"
 #include "config.h"
 #include "tools.h"
-#include "bar.h"
+#include "title-description.h"
 
 #define TIME_INFO_X         100
 extern OS_Global_struct __os_global_struct;

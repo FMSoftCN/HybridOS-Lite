@@ -10,15 +10,10 @@
 // https://www.fmsoft.cn/exception-list
 //
 //////////////////////////////////////////////////////////////////////////////
-/* 
-** $Id: helloworld.c 767 2009-12-08 06:42:19Z houhuihua $
+/*
+** main.c: It illustrates how to program when manifest file is changed.
 **
-** Listing 1.1
-**
-** helloworld.c: Sample program for MiniGUI Programming Guide
-**      The first MiniGUI application.
-**
-** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
+** Copyright (C) 2021 FMSoft (http://www.fmsoft.cn).
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.

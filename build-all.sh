@@ -35,7 +35,7 @@ cd ..
 git clone https://gitlab.fmsoft.cn/VincentWei/mgeff.git -b rel-5-0
 cd mgeff
 ./autogen.sh
-./configure
+./configure --disalbe-effectors
 make -j4
 sudo make install
 cd ..

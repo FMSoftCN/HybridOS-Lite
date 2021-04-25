@@ -88,7 +88,7 @@
 #include "../include/sysconfig.h"
 #include "config.h"
 #include "tools.h"
-#include "bar.h"
+#include "title-description.h"
 
 #define MAX_SQUARE      11
 #define SQUARE_INTERVAL 12

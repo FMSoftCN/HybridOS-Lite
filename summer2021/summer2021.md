@@ -1,6 +1,6 @@
 # 开源软件供应链点亮计划-暑期 2021  
 
-本文是 MiniGUI 社区参与中科院软件所和 openEuler 社区共同主办发起的“开源软件供应链点亮计划-暑期 2021”活动的项目说明。  
+本文是合璧操作系统社区参与中科院软件所和 openEuler 社区共同主办发起的“开源软件供应链点亮计划-暑期 2021”活动的项目说明。  
 
 ![SUMMER 2021](figures/summer2021.png)
 
@@ -24,7 +24,7 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 
 【项目社区导师】魏永明  
 
-【导师联系方式】summer2021@minigui.com  
+【导师联系方式】vincent@minigui.org  
 
 【项目产出要求】  
 
@@ -60,9 +60,9 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 
 【项目难度】中  
 
-【项目社区导师】魏永明  
+【项目社区导师】薛淑明  
 
-【导师联系方式】summer2021@minigui.com  
+【导师联系方式】xueshuming@minigui.org  
 
 【项目产出要求】  
 - 定义 hiBus 服务器端内置行者的接口  
@@ -100,9 +100,9 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
   
 【项目难度】中  
 
-【项目社区导师】魏永明  
+【项目社区导师】耿岳  
 
-【导师联系方式】summer2021@minigui.com  
+【导师联系方式】gengyue@minigui.org  
 
 【项目产出要求】  
 - 明确硬件设备的操作，设定硬件操作的预期行为，并编写操作硬件设备的守护进程
@@ -140,9 +140,9 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
   
 【项目难度】中  
 
-【项目社区导师】魏永明  
+【项目社区导师】耿岳  
 
-【导师联系方式】summer2021@minigui.com  
+【导师联系方式】gengyue@minigui.org  
 
 【项目产出要求】  
 - 明确硬件设备的操作，编写硬件设备操作的守护进程
@@ -178,9 +178,9 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
   
 【项目难度】中  
 
-【项目社区导师】魏永明  
+【项目社区导师】薛淑明  
 
-【导师联系方式】summer2021@minigui.com  
+【导师联系方式】xueshuming@minigui.org  
 
 【项目产出要求】  
 - 使用多个 rsvg 图片，分别完成旋转、平移、缩放三种动画效果； 
@@ -215,7 +215,7 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 
 【项目社区导师】魏永明
 
-【导师联系方式】summer2020@minigui.com
+【导师联系方式】vincent@minigui.org
 
 【项目产出要求】
    - 在现有 Mesa MiniGUI backend 的实现基础上，提供符合 EGL 规范 pixel buffer 相关接口实现。
@@ -239,9 +239,9 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 
 【项目难度】中  
 
-【项目社区导师】魏永明  
+【项目社区导师】薛淑明 
 
-【导师联系方式】summer2021@minigui.com  
+【导师联系方式】xueshuming@minigui.com  
 
 【项目产出要求】  
 
@@ -263,6 +263,34 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 - <https://github.com/VincentWei/mgncs4touch>
 - <https://github.com/VincentWei/mg-demos>  
 
+## MiniGUI 的 DRM 加速图形引擎
+
+【项目标题】MiniGUI 的 DRM 加速图形引擎
+
+【项目描述】DRM 已经成为 Linux 环境中新一代的现代图形支持框架。自 4.0 版本以来，MiniGUI 支持 DRM，但目前只提供了一个针对早期 Intel i915 芯片的加速图形引擎。该项目要求您为某个支持 DRM 且包含基础 2D 加速能力的 GPU 开发一个 MiniGUI 的 DRM 加速图形引擎。该 GPU 可以是 PC 显卡，也可以是嵌入式 SoC，如全志、瑞芯或者展讯的 SoC。
+
+【项目难度】中
+
+【项目社区导师】魏永明
+
+【导师联系方式】vincent@minigui.org
+
+【项目产出要求】
+   - 符合 MiniGUI 5.0 DRM 引擎接口的加速引擎，可编译成动态库供 MiniGUI 在运行时动态装载。
+   - 提供对显存管理、矩形填充、位块传输（Blitting）等的加速支持。
+   - 在 [hiDRMDrier](https://github.com/FMSoftCN/hidrmdrivers) 基础上完成开发工作。
+   - 继承 hiDRMDriver 使用的 MIT 许可证。
+
+【项目技术要求】
+   - Linux 环境下的 C/C++ 编程
+   - MiniGUI、Mesa 等软件
+
+【相关的开源软件仓库列表】
+   - <https://github.com/VincentWei/build-minigui-5.0>
+   - <https://github.com/VincentWei/minigui>
+   - <https://github.com/FMSoftCN/hidrmdrivers>
+   - <https://github.com/FMSoftCN/himesa>
+  
 ## 面向小屏幕智能设备的 MiniGUI 定制合成器  
 
 【项目标题】面向小屏幕智能设备的 MiniGUI 合成器  
@@ -271,9 +299,9 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 
 【项目难度】高  
 
-【项目社区导师】魏永明  
+【项目社区导师】耿岳  
 
-【导师联系方式】summer2020@minigui.com  
+【导师联系方式】gengyue@minigui.org  
 
 【项目产出要求】
    - 可在 Ubuntu 18.04 上编译运行，使用 HybridOS 图形栈中的 Cairo 或者 Mesa (OpenGL ES）作为渲染引擎，实现一个定制的 MiniGUI 5.0 合成器，可参考效果：
@@ -292,36 +320,6 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
    - <https://github.com/VincentWei/minigui>
    - <https://github.com/FMSoftCN/hicairo>
    - <https://github.com/FMSoftCN/himesa>
-  
-## MiniGUI 的 DRM 加速图形引擎
-
-【项目标题】MiniGUI 的 DRM 加速图形引擎
-
-【项目描述】DRM 已经成为 Linux 环境中新一代的现代图形支持框架。自 4.0 版本以来，MiniGUI 支持 DRM，但目前只提供了一个针对早期 Intel i915 芯片的加速图形引擎。该项目要求您为某个支持 DRM 且包含基础 2D 加速能力的 GPU 开发一个 MiniGUI 的 DRM 加速图形引擎。该 GPU 可以是 PC 显卡，也可以是嵌入式 SoC，如全志、瑞芯或者展讯的 SoC。
-
-【项目难度】中
-
-【项目社区导师】魏永明
-
-【导师联系方式】summer2020@minigui.com
-
-【项目产出要求】
-   - 符合 MiniGUI 5.0 DRM 引擎接口的加速引擎，可编译成动态库供 MiniGUI 在运行时动态装载。
-   - 提供对显存管理、矩形填充、位块传输（Blitting）等的加速支持。
-   - 在 [hiDRMDrier](https://github.com/FMSoftCN/hidrmdrivers) 基础上完成开发工作。
-   - 继承 hiDRMDriver 使用的 MIT 许可证。
-
-【项目技术要求】
-   - Linux 环境下的 C/C++ 编程
-   - MiniGUI、Mesa 等软件
-
-【相关的开源软件仓库列表】
-   - <https://github.com/VincentWei/build-minigui-5.0>
-   - <https://github.com/VincentWei/minigui>
-   - <https://github.com/FMSoftCN/hidrmdrivers>
-   - <https://github.com/FMSoftCN/himesa>
-  
-
 
 ## 参考文档
 

@@ -10,54 +10,23 @@
 // https://www.fmsoft.cn/exception-list
 //
 //////////////////////////////////////////////////////////////////////////////
-/**
- * \file hibus.c
- * \author Gengyue <gengyue@minigui.org>
- * \date 2020/09/16
- *
- * \brief This file implements status bar in system manager process.
- *
- \verbatim
-
-    This file is part of hishell, a developing operating system based on
-    MiniGUI. HybridOs will support embedded systems and smart IoT devices.
-
-    Copyright (C) 2002~2020, Beijing FMSoft Technologies Co., Ltd.
-    Copyright (C) 1998~2002, WEI Yongming
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-    Or,
-
-    As this program is a library, any link to this program must follow
-    GNU General Public License version 3 (GPLv3). If you cannot accept
-    GPLv3, you need to be licensed from FMSoft.
-
-    If you have got a commercial license of this program, please use it
-    under the terms and conditions of the commercial license.
-
-    For more information about the commercial license, please refer to
-    <http://www.minigui.com/blog/minigui-licensing-policy/>.
-
- \endverbatim
- */
-
 /*
- * $Id: hibus.c 13674 2021-03-11 11:40:00Z Gengyue $
- *
- *      HybridOS for Linux, VxWorks, NuCleus, OSE.
- */
+** hibus.c: It illustrates how to use libhibus.so.
+**
+** Copyright (C) 2021 FMSoft (http://www.fmsoft.cn).
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -79,7 +48,8 @@
 
 extern Global_Param global_param;
 
-static char * quitApp(hibus_conn* conn, const char* from_endpoint, const char* to_method, const char* method_param, int *err_code)
+static char * quitApp(hibus_conn* conn, const char* from_endpoint, const char* to_method, \
+                                                const char* method_param, int *err_code)
 {
     fprintf(stderr, "quit chgconfig: %s\n", method_param);
     if(global_param.main_hwnd)
@@ -98,7 +68,8 @@ int start_hibus(hibus_conn ** context, const char * id)
     while(ret_code < 10)
     {
         // connect to hibus server
-        fd_socket = hibus_connect_via_unix_socket(SOCKET_PATH, HIBUS_HISHELL_NAME, runner_name, &hibus_context);
+        fd_socket = hibus_connect_via_unix_socket(SOCKET_PATH, HIBUS_HISHELL_NAME, \
+                                                        runner_name, &hibus_context);
         if(fd_socket <= 0)
         {
             fprintf(stderr, "chgconfig: connect to HIBUS server error!\n");
@@ -115,10 +86,12 @@ int start_hibus(hibus_conn ** context, const char * id)
     *context = hibus_context;
 
     // register procedure
-    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_QUIT, NULL, NULL, quitApp);
+    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_QUIT, \
+                                                            NULL, NULL, quitApp);
     if(ret_code)
     {
-        fprintf(stderr, "chgconfig: Error for register procedure %s, %s.\n", HIBUS_PROCEDURE_LAUNCHAPP, hibus_get_err_message(ret_code));
+        fprintf(stderr, "chgconfig: Error for register procedure %s, %s.\n", \
+                    HIBUS_PROCEDURE_LAUNCHAPP, hibus_get_err_message(ret_code));
         return -1;
     }
 
