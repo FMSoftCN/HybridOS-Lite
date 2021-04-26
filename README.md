@@ -2,7 +2,7 @@
 
 This instruction assumes that you are using Ubuntu Linux 18.04/20.04 LTS.
 
-HybridOS has two versions. One is for intricate applications with a full-featured browser. Of course the system requirement is a little higher, such as over 256M storage, and over 1G RAM. But in IoT devices, no spare resources support this version, because of the limitation of hardware. So, another version, HybridOS Lite is the best chioce.
+HybridOS has a greate software stack to support its powerful functions. But for some simple device, such as IoT deivce, can not afford the consumption of resource, because of the limitation of hardware. So we select some libraries from HybridOS software stack, constitute HybridOS Lite, which is fit for those devices, which normally have only 64M RAM and 16M storage at the most.
 
 The codes in this repositroy tell you how to program applications with HybridOS Lite.
 
@@ -46,7 +46,7 @@ In the feature above, only displays the key directories and files. They are:
 - `cmake/` the directory for cmake to find necessary libraries;
 - `build-lib/` the directory for building dependent library;
   - `fetch-all.sh` the script for getting all source code of library;
-  - `build-all.sh` the script for building all dependent library;
+  - `build-all.sh` the script for building all dependent libraries;
 - `src/` contains source code and configure files;
   - `mginit/` The most important part of this sample. In this directory, illustrates how to parsing manifest file, how to layout in the screen, and how to control compositor. It is the core of HybridOS Lite.
   - `wallpaper/` sample code, illustrate how to build a dynamic wall paper;
@@ -114,7 +114,7 @@ $ make
 
 ## How to run HybridOS Lite  
 
-There are two terminals when runs HybridOS Lite, one is for hibusd, the other is for mginit.
+Two terminals are used, when runs HybridOS Lite. One is for hibusd, the other is for mginit.
 
 In one terminal, you should type:
 
@@ -129,15 +129,15 @@ $ cd hybridos-lite/bin
 $ ./mginit
 ```
 
-When you can see on the screen, just like the picutre below:
+Then you can see the screen, just like the picutres below:
 
-- It is chgconfig application. When you press the icons in the screen, HybridOS Lite will change a new manifest file.
+- It is chgconfig application. When you press the icons in the screen, HybridOS Lite will change a new manifest file. When you change manifest files, pay attention to the variation of indicator bar at the bottom of screen.
 ![SUMMER 2021](summer2021/figures/chgconfig.png)
 
 - It is gear application. 
 ![SUMMER 2021](summer2021/figures/gear.png)
 
-- When you change manifest file, the third screen is blow. It has 16 applications.
+- When you change manifest file, the third screen is as blow. It has 16 applications.
 ![SUMMER 2021](summer2021/figures/multi.png)
 
 - When you drag the screen, or press the dot in indicator bar, the screen will be switched between different layers.
