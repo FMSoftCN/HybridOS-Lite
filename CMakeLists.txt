@@ -32,7 +32,6 @@ list(APPEND HISHELL_RES_FILES
 
 file(COPY ${HISHELL_RES_FILES} DESTINATION ${PROJECT_SOURCE_DIR}/bin/res)
 file(COPY "${PROJECT_SOURCE_DIR}/src/layout/MiniGUI.cfg" DESTINATION ${PROJECT_SOURCE_DIR}/bin)
-file(COPY "${PROJECT_SOURCE_DIR}/src/layout/hybridos.cfg" DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 file(COPY "${PROJECT_SOURCE_DIR}/src/layout/manifest.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
 file(COPY "${PROJECT_SOURCE_DIR}/src/layout/default_layout.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
 file(COPY "${PROJECT_SOURCE_DIR}/src/layout/newconfig.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)

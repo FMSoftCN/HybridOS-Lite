@@ -54,10 +54,6 @@
 #define MSG_MAINWINDOW_CHANGE           (MSG_USER + 1)
 #define MSG_CONFIG_CHANGE               (MSG_USER + 2)
 
-// configuration file
-#define SYSTEM_CONFIG_FILE              "hybridos.cfg"  // configuration file
-
-
 typedef struct tagRequestInfo 
 {
     int id;                             // sub request ID
