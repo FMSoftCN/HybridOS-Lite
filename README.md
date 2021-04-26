@@ -10,8 +10,7 @@ The codes in this repositroy tell you how to program applications with HybridOS 
 
 - Multi-process programing mode, improve system reliability;
 - Layout with CSS properties, not only for system screen, but also for elements in applications;
-- Hibus is applied, it makes data driven possible, and separates GUI interaction from data logic;
-- HiACEJS is introduced, the user can develop simple applitions with high efficiency.
+- HiBus is applied, it makes data driven possible, and separates GUI interaction from data logic;
 
 ## Architecture of this directory  
 
@@ -107,25 +106,39 @@ $ cd ..
 1. Build HybridOS Lite:
 
 ```
-$ cmake .
+$ mkdir build
+$ cd build
+$ cmake ../
 $ make
 ```
 
-## How to run the samples  
+## How to run HybridOS Lite  
 
 There are two terminals when runs HybridOS Lite, one is for hibusd, the other is for mginit.
 
 In one terminal, you should type:
 
 ```
-$ cd hybiros-lit/build-lib/hibus/src 
+$ cd hybridos-lite/build-lib/hibus/src 
 $ sudo hibusd -d
 ```
 
 And type the command below in another terminal:
 ```
-$ cd hybiros-lit/bin 
+$ cd hybridos-lite/bin 
 $ ./mginit
 ```
 
 When you can see on the screen, just like the picutre below:
+
+- It is chgconfig application. When you press the icons in the screen, HybridOS Lite will change a new manifest file.
+![SUMMER 2021](summer2021/figures/chgconfig.png)
+
+- It is gear application. 
+![SUMMER 2021](summer2021/figures/gear.png)
+
+- When you change manifest file, the third screen is blow. It has 16 applications.
+![SUMMER 2021](summer2021/figures/multi.png)
+
+- When you drag the screen, or press the dot in indicator bar, the screen will be switched between different layers.
+![SUMMER 2021](summer2021/figures/drag.png)

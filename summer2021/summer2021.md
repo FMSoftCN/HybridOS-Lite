@@ -105,9 +105,9 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 【导师联系方式】gengyue@minigui.org  
 
 【项目产出要求】  
-- 明确硬件设备的操作，设定硬件操作的预期行为，并编写操作硬件设备的守护进程
+- 明确硬件设备的操作，设定硬件操作的预期行为，并编写操作硬件设备的守护进程  
 
-  开发者根据自己的硬件设备，明确操作设备的行为。比如 LED 的开关，或者是 GPIO 的高低。然后编写该操控该硬件的守护进程；
+  开发者根据自己的硬件设备，明确操作设备的行为。比如 LED 的开关，或者是 GPIO 的高低。然后编写该操控该硬件的守护进程。  
 
 - 定义 hiBus 数据传输协议 
 
@@ -147,7 +147,7 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 【项目产出要求】  
 - 明确硬件设备的操作，编写硬件设备操作的守护进程
 
-  开发者根据自己的硬件设备，明确操作设备的行为。比如开发板上的按键，或者是通信串口的输入数据。然后编写该操控该硬件的守护进程；
+  开发者根据自己的硬件设备，明确操作设备的行为。比如开发板上的按键，或者是通信串口的输入数据。然后编写该操控该硬件的守护进程。
 
 - 定义 hiBus 数据传输协议 
 
@@ -183,9 +183,9 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 【导师联系方式】xueshuming@minigui.org  
 
 【项目产出要求】  
-- 使用多个 rsvg 图片，分别完成旋转、平移、缩放三种动画效果； 
+- 使用多个 rsvg 图片，分别完成旋转、平移、缩放三种动画效果。 
 
-- 使用 mgeff 所提供的 MGEFF_ANIMATION 类型及相关操作，用以实现各帧之间的时间间隔处理；  
+- 使用 mgeff 所提供的 MGEFF_ANIMATION 类型及相关操作，用以实现各帧之间的时间间隔处理。  
 
 - 两个 MiniGUI 应用程序，完成相同的动画效果，分别使用 MGEFF_ANIMATION 的同步、异步操作完成。  
 
@@ -196,14 +196,11 @@ hiBus 为客户端提供了 Unix Domain Socket 和 WebSocket 两种连接方式�
 - meeff 
 - hirsvg 
 
-
 【相关的开源软件仓库列表】  
-
-- 仓库：
-  <https://gitlab.fmsoft.cn/VincentWei/minigui.git -b rel-5-0>  
-  <https://gitlab.fmsoft.cn/VincentWei/mgeff.git -b rel-5-0>
-  <https://gitlab.fmsoft.cn/hybridos/hicairo.git -b minigui-backend>
-  <https://gitlab.fmsoft.cn/hybridos/hirsvg.git -b minigui-backend>
+   - <https://gitlab.fmsoft.cn/VincentWei/minigui.git -b rel-5-0>  
+   - <https://gitlab.fmsoft.cn/VincentWei/mgeff.git -b rel-5-0>
+   - <https://gitlab.fmsoft.cn/hybridos/hicairo.git -b minigui-backend>
+   - <https://gitlab.fmsoft.cn/hybridos/hirsvg.git -b minigui-backend>
 
 ## HybridOS 图形栈增强
 
