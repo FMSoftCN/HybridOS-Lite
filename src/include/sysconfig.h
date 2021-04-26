@@ -31,11 +31,18 @@
 #ifndef _SYSTEM_CONFIG
 #define _SYSTEM_CONFIG
 
+// for hibus
+#define SOCKET_PATH                     "/var/tmp/hibus.sock"
+#define HIBUS_HISHELL_NAME              "cn.fmsoft.hybridos.hishell"
+#define HIBUS_HISHELL_MGINIT_NAME       "mginit"
+
 // for hibus, remote procedure
 #define HIBUS_PROCEDURE_CONFIG_CHANGE   "configChange"
-#define HIBUS_PROCEDURE_QUIT            "quitApp"
 #define HIBUS_PROCEDURE_LAUNCHAPP       "launchApp"
 #define HIBUS_PROCEDURE_LAUNCHRUNNER    "launchRunner"
+
+// for hibus, remote procedure
+#define HIBUS_EVENT_APP_QUIT            "APPQUITEVENT"
 
 // Customer Require Id
 #define FORMAT_REQID                    (MAX_SYS_REQID + 1)

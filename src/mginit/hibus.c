@@ -119,7 +119,6 @@ int start_hibus(hibus_conn ** context)
     hibus_conn * hibus_context = NULL;
     int fd_socket = -1;
     int ret_code = 0;
-    char * endpoint = NULL;
     
     while(ret_code < 10)
     {
@@ -167,10 +166,16 @@ int start_hibus(hibus_conn ** context)
         return -1;
     }
 
-    *context = hibus_context;
+    // register hibus event
+    ret_code = hibus_register_event(hibus_context, HIBUS_EVENT_APP_QUIT, NULL, NULL);
+    if(ret_code)
+    {
+        fprintf(stderr, "mginit hibus: Error for register event %s, %s.\n", HIBUS_EVENT_APP_QUIT, hibus_get_err_message(ret_code));
+        return -1;
+    }
 
-    if(endpoint)
-        free(endpoint);
+
+    *context = hibus_context;
 
     return fd_socket;
 }
@@ -181,6 +186,8 @@ void end_hibus(hibus_conn * context)
     hibus_revoke_procedure(context, HIBUS_PROCEDURE_LAUNCHRUNNER);
     hibus_revoke_procedure(context, HIBUS_PROCEDURE_LAUNCHAPP);
     hibus_revoke_procedure(context, HIBUS_PROCEDURE_CONFIG_CHANGE);
+
+    hibus_revoke_event(context, HIBUS_EVENT_APP_QUIT);
 
     hibus_disconnect(context);
 }

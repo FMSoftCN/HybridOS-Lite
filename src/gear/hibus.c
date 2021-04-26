@@ -48,12 +48,13 @@
 
 extern Global_Param global_param;
 
-static char * quitApp(hibus_conn* conn, const char* from_endpoint, const char* to_method, \
-                                                const char* method_param, int *err_code)
+static void quitApp(hibus_conn* conn, const char* from_endpoint, const char* bubble_name, \
+                                                                const char* bubble_data)
 {
+    fprintf(stderr, "quit gear: %s\n", bubble_data);
     if(global_param.main_hwnd)
         PostMessage(global_param.main_hwnd, MSG_CLOSE, 0, 0);
-    return NULL;
+    return;
 }
 
 int start_hibus(hibus_conn ** context, const char * id)
@@ -62,6 +63,7 @@ int start_hibus(hibus_conn ** context, const char * id)
     int fd_socket = -1;
     int ret_code = 0;
     char runner_name[32] = {0};
+    char * endpoint = NULL;
     
     sprintf(runner_name, "gear%s", id);
     while(ret_code < 10)
@@ -82,17 +84,21 @@ int start_hibus(hibus_conn ** context, const char * id)
     if(ret_code == 10)
         return -1;
 
-    *context = hibus_context;
 
-    // register procedure
-    ret_code = hibus_register_procedure(hibus_context, HIBUS_PROCEDURE_QUIT, NULL, \
-                                                                    NULL, quitApp);
+    // subscribe hibus event
+    endpoint = hibus_assemble_endpoint_name_alloc(HIBUS_LOCALHOST, HIBUS_HISHELL_NAME, \
+                                                                HIBUS_HISHELL_MGINIT_NAME);
+    ret_code = hibus_subscribe_event(hibus_context, endpoint, HIBUS_EVENT_APP_QUIT, quitApp);
     if(ret_code)
     {
-        fprintf(stderr, "mginit hibus: Error for register procedure %s, %s.\n", \
-                        HIBUS_PROCEDURE_LAUNCHAPP, hibus_get_err_message(ret_code));
+        fprintf(stderr, "gear: Error for subscribe event %s, %s.\n", \
+                    HIBUS_EVENT_APP_QUIT, hibus_get_err_message(ret_code));
         return -1;
     }
+
+    if(endpoint)
+        free(endpoint);
+    *context = hibus_context;
 
     return fd_socket;
 }
@@ -100,7 +106,5 @@ int start_hibus(hibus_conn ** context, const char * id)
 
 void end_hibus(hibus_conn * context)
 {
-    hibus_revoke_procedure(context, HIBUS_PROCEDURE_QUIT);
-
     hibus_disconnect(context);
 }

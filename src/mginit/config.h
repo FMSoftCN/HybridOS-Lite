@@ -72,11 +72,6 @@ extern "C" {
 #define HISHELL_MAX_PATH            (256)
 #define STYLE_LENGTH                (512)
 
-// for hibus
-#define SOCKET_PATH                 "/var/tmp/hibus.sock"
-#define HIBUS_HISHELL_NAME          "cn.fmsoft.hybridos.hishell"
-#define HIBUS_HISHELL_MGINIT_NAME   "mginit"
-
 typedef enum
 {
     SCREEN_ANIMATION_HORIZENTAL,
