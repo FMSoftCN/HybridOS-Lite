@@ -8,6 +8,10 @@ The codes in this repositroy tell you how to program applications with HybridOS 
 
 ## Features of HybridOS Lite  
 
+- Multi-process programing mode, improve system reliability;
+- Layout with CSS properties, not only for system screen, but also for elements in applications;
+- Hibus is applied, it makes data driven possible, and separates GUI interaction from data logic;
+- HiACEJS is introduced, the user can develop simple applitions with high efficiency.
 
 ## Architecture of this directory  
 
@@ -59,7 +63,69 @@ In the feature above, only displays the key directories and files. They are:
 
 ## How to building the samples  
 
+### Prerequisites
+
+You should run `apt install <package_name>` to install the following packages on your Ubuntu Linux.
+
+* Building tools:
+   * git
+   * gcc/g++
+   * binutils
+   * autoconf/automake
+   * libtool
+   * make
+   * cmake
+   * pkg-config
+   * gtk-doc-tools
+* Dependent libraries:
+   * libgtk2.0-dev
+   * libjpeg-dev
+   * libpng-dev (libpng12-dev on Ubuntu Linux 16.04 instead)
+   * libfreetype6-dev
+   * libinput-dev
+   * libdrm-dev
+   * libsqlite3-dev
+   * libxml2-dev
+   * libssl1.0-dev
+
+You can run the following commands to install all above software packages on Ubuntu 18.04/20.04:
+
+1. Clone this repo from websites:
+
+```
+$ cd hybridos-lite/build-lib
+$ ./fetch-all.sh
+```
+
+1. Build all dependent libraries:
+
+```
+$ ./build-all.sh
+$ cd ..
+```
+
+1. Build HybridOS Lite:
+
+```
+$ cmake .
+$ make
+```
 
 ## How to run the samples  
 
+There are two terminals when runs HybridOS Lite, one is for hibusd, the other is for mginit.
 
+In one terminal, you should type:
+
+```
+$ cd hybiros-lit/build-lib/hibus/src 
+$ sudo hibusd -d
+```
+
+And type the command below in another terminal:
+```
+$ cd hybiros-lit/bin 
+$ ./mginit
+```
+
+When you can see on the screen, just like the picutre below:
