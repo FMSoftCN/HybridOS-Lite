@@ -256,7 +256,7 @@ Page 2:
 
 在目前的 `HybridOS Lite` 版本中，`CSS` 只支持两级布局。也即屏幕为第一级，页为第二级。
 
-### 用户 `CSS` 文件
+### 用户 CSS 文件
 
 在应用程序中，`GUI` 是由一个个元素（Element）构成的。元素可以是一段文字、一个图标，或者一个控件。下面以 `chgconfig1.css` 为例进行说明。
 
@@ -353,6 +353,8 @@ Page 2:
 - `-d config_file_name`：该参数为一字符串，可选。该参数即是在 `manifest.json` 文件中 `entry` 中的 `-d` 部分，表明该应用使用的用户数据文件；
 
 - `-c css_file_name`：该参数为一字符串，可选。该参数即是在 `manifest.json` 文件中 `entry` 中的 `-c` 部分，表明该应用使用的 `CSS` 文件；
+
+- 其他参数：用户在 `manifest.json` 文件中 `entry` 中定义的其他参数，由应用程序自行解析处理。
 
 ### 应用程序的布局
 
