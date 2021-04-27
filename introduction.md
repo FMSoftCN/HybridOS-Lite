@@ -142,13 +142,16 @@ Page 2:
 
 通过点击 `Indicator Bar` 中的页选择器，或者用鼠标在 `Page Area` 中的拖拽，可在各个页之间进行切换。实际效果如下图。
 
-页1，只包含一个 `GUI` 应用:
+页1，只包含一个 `GUI` 应用:  
+
 ![change configuration](summer2021/figures/chgconfig.png)
 
-页2，包含了16个 `GUI` 应用:
+页2，包含了16个 `GUI` 应用:  
+
 ![with multiple applications](summer2021/figures/multi.png)
 
-鼠标拖拽，进行页切换
+鼠标拖拽，进行页切换:  
+
 ![drag the mouse](summer2021/figures/drag.png)
 
 
@@ -180,6 +183,7 @@ Page 2:
 做为示例，在本代码中，合成器只完成了页切换时的缩放效果（点击页选择器），页切换时的动画效果（拖拽鼠标）。
 
 缩放效果如下：
+
 ![zoom in](summer2021/figures/compositor.png)
 
 
