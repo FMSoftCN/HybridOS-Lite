@@ -307,8 +307,6 @@ void end_apps(void)
                 sprintf(runner_name, "%s%d", runner->name, runner->hibus_id);
                 endpoint = hibus_assemble_endpoint_name_alloc(HIBUS_LOCALHOST, HIBUS_HISHELL_NAME, runner_name);
                 hibus_fire_event(__os_global_struct.hibus_context, HIBUS_EVENT_APP_QUIT, "{\"command\":\"quit\"}");
-//                hibus_call_procedure(__os_global_struct.hibus_context, endpoint, HIBUS_PROCEDURE_QUIT, "{\"device\":\"wlp5s0\"}", 1000, quit_handler);
-//                kill(runner->pid, SIGTERM);
             }
 
             if(runner->name)
