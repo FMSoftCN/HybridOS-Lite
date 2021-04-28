@@ -174,6 +174,7 @@ static void animated_cb(MGEFF_ANIMATION handle, HWND hWnd, int id, int *value)
 
     if(*value != param->current)
     {
+        param->current = *value;
         param->cpf.percent =  *value * 100 / param->end;
         param->fallback_ops->composite_layers(cc_context, param->layers, 2, &(param->cpf));
     }
