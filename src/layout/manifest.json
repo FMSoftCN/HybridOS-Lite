@@ -35,7 +35,7 @@
                 {
                     "name": "gear",
                     "type": "exec",
-                    "entry": "gear -d gear1.ini -c gear1.css",
+                    "entry": "gear -d gear1.ini -c gear1.css -p gear.svg",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],

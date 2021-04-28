@@ -53,6 +53,7 @@
 Global_Param global_param;
 static char config_file[HISHELL_MAX_PATH] = {0};
 static char css_file[HISHELL_MAX_PATH] = {0};
+static char svg_file[HISHELL_MAX_PATH] = {0};
 
 // get css file content
 static char * get_file_content(char * path, int *length)
@@ -121,9 +122,10 @@ static BOOL parse_config(int width, int height)
 
         if((access(file_path, F_OK | R_OK)) != 0)
             return FALSE;
-        memset(global_param.caption, 0, MAX_NAME_LENGTH);
-        GetValueFromEtcFile(file_path, "AppConfigData", "caption", \
-                                    global_param.caption, MAX_NAME_LENGTH);
+
+        if(global_param.caption[0] == 0)
+            GetValueFromEtcFile(file_path, "AppConfigData", "caption", \
+                                        global_param.caption, MAX_NAME_LENGTH);
 
         memset(global_param.button_color, 0, 32);
         if(GetValueFromEtcFile(file_path, "AppConfigData", "icon_color", \
@@ -324,7 +326,7 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
             SetTextColor (hdc, DWORD2Pixel (hdc, 0xFFFFFFFF));
             SetBkMode (hdc, BM_TRANSPARENT);
             SelectFont(hdc, font_caption);
-            if(global_param.caption)
+            if(global_param.caption[0])
                 DrawText (hdc, global_param.caption, strlen((char *)global_param.caption), \
                         &global_param.caption_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
@@ -343,7 +345,10 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
             // load svg file
             readlink("/proc/self/exe", path, HISHELL_MAX_PATH);
-            sprintf(path, "%s/res/gear.svg", dirname(path));
+            if(svg_file[0])
+                sprintf(path, "%s/res/%s", dirname(path), svg_file);
+            else
+                sprintf(path, "%s/res/gear.svg", dirname(path));
             loadSVGFromFile(path);
 
             if(global_param.font_size == 0)
@@ -387,7 +392,12 @@ int MiniGUIMain (int argc, const char* argv[])
     int fd_hibus = -1;
     int opt;
 
-    while((opt = getopt(argc, (char *const *)argv, "l:b:d:c:"))!= -1)
+    if(argc < 3)
+        return 1;
+
+    memset(&global_param, 0, sizeof(Global_Param));
+
+    while((opt = getopt(argc, (char *const *)argv, "l:b:d:c:p:t:"))!= -1)
     {
         switch(opt)
         {
@@ -403,18 +413,18 @@ int MiniGUIMain (int argc, const char* argv[])
             case 'c':           // css file
                 sprintf(css_file, "%s", optarg);
                 break;
+            case 'p':           // picture file
+                sprintf(svg_file, "%s", optarg);
+                break;
+            case 't':
+                sprintf(global_param.caption, "%s", optarg);
+                break;
         }
     }
-
-    memset(&global_param, 0, sizeof(Global_Param));
-
-    if(argc < 3)
-        return 1;
 
 #ifdef _MGRM_PROCESSES
     JoinLayer(layer , "gear" , 0 , 0);
 #endif
-    mGEffInit();
 
     CreateInfo.dwStyle = WS_VISIBLE;
     CreateInfo.dwExStyle = WS_EX_AUTOPOSITION;
@@ -473,7 +483,6 @@ int MiniGUIMain (int argc, const char* argv[])
 
     MainWindowThreadCleanup (hMainWnd);
     end_hibus(global_param.hibus_context);
-    mGEffDeinit();
 
     return 0;
 }

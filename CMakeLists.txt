@@ -28,6 +28,20 @@ list(APPEND HISHELL_RES_FILES
     "${PROJECT_SOURCE_DIR}/src/chgconfig/res/single.svg"
     "${PROJECT_SOURCE_DIR}/src/chgconfig/res/multiple.svg"
     "${PROJECT_SOURCE_DIR}/src/gear/res/gear.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/cool.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/heat.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/dry.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/switch.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/windcircle.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/windnature.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/windlittle.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/light.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/health.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/speedhigh.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/speedmid.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/speedlow.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/left.svg"
+    "${PROJECT_SOURCE_DIR}/src/gear/res/up.svg"
 )
 
 file(COPY ${HISHELL_RES_FILES} DESTINATION ${PROJECT_SOURCE_DIR}/bin/res)

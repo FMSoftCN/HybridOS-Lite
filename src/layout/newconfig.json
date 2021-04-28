@@ -53,7 +53,7 @@
                 {
                     "name": "gear2",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p cool.svg -t 制冷",
                     "runas": "window, default",
                     "class": "",
                     "CSSFile": "gear2.css",
@@ -61,27 +61,27 @@
                     "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:1; grid-row-end:2;"
                 },
                 {
-                    "name": "chgconfig2",
+                    "name": "gear3",
                     "type": "exec",
-                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p heat.svg -t 制热",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:1; grid-row-end:2;"
                 },
                 {
-                    "name": "gear3",
+                    "name": "gear4",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p dry.svg -t 抽湿",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:1; grid-row-end:2;"
                 },
                 {
-                    "name": "chgconfig3",
+                    "name": "gear5",
                     "type": "exec",
-                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p switch.svg -t 开关",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
@@ -89,36 +89,36 @@
                 },
                 
                 {
-                    "name": "chgconfig4",
+                    "name": "gear6",
                     "type": "exec",
-                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p windcircle.svg -t 摆动风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:2; grid-row-end:3;"
                 },
                 {
-                    "name": "gear4",
+                    "name": "gear7",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p windlittle.svg -t 直吹",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:2; grid-row-end:3;"
                 },
                 {
-                    "name": "chgconfig5",
+                    "name": "gear8",
                     "type": "exec",
-                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p windnature.svg -t 自然风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:2; grid-row-end:3;"
                 },
                 {
-                    "name": "gear5",
+                    "name": "gear9",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p light.svg -t 屏幕灯光",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
@@ -126,36 +126,36 @@
                 },
                 
                 {
-                    "name": "gear6",
+                    "name": "gear10",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p speedhigh.svg -t 风速高",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:3; grid-row-end:4;"
                 },
                 {
-                    "name": "chgconfig6",
+                    "name": "gear11",
                     "type": "exec",
-                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p speedmid.svg -t 风速中",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:3; grid-row-end:4;"
                 },
                 {
-                    "name": "gear7",
+                    "name": "gear12",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p speedlow.svg -t 风速低",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:3; grid-row-end:4;"
                 },
                 {
-                    "name": "chgconfig7",
+                    "name": "gear13",
                     "type": "exec",
-                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p health.svg -t 智能风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
@@ -163,36 +163,36 @@
                 },
 
                 {
-                    "name": "chgconfig8",
+                    "name": "gear14",
                     "type": "exec",
-                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p left.svg -t 左右扫风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:4; grid-row-end:5;"
                 },
                 {
-                    "name": "gear8",
+                    "name": "gear15",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p up.svg -t 上下扫风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:4; grid-row-end:5;"
                 },
                 {
-                    "name": "chgconfig9",
+                    "name": "gear16",
                     "type": "exec",
-                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
+                    "entry": "gear -d gear2.ini -c gear2.css -p gear.svg -t 空调自检",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:4; grid-row-end:5;"
                 },
                 {
-                    "name": "gear9",
+                    "name": "chgconfig9",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css",
+                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],

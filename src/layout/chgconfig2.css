@@ -5,8 +5,8 @@
     left: 5%; 
     top: 10%; 
     width: 90%; 
-    height: 10%; 
-    font-size:20px;
+    height: 20%; 
+    font-size:25px;
 }
 
 #icon0
@@ -14,7 +14,7 @@
     display:inline-block; 
     position: relative; 
     left: 26%; 
-    top: 35%; 
+    top: 30%; 
     width: 16%; 
     height: 16%;
 }
@@ -24,7 +24,7 @@
     display:inline-block; 
     position: relative; 
     left: 42%; 
-    top: 35%; 
+    top: 30%; 
     width: 16%; 
     height: 16%;
 }

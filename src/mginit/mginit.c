@@ -174,13 +174,11 @@ int MiniGUIMain (int args, const char* arg[])
 
     
     // step 6: start wallpaper and 3 windows
-#if 0
     __os_global_struct.pid_wallpaper = exec_hishell_app("wallpaper");
     if(__os_global_struct.pid_wallpaper < 0)
     {
         return 3;
     }
-#endif
 
     // create title, description, indicator bar
     if(create_title_bar () == HWND_INVALID)
