@@ -28,14 +28,14 @@
             "id": "2",
             "title": {
                 "en": "page 2",
-                "zh_CN": "gear running"
+                "zh_CN": "svg example"
             },
             "windowLayoutStyles": null,
             "runners": [
                 {
-                    "name": "gear",
+                    "name": "svgshow",
                     "type": "exec",
-                    "entry": "gear -d gear1.ini -c gear1.css -p gear.svg",
+                    "entry": "svgshow -d svgshow1.ini -c svgshow1.css -p gear.svg",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],

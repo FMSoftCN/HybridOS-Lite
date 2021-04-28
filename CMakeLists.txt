@@ -27,21 +27,21 @@ list(APPEND HISHELL_RES_FILES
     "${PROJECT_SOURCE_DIR}/src/mginit/res/circle.svg"
     "${PROJECT_SOURCE_DIR}/src/chgconfig/res/single.svg"
     "${PROJECT_SOURCE_DIR}/src/chgconfig/res/multiple.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/gear.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/cool.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/heat.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/dry.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/switch.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/windcircle.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/windnature.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/windlittle.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/light.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/health.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/speedhigh.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/speedmid.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/speedlow.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/left.svg"
-    "${PROJECT_SOURCE_DIR}/src/gear/res/up.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/gear.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/cool.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/heat.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/dry.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/switch.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/windcircle.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/windnature.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/windlittle.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/light.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/health.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/speedhigh.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/speedmid.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/speedlow.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/left.svg"
+    "${PROJECT_SOURCE_DIR}/src/svgshow/res/up.svg"
 )
 
 file(COPY ${HISHELL_RES_FILES} DESTINATION ${PROJECT_SOURCE_DIR}/bin/res)
@@ -52,8 +52,8 @@ file(COPY "${PROJECT_SOURCE_DIR}/src/layout/newconfig.json" DESTINATION ${PROJEC
 file(COPY "${PROJECT_SOURCE_DIR}/src/layout/chgconfig1.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
 file(COPY "${PROJECT_SOURCE_DIR}/src/layout/chgconfig2.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
 file(COPY "${PROJECT_SOURCE_DIR}/src/layout/newconfig.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "${PROJECT_SOURCE_DIR}/src/layout/gear1.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
-file(COPY "${PROJECT_SOURCE_DIR}/src/layout/gear2.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/svgshow1.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/svgshow2.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
 file(COPY "${PROJECT_SOURCE_DIR}/src/config" DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
 
 # set output path

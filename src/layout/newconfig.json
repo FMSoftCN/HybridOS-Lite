@@ -10,14 +10,14 @@
             "id": "1",
             "title": {
                 "en": "page 1",
-                "zh_CN": "gear"
+                "zh_CN": "svg example"
             },
             "windowLayoutStyles": null,
             "runners": [
                 {
-                    "name": "gear1",
+                    "name": "svgshow1",
                     "type": "exec",
-                    "entry": "gear -d gear1.ini -c gear1.css",
+                    "entry": "svgshow -d svgshow1.ini -c svgshow1.css",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
@@ -51,37 +51,37 @@
             "windowLayoutStyles": "display: grid; grid-template-columns: 25% 25% 25% 25%; grid-template-rows: 25% 25% 25% 25%; width: 100%; height: 90%",
             "runners": [
                 {
-                    "name": "gear2",
+                    "name": "svgshow2",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p cool.svg -t 制冷",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p cool.svg -t 制冷",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "gear2.css",
+                    "CSSFile": "svgshow2.css",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:1; grid-row-end:2;"
                 },
                 {
-                    "name": "gear3",
+                    "name": "svgshow3",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p heat.svg -t 制热",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p heat.svg -t 制热",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:1; grid-row-end:2;"
                 },
                 {
-                    "name": "gear4",
+                    "name": "svgshow4",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p dry.svg -t 抽湿",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p dry.svg -t 抽湿",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:1; grid-row-end:2;"
                 },
                 {
-                    "name": "gear5",
+                    "name": "svgshow5",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p switch.svg -t 开关",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p switch.svg -t 开关",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
@@ -89,36 +89,36 @@
                 },
                 
                 {
-                    "name": "gear6",
+                    "name": "svgshow6",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p windcircle.svg -t 摆动风",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p windcircle.svg -t 摆动风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:2; grid-row-end:3;"
                 },
                 {
-                    "name": "gear7",
+                    "name": "svgshow7",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p windlittle.svg -t 直吹",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p windlittle.svg -t 直吹",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:2; grid-row-end:3;"
                 },
                 {
-                    "name": "gear8",
+                    "name": "svgshow8",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p windnature.svg -t 自然风",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p windnature.svg -t 自然风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:2; grid-row-end:3;"
                 },
                 {
-                    "name": "gear9",
+                    "name": "svgshow9",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p light.svg -t 屏幕灯光",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p light.svg -t 屏幕灯光",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
@@ -126,36 +126,36 @@
                 },
                 
                 {
-                    "name": "gear10",
+                    "name": "svgshow10",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p speedhigh.svg -t 风速高",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p speedhigh.svg -t 风速高",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:3; grid-row-end:4;"
                 },
                 {
-                    "name": "gear11",
+                    "name": "svgshow11",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p speedmid.svg -t 风速中",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p speedmid.svg -t 风速中",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:3; grid-row-end:4;"
                 },
                 {
-                    "name": "gear12",
+                    "name": "svgshow12",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p speedlow.svg -t 风速低",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p speedlow.svg -t 风速低",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:3; grid-row-end:4;"
                 },
                 {
-                    "name": "gear13",
+                    "name": "svgshow13",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p health.svg -t 智能风",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p health.svg -t 智能风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
@@ -163,27 +163,27 @@
                 },
 
                 {
-                    "name": "gear14",
+                    "name": "svgshow14",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p left.svg -t 左右扫风",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p left.svg -t 左右扫风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:4; grid-row-end:5;"
                 },
                 {
-                    "name": "gear15",
+                    "name": "svgshow15",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p up.svg -t 上下扫风",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p up.svg -t 上下扫风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
                     "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:4; grid-row-end:5;"
                 },
                 {
-                    "name": "gear16",
+                    "name": "svgshow16",
                     "type": "exec",
-                    "entry": "gear -d gear2.ini -c gear2.css -p gear.svg -t 空调自检",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p gear.svg -t 空调自检",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
