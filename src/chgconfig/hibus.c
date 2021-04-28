@@ -57,7 +57,7 @@ static void quitApp(hibus_conn* conn, const char* from_endpoint, const char* bub
     return;
 }
 
-int start_hibus(hibus_conn ** context, const char * id)
+int start_hibus(hibus_conn ** context, const char * name)
 {
     hibus_conn * hibus_context = NULL;
     int fd_socket = -1;
@@ -65,7 +65,7 @@ int start_hibus(hibus_conn ** context, const char * id)
     char runner_name[32] = {0};
     char * endpoint = NULL;
     
-    sprintf(runner_name, "chgconfig%s", id);
+    sprintf(runner_name, "%s", name);
     while(ret_code < 10)
     {
         // connect to hibus server

@@ -217,19 +217,68 @@ int find_clientId_by_pid(pid_t pid)
     return i;
 }
 
-static pid_t exec_lite_runner(char * app, char* layer, char * hibus_id, char* entry, char * css_file)
+static pid_t exec_lite_runner(char * entry, char* name, char * layer)
 {
     pid_t pid = 0;
     char buff [PATH_MAX + NAME_MAX + 1] = {0};
     char execPath[PATH_MAX + 1];
+    char * param[100];
+    int length = 0;
+
+    if((entry == NULL) || (name == NULL) || (layer == NULL))
+        return -1;
 
     if ((pid = vfork ()) > 0) {
         fprintf (stderr, "new child, pid: %d.\n", pid);
     }
-    else if (pid == 0) {
+    else if (pid == 0) 
+    {
+        char * temp = NULL;
+        char * temp1 = NULL;
+        int n = 0;
+        
+        length = strlen(entry);
+        temp1 = entry;
+        temp = strchr(temp1, ' ');
+
+        while(temp)
+        {
+            if(temp == temp1)       // it is space
+            {
+                if((temp - entry) >= length)
+                    break;
+                else
+                    temp1 = temp + 1;
+            }
+            else
+            {
+                param[n] = malloc((temp - temp1) * sizeof(char) + 1);
+                snprintf(param[n], (temp - temp1) + 1, "%s", temp1);
+                n ++;
+
+                if((temp - entry) >= length)
+                    break;
+
+                temp1 = temp + 1;
+            }
+            temp = strchr(temp1, ' ');
+            if(temp == NULL)
+            {
+                param[n] = malloc(strlen(temp1) * sizeof(char) + 1);
+                sprintf(param[n], "%s", temp1);
+                n ++;
+                break;
+            }
+        }
+        param[n++] = "-b";
+        param[n++] = name;
+        param[n++] = "-l";
+        param[n++] = layer;
+        param[n] = NULL;
+
         readlink("/proc/self/exe", buff, PATH_MAX + NAME_MAX + 1);
-        sprintf(buff, "%s/%s", dirname(buff), app);
-        execl (buff, app, layer, hibus_id, entry, css_file, NULL);
+        sprintf(buff, "%s/%s", dirname(buff), param[0]);
+        execv (buff, param);
         perror ("execl");
         _exit (1);
     }
@@ -246,12 +295,10 @@ static int quit_handler(hibus_conn* conn, const char* from_endpoint, const char*
 
 void start_apps()
 {
-    int hibus_id = 0;
     int id = 0;
     page_struct * page = __os_global_struct.page;
     runner_struct * runner = NULL;
     char layer[16] = {0};
-    char hibus[16] = {0};
 
     while(page)
     {
@@ -262,11 +309,8 @@ void start_apps()
         {
             if(runner->name)
             {
-                sprintf(layer, "%d", id - 1);
-                sprintf(hibus, "%d", hibus_id);
-                runner->pid = exec_lite_runner(runner->name, layer, hibus, runner->entry, runner->css_file);
-                runner->hibus_id = hibus_id;
-                hibus_id ++;
+                sprintf(layer, "layer%d", id - 1);
+                runner->pid = exec_lite_runner(runner->entry, runner->name, layer);
 
                 if(runner->pid > 0)
                     runner->status = RS_RUN;
@@ -304,7 +348,7 @@ void end_apps(void)
         {
             if(runner->pid >= 0)
             {
-                sprintf(runner_name, "%s%d", runner->name, runner->hibus_id);
+                sprintf(runner_name, "%s", runner->name);
                 endpoint = hibus_assemble_endpoint_name_alloc(HIBUS_LOCALHOST, HIBUS_HISHELL_NAME, runner_name);
                 hibus_fire_event(__os_global_struct.hibus_context, HIBUS_EVENT_APP_QUIT, "{\"command\":\"quit\"}");
             }
@@ -315,8 +359,6 @@ void end_apps(void)
                 free(runner->entry);
             if(runner->css_class)
                 free(runner->css_class);
-            if(runner->css_file)
-                free(runner->css_file);
             if(runner->styles)
                 free(runner->styles);
             if(runner->intent)

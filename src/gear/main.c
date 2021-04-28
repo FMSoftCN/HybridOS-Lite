@@ -51,9 +51,8 @@
 
 
 Global_Param global_param;
-static const char * config_file = NULL;
-static const char * css_file = NULL;
-static void create_animation(HWND hWnd);
+static char config_file[HISHELL_MAX_PATH] = {0};
+static char css_file[HISHELL_MAX_PATH] = {0};
 
 // get css file content
 static char * get_file_content(char * path, int *length)
@@ -108,18 +107,17 @@ static char * get_file_content(char * path, int *length)
 
 
 // get user data and layout
-static BOOL parse_config(const char * file_name, const char * css_file, \
-                                                    int width, int height)
+static BOOL parse_config(int width, int height)
 {
     char file_path[256] = {0};
     int default_length = 0;
     char * css_content = NULL;
 
     // get user date from file
-    if(file_name)
+    if(config_file[0])
     {
         readlink("/proc/self/exe", file_path, 256);
-        sprintf(file_path, "%s/config/%s", dirname(file_path), file_name);
+        sprintf(file_path, "%s/config/%s", dirname(file_path), config_file);
 
         if((access(file_path, F_OK | R_OK)) != 0)
             return FALSE;
@@ -154,7 +152,7 @@ static BOOL parse_config(const char * file_name, const char * css_file, \
         return HILAYOUT_INVALID;
 
     // get css file
-    if(css_file)
+    if(css_file[0])
     {
         memset(file_path, 0, 256);
         readlink("/proc/self/exe", file_path, 256);
@@ -341,7 +339,7 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
             RECT window_rect;
 
             GetWindowRect(hWnd, &window_rect);
-            parse_config(config_file, css_file, RECTW(window_rect), RECTH(window_rect));
+            parse_config(RECTW(window_rect), RECTH(window_rect));
 
             // load svg file
             readlink("/proc/self/exe", path, HISHELL_MAX_PATH);
@@ -385,19 +383,33 @@ int MiniGUIMain (int argc, const char* argv[])
     HWND hMainWnd;
     MAINWINCREATE CreateInfo;
     char layer[16] = {0};
+    char hibus_name[MAX_NAME_LENGTH] = {0};
     int fd_hibus = -1;
+    int opt;
+
+    while((opt = getopt(argc, (char *const *)argv, "l:b:d:c:"))!= -1)
+    {
+        switch(opt)
+        {
+            case 'l':           // layer name
+                sprintf(layer, "%s", optarg);
+                break;
+            case 'b':           // hibus name
+                sprintf(hibus_name, "%s", optarg);
+                break;
+            case 'd':           // user defined config file
+                sprintf(config_file, "%s", optarg);
+                break;
+            case 'c':           // css file
+                sprintf(css_file, "%s", optarg);
+                break;
+        }
+    }
 
     memset(&global_param, 0, sizeof(Global_Param));
 
-    if(argc < 4)
+    if(argc < 3)
         return 1;
-
-    sprintf(layer, "layer%s", argv[1]);
-    
-    config_file = argv[3];
-
-    if(argc == 5)
-        css_file = argv[4];
 
 #ifdef _MGRM_PROCESSES
     JoinLayer(layer , "gear" , 0 , 0);
@@ -443,7 +455,7 @@ int MiniGUIMain (int argc, const char* argv[])
     ShowWindow(hMainWnd, SW_SHOWNORMAL);
 
     global_param.main_hwnd = hMainWnd;
-    fd_hibus = start_hibus(&(global_param.hibus_context), argv[2]);
+    fd_hibus = start_hibus(&(global_param.hibus_context), hibus_name);
     if(fd_hibus <= 0)
     {
         fprintf (stderr, "Can not connect to hibus.\n");

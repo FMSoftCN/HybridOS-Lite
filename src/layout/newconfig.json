@@ -15,17 +15,13 @@
             "windowLayoutStyles": null,
             "runners": [
                 {
-                    "name": "gear",
+                    "name": "gear1",
                     "type": "exec",
-                    "entry": "gear1.ini",
+                    "entry": "gear -d gear1.ini -c gear1.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "gear1.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;"
                 }]
         },
         {
@@ -37,17 +33,13 @@
             "windowLayoutStyles": null,
             "runners": [
                 {
-                    "name": "chgconfig",
+                    "name": "chgconfig1",
                     "type": "exec",
-                    "entry": "chgconfig1.ini",
+                    "entry": "chgconfig -d chgconfig1.ini -c chgconfig1.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "chgconfig1.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;"
                 }]
         },
         {
@@ -59,215 +51,152 @@
             "windowLayoutStyles": "display: grid; grid-template-columns: 25% 25% 25% 25%; grid-template-rows: 25% 25% 25% 25%; width: 100%; height: 90%",
             "runners": [
                 {
-                    "name": "gear",
+                    "name": "gear2",
                     "type": "exec",
-                    "entry": "gear2.ini",
+                    "entry": "gear -d gear2.ini -c gear2.css",
                     "runas": "window, default",
                     "class": "",
                     "CSSFile": "gear2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:1; grid-row-end:2;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:1; grid-row-end:2;"
                 },
                 {
-                    "name": "chgconfig",
+                    "name": "chgconfig2",
                     "type": "exec",
-                    "entry": "chgconfig2.ini",
-                    "CSSFile": "chgconfig2.css",
+                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:1; grid-row-end:2;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:1; grid-row-end:2;"
                 },
                 {
-                    "name": "gear",
+                    "name": "gear3",
                     "type": "exec",
-                    "entry": "gear2.ini",
+                    "entry": "gear -d gear2.ini -c gear2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "gear2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:1; grid-row-end:2;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:1; grid-row-end:2;"
                 },
                 {
-                    "name": "chgconfig",
+                    "name": "chgconfig3",
                     "type": "exec",
-                    "entry": "chgconfig2.ini",
+                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "chgconfig2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:1; grid-row-end:2;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:1; grid-row-end:2;"
                 },
                 
                 {
-                    "name": "chgconfig",
+                    "name": "chgconfig4",
                     "type": "exec",
-                    "entry": "chgconfig2.ini",
+                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "chgconfig2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:2; grid-row-end:3;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:2; grid-row-end:3;"
                 },
                 {
-                    "name": "gear",
+                    "name": "gear4",
                     "type": "exec",
-                    "entry": "gear2.ini",
+                    "entry": "gear -d gear2.ini -c gear2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "gear2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:2; grid-row-end:3;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:2; grid-row-end:3;"
                 },
                 {
-                    "name": "chgconfig",
+                    "name": "chgconfig5",
                     "type": "exec",
-                    "entry": "chgconfig2.ini",
+                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "chgconfig2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:2; grid-row-end:3;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:2; grid-row-end:3;"
                 },
                 {
-                    "name": "gear",
+                    "name": "gear5",
                     "type": "exec",
-                    "entry": "gear2.ini",
+                    "entry": "gear -d gear2.ini -c gear2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "gear2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:2; grid-row-end:3;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:2; grid-row-end:3;"
                 },
                 
                 {
-                    "name": "gear",
+                    "name": "gear6",
                     "type": "exec",
-                    "entry": "gear2.ini",
+                    "entry": "gear -d gear2.ini -c gear2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "gear2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:3; grid-row-end:4;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:3; grid-row-end:4;"
                 },
                 {
-                    "name": "chgconfig",
+                    "name": "chgconfig6",
                     "type": "exec",
-                    "entry": "chgconfig2.ini",
+                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "chgconfig2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:3; grid-row-end:4;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:3; grid-row-end:4;"
                 },
                 {
-                    "name": "gear",
+                    "name": "gear7",
                     "type": "exec",
-                    "entry": "gear2.ini",
+                    "entry": "gear -d gear2.ini -c gear2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "gear2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:3; grid-row-end:4;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:3; grid-row-end:4;"
                 },
                 {
-                    "name": "chgconfig",
+                    "name": "chgconfig7",
                     "type": "exec",
-                    "entry": "chgconfig2.ini",
+                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "chgconfig2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:3; grid-row-end:4;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:3; grid-row-end:4;"
                 },
 
                 {
-                    "name": "chgconfig",
+                    "name": "chgconfig8",
                     "type": "exec",
-                    "entry": "chgconfig2.ini",
+                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "chgconfig2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:4; grid-row-end:5;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:1; grid-column-end:2; grid-row-start:4; grid-row-end:5;"
                 },
                 {
-                    "name": "gear",
+                    "name": "gear8",
                     "type": "exec",
-                    "entry": "gear2.ini",
+                    "entry": "gear -d gear2.ini -c gear2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "gear2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:4; grid-row-end:5;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:2; grid-column-end:3; grid-row-start:4; grid-row-end:5;"
                 },
                 {
-                    "name": "chgconfig",
+                    "name": "chgconfig9",
                     "type": "exec",
-                    "entry": "chgconfig2.ini",
+                    "entry": "chgconfig -d chgconfig2.ini -c chgconfig2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "chgconfig2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:4; grid-row-end:5;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:3; grid-column-end:4; grid-row-start:4; grid-row-end:5;"
                 },
                 {
-                    "name": "gear",
+                    "name": "gear9",
                     "type": "exec",
-                    "entry": "gear2.ini",
+                    "entry": "gear -d gear2.ini -c gear2.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "gear2.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:4; grid-row-end:5;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "grid-column-start:4; grid-column-end:5; grid-row-start:4; grid-row-end:5;"
                 }]
         }
   ]

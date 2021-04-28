@@ -152,7 +152,6 @@ typedef struct runner_structure_tag
     char * name;                // runner name
     char * entry;               // executive file
     char * css_class;           // css class of this runner
-    char * css_file;            // css file of this runner
     char * styles;              // css for this runner
     char * intent;              // start parameter
     unsigned int runas;         // how to start
@@ -172,8 +171,6 @@ typedef struct runner_structure_tag
 
     pid_t pid;                  // pid for runner thread
     runnerStatus status;        // run status
-
-    int hibus_id;               // id for hibus
 } runner_struct;
 
 

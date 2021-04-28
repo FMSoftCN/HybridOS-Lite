@@ -17,15 +17,11 @@
                 {
                     "name": "chgconfig",
                     "type": "exec",
-                    "entry": "chgconfig1.ini",
+                    "entry": "chgconfig -d chgconfig1.ini -c chgconfig1.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "chgconfig1.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;"
                 }]
         },
         {
@@ -39,15 +35,11 @@
                 {
                     "name": "gear",
                     "type": "exec",
-                    "entry": "gear1.ini",
+                    "entry": "gear -d gear1.ini -c gear1.css",
                     "runas": "window, default",
                     "class": "",
-                    "CSSFile": "gear1.css",
                     "dependencies": ["hibusd"],
-                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;",
-                    "intent": {
-                                "parameter": {"index":0}
-                              }
+                    "windowBoxStyles": "position: relative; left: 0%; top: 0%; width: 100%; height: 100%;"
                 }]
         }
   ]

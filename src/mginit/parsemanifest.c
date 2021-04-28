@@ -378,13 +378,6 @@ static runner_struct * parseRunner(struct json_object * obj)
             runner->css_class = strdup(string);
     }
 
-    // get css file 
-    if(json_object_object_get_ex(obj, "CSSFile", &jo_tmp) != 0)
-    {
-        string = json_object_get_string(jo_tmp);
-        if(string)
-            runner->css_file = strdup(string);
-    }
     // get the windowBoxStyles
     if(json_object_object_get_ex(obj, "windowBoxStyles", &jo_tmp) != 0)
     {

@@ -48,19 +48,18 @@
 
 ```
  ---------------------------------------------------------------------------------
-| DockerBar, StatusBar, |              |                 | Input Method Window,  |
-| IndicatorBar,         |   GUI app1   |   GUI app ...   | System Alert Window,  |        - main windows
-| DescriptionBar ...    |              |                 | ...                   |
+| DockerBar, StatusBar,   |                  |                 |                  |
+| IndicatorBar,           |     GUI app1     |     GUI app2    |    GUI app ...   |        - main windows
+| DescriptionBar ...      |                  |                 |                  |
  ---------------------------------------------------------------------------------
-|                   Wallpaper                 |      mginit w/ compositor         |____ 
+|  mginit w/ compositor   |                        Wallpaper                      |____ 
  ---------------------------------------------------------------------------------     |
 |                                                                                 |    |
 |   MiniGUI, hiCairo, hirsvg, hibox, hibus, hidomlayout, LibPNG, LibJPEG, ...     |    | hiBus
 |                                                                                 |    |
  ---------------------------------------------------------------------------------     |
-|                           HybridOS servers and user daemons                     |____|
+|                                hibusd and user daemons                          |____|
  ---------------------------------------------------------------------------------
-|                             LibZ, CURL, LibGcrypt, ...                          |
 |                               C/C++ runtime environment                         |
  ---------------------------------------------------------------------------------
 |                               Linux Kernel/Drivers                              |
@@ -388,9 +387,9 @@ Page 2:
 
 `mginit` 向 `HybridOS Lite` 应用，传递的启动参数可能有：
 
-- `-l layer_number`：该参数为一数字，必传，必须处理。每个应用都属于某层，所以必须调用 `JoinLayer()` 将该应用加入到某层。层的名字为 `layern`，`n` 为传递进来的参数；
+- `-l layer_name`：该参数为一字符串，必传，必须处理。每个应用都属于某层，所以必须调用 `JoinLayer()` 将该应用加入到某层。改参数即为层的名字；
 
-- `-n name`：该参数为一字符串，必传，必须处理。该参数用于 `HiBus` 唯一标识某个应用的实例；
+- `-b name`：该参数为一字符串，必传，必须处理。该参数用于 `HiBus` 唯一标识某个应用的实例；
 
 - `-d config_file_name`：该参数为一字符串，可选。该参数即是在 `manifest.json` 文件中 `entry` 中的 `-d` 部分，表明该应用使用的用户数据文件；
 
