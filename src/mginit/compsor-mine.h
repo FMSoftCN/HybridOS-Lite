@@ -37,6 +37,16 @@ extern "C" {
 
 void start_my_compositor(void);
 
+typedef struct animation_structure_tag
+{
+    MG_Layer ** layers;
+    COMBPARAMS_FALLBACK cpf;
+    CompositorOps* fallback_ops;
+    int end;
+    int current;
+} animation_param;
+
+
 #ifdef __cplusplus
 }
 #endif  /* __cplusplus */

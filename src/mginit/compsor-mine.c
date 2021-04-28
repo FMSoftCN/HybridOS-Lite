@@ -55,7 +55,7 @@ extern OS_Global_struct __os_global_struct;                     // global variab
 CompositorCtxt * cc_context = NULL;                             // CompositorCtxt for composite_layers
 static MSGHOOK m_OldMouseHook = NULL;                           // mouse hook function
 static MoseSpeed mouseinfo;                                     // for drag screen
-
+static MGEFF_ANIMATION animation = NULL;                        // handle of animation
 
 static BOOL check_runner_flag(void)
 {
@@ -167,6 +167,54 @@ static void my_transit_to_layer (CompositorCtxt* ctxt, MG_Layer* to_layer)
 {
 }
 
+// callback function of animation
+static void animated_cb(MGEFF_ANIMATION handle, HWND hWnd, int id, int *value)
+{
+    animation_param * param = (animation_param *)mGEffAnimationGetTarget(handle);
+
+    if(*value != param->current)
+    {
+        param->cpf.percent =  *value * 100 / param->end;
+        param->fallback_ops->composite_layers(cc_context, param->layers, 2, &(param->cpf));
+    }
+}
+
+// the function which will be invoked at the end of animation
+static void animated_end(MGEFF_ANIMATION handle)
+{
+    animation_param * param = (animation_param *)mGEffAnimationGetTarget(handle);
+    mGEffAnimationDelete(animation);
+    animation = NULL;
+
+    if(param)
+        free(param);
+}
+
+static void create_animation(animation_param * param, int start, int end)
+{
+    if(animation)
+    {
+        mGEffAnimationDelete(animation);
+        animation = NULL;
+    }
+
+    animation = mGEffAnimationCreate((void *)param, (void *)animated_cb, 1, MGEFF_INT);
+    if (animation)
+    {
+        int duration = 0;
+        enum EffMotionType motionType = OutQuad;
+
+        duration = 500;
+
+        mGEffAnimationSetStartValue(animation, &start);
+        mGEffAnimationSetEndValue(animation, &end);
+        mGEffAnimationSetDuration(animation, duration);
+        mGEffAnimationSetCurve(animation, motionType);
+        mGEffAnimationSetFinishedCb(animation, animated_end);
+        mGEffAnimationSyncRun(animation);
+    }
+}
+
 static void show_page(BOOL next, MG_Layer ** layers, int x, int y)
 {
     int step = 0;
@@ -176,6 +224,7 @@ static void show_page(BOOL next, MG_Layer ** layers, int x, int y)
     CompositorOps* fallback_ops = (CompositorOps*)ServerGetCompositorOps (COMPSOR_NAME_FALLBACK);
     CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
     COMBPARAMS_FALLBACK cpf;
+    animation_param * param = NULL;
 
     if(__os_global_struct.direction == SCREEN_ANIMATION_HORIZENTAL)
     {       
@@ -210,24 +259,37 @@ static void show_page(BOOL next, MG_Layer ** layers, int x, int y)
         }
     }
         
+    param = malloc(sizeof(animation_param));
+    param->layers = layers;
+    param->cpf = cpf;
+    param->end = end;
+    param->fallback_ops = fallback_ops;
+    param->current = -1;
+
     if(next)                 // next layer
     {       
+        create_animation(param, start, 0);
+#if 0
         for(; start > 0; start -= step)
         {   
             cpf.percent = start * 100 / end;
             fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
             usleep (20 * 1000);
         }
+#endif
         __os_global_struct.current_page ++;
     }
     else                        // prev layer
     {
+        create_animation(param, start, end);
+#if 0
         for(; start < end; start += step)
         {
             cpf.percent = start * 100 / end;
             fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
             usleep (20 * 1000);
         }
+#endif
         __os_global_struct.current_page --;
     }
 
@@ -251,6 +313,7 @@ static void show_current_page(BOOL next, MG_Layer ** layers, int x, int y)
     CompositorOps* fallback_ops = (CompositorOps*)ServerGetCompositorOps (COMPSOR_NAME_FALLBACK);
     CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
     COMBPARAMS_FALLBACK cpf;
+    animation_param * param = NULL;
 
     if(__os_global_struct.direction == SCREEN_ANIMATION_HORIZENTAL)
     {       
@@ -285,8 +348,17 @@ static void show_current_page(BOOL next, MG_Layer ** layers, int x, int y)
         }
     }
         
+    param = malloc(sizeof(animation_param));
+    param->layers = layers;
+    param->cpf = cpf;
+    param->end = end;
+    param->fallback_ops = fallback_ops;
+    param->current = -1;
+
     if(next)                 // next layer
     {       
+        create_animation(param, start, end);
+#if 0
         for(; start < end; start += step)
         {   
             cpf.percent = start * 100 / end;
@@ -294,9 +366,12 @@ static void show_current_page(BOOL next, MG_Layer ** layers, int x, int y)
             usleep (20 * 1000);
         }
         cpf.percent = 100;
+#endif
     }
     else                        // prev layer
     {
+        create_animation(param, start, 0);
+#if 0
         for(; start > 0; start -= step)
         {
             cpf.percent = start * 100 / end;
@@ -304,17 +379,12 @@ static void show_current_page(BOOL next, MG_Layer ** layers, int x, int y)
             usleep (20 * 1000);
         }
         cpf.percent = 0;
+#endif
     }
 
-//    fallback_ops->transit_to_layer = my_transit_to_layer;
-    fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+//    fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
     fallback_ops->refresh(cc_context);
-//    fallback_ops->transit_to_layer = old_transit_to_lay;
 
-//    if(next)
-//        ServerSetTopmostLayer(layers[0]);
-//    else
-//        ServerSetTopmostLayer(layers[1]);
 }
 
 static runner_struct * get_point_hwnd(int x, int y)

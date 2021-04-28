@@ -23,19 +23,19 @@ hybridos-lite/
 │   ├── mginit
 │   ├── wallpaper
 │   ├── chgconfig
-│   ├── gear
+│   ├── svgshow 
 │   ├── include 
 │   ├── layout
 │   │     ├── manifest.json
 │   │     ├── newconfig.json
 │   │     ├── default_layout.css
-│   │     ├── gear1.css
-│   │     ├── gear2.css
+│   │     ├── svgshow1.css
+│   │     ├── svgshow2.css
 │   │     ├── chgconfig1.css
 │   │     └── chgconfig2.css
 │   └── config
-│         ├── gear1.ini
-│         ├── gear2.ini
+│         ├── svgshow1.ini
+│         ├── svgshow2.ini
 │         ├── chgconfig1.ini
 │         └── chgconfig2.ini
 └── cmake 
@@ -51,13 +51,13 @@ In the feature above, only displays the key directories and files. They are:
   - `mginit/` The most important part of this sample. In this directory, illustrates how to parsing manifest file, how to layout in the screen, and how to control compositor. It is the core of HybridOS Lite.
   - `wallpaper/` sample code, illustrate how to build a dynamic wall paper;
   - `chgconfig/` sample code, illustrate how to change manifest files;
-  - `gear/` sample code, tell you how to draw svg files with MiniGUI;
+  - `svgshow/` sample code, tell you how to draw svg files with MiniGUI;
   - `config` the director contains user defined data for every application. 
   - `layout/` contains layout files;
     - `manifest.json` the main layout file for the whole screen;
     - `newconfig.json` the alternative layout file for change manifest.json;
     - `default_layout.css` contains default css for every dom element;
-    - `gearx.css` css files for gear when runns with different width and height;
+    - `svgshowx.css` css files for svgshow when runns with different width and height;
     - `chgconfigx.css` css files for chgconfig when runns with different width and height.
 
 ## How to building the samples  
@@ -134,7 +134,7 @@ Then you can see the screen, just like the picutres below:
 - It is chgconfig application. When you press the icons in the screen, HybridOS Lite will change a new manifest file. When you change manifest files, pay attention to the variation of indicator bar at the bottom of screen.
 ![SUMMER 2021](summer2021/figures/chgconfig.png)
 
-- It is gear application. 
+- It is svgshow application. 
 ![SUMMER 2021](summer2021/figures/gear.png)
 
 - When you change manifest file, the third screen is as blow. It has 16 applications.
