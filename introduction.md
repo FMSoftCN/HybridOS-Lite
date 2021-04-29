@@ -1,6 +1,6 @@
-# HybridOS Lite 编程指南 
+# HybridOS Lite 介绍 
 
-【主题】HybridOS Lite 编程指南   
+【主题】HybridOS Lite 介绍   
 【摘要】本文描述了 `HybridOS Lite` 的基本概念，并讲述了编程的基本方法和思路  
 【版本】1.0  
 【作者】耿岳  
@@ -255,14 +255,14 @@ Page 2:
             "id": "2",
             "title": {
                 "en": "page 2",
-                "zh_CN": "gear running"
+                "zh_CN": "svg example"
             },
             "windowLayoutStyles": null,
             "runners": [
                 {
-                    "name": "gear",
+                    "name": "svgshow",
                     "type": "exec",
-                    "entry": "gear -d gear1.ini -c gear1.css",
+                    "entry": "svgshow -d svgshow1.ini -c svgshow1.css",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
@@ -291,7 +291,7 @@ Page 2:
 
 - `entry`：可执行程序的程序名，以及启动参数。启动参数由每个应用程序自行解析并实现。这里只是表明：应用程序名为 `chgconfig`，用户配置文件名为 `chgconfig1.init`，应用布局 `CSS` 文件名为 `chgconfig1.css`；
 
-- `windowBoxStyles`：指定了该应用在 `Page Area` 中的位置。在这里，`chgconfig` 和 `gear` 占用了全部的 `Page Area`，也即全屏显示。
+- `windowBoxStyles`：指定了该应用在 `Page Area` 中的位置。在这里，`chgconfig` 和 `svgshow` 占用了全部的 `Page Area`，也即全屏显示。
 
 其余内容，《合璧操作系统的应用管理》已经表述清除，不再赘述。
 
@@ -365,7 +365,7 @@ Page 2:
 
 在这里，`CSS` 的选择器使用的是 `id`，也可以使用 `class`、`name`。`CSS` 文件的语法，完全符合 `CSS2.1` 规范。
 
-同一个应用的多个实例，可能被放置在不同页中，其大小很可能也各不相同。比如 `gear` 应用可以独占 `Page Area`，也可能只占用 `Page Area` 的1 /16，此时如果依然适用该 `CSS` 文件，则比例不协调，并且文字无法显示。需要为这个应用实例单独再写一个 `CSS` 文件。
+同一个应用的多个实例，可能被放置在不同页中，其大小很可能也各不相同。比如 `svgshow` 应用可以独占 `Page Area`，也可能只占用 `Page Area` 的1 /16，此时如果依然适用该 `CSS` 文件，则比例不协调，并且文字无法显示。需要为这个应用实例单独再写一个 `CSS` 文件。
 
 这样各个应用的不同实例可以随意摆放，不用调整二进制代码，只需要修改对应的 `CSS` 文件即可。这样即打破了硬件设备对 `GUI` 的约束，达到快速开发，迅速出产品的目的。
 

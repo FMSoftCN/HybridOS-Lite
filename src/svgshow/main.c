@@ -51,9 +51,6 @@
 
 
 Global_Param global_param;
-static char config_file[HISHELL_MAX_PATH] = {0};
-static char css_file[HISHELL_MAX_PATH] = {0};
-static char svg_file[HISHELL_MAX_PATH] = {0};
 
 // get css file content
 static char * get_file_content(char * path, int *length)
@@ -110,15 +107,15 @@ static char * get_file_content(char * path, int *length)
 // get user data and layout
 static BOOL parse_config(int width, int height)
 {
-    char file_path[256] = {0};
+    char file_path[HISHELL_MAX_PATH] = {0};
     int default_length = 0;
     char * css_content = NULL;
 
     // get user date from file
-    if(config_file[0])
+    if(global_param.config_file[0])
     {
-        readlink("/proc/self/exe", file_path, 256);
-        sprintf(file_path, "%s/config/%s", dirname(file_path), config_file);
+        readlink("/proc/self/exe", file_path, HISHELL_MAX_PATH);
+        sprintf(file_path, "%s/config/%s", dirname(file_path), global_param.config_file);
 
         if((access(file_path, F_OK | R_OK)) != 0)
             return FALSE;
@@ -154,11 +151,11 @@ static BOOL parse_config(int width, int height)
         return HILAYOUT_INVALID;
 
     // get css file
-    if(css_file[0])
+    if(global_param.css_file[0])
     {
-        memset(file_path, 0, 256);
-        readlink("/proc/self/exe", file_path, 256);
-        sprintf(file_path, "%s/layout/%s", dirname(file_path), css_file);
+        memset(file_path, 0, HISHELL_MAX_PATH);
+        readlink("/proc/self/exe", file_path, HISHELL_MAX_PATH);
+        sprintf(file_path, "%s/layout/%s", dirname(file_path), global_param.css_file);
 
         css_content = get_file_content(file_path, &default_length);
         if(css_content)
@@ -345,8 +342,8 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
             // load svg file
             readlink("/proc/self/exe", path, HISHELL_MAX_PATH);
-            if(svg_file[0])
-                sprintf(path, "%s/res/%s", dirname(path), svg_file);
+            if(global_param.svg_file[0])
+                sprintf(path, "%s/res/%s", dirname(path), global_param.svg_file);
             else
                 sprintf(path, "%s/res/gear.svg", dirname(path));
             loadSVGFromFile(path);
@@ -408,13 +405,13 @@ int MiniGUIMain (int argc, const char* argv[])
                 sprintf(hibus_name, "%s", optarg);
                 break;
             case 'd':           // user defined config file
-                sprintf(config_file, "%s", optarg);
+                sprintf(global_param.config_file, "%s", optarg);
                 break;
             case 'c':           // css file
-                sprintf(css_file, "%s", optarg);
+                sprintf(global_param.css_file, "%s", optarg);
                 break;
             case 'p':           // picture file
-                sprintf(svg_file, "%s", optarg);
+                sprintf(global_param.svg_file, "%s", optarg);
                 break;
             case 't':
                 sprintf(global_param.caption, "%s", optarg);

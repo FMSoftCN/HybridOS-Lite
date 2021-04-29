@@ -78,24 +78,19 @@ static cairo_surface_t *create_cairo_surface (HDC hdc, int width, int height)
 #ifdef CAIRO_HAS_DRM_SURFACE
     if (cd == NULL) {
         cd = cairo_drm_device_default ();
-        if (cairo_device_status (cd)) {
-            _ERR_PRINTF("hicairo: failed to create cairo_device object: %m\n");
+        if (cairo_device_status (cd)) 
+        {
             cairo_device_destroy (cd);
             cd = NULL;
         }
     }
 #endif
 
-    if (hdc == HDC_INVALID) {
-        _DBG_PRINTF("hicairo: calling cairo_minigui_surface_create_with_memdc\n");
+    if (hdc == HDC_INVALID) 
         return cairo_minigui_surface_create_with_memdc (cd, CAIRO_FORMAT_RGB24, width, height);
-    }
-    else if (hdc != HDC_SCREEN && width > 0 && height > 0) {
-        _DBG_PRINTF("hicairo: cairo_minigui_surface_create_with_memdc_similar\n");
+    else if (hdc != HDC_SCREEN && width > 0 && height > 0) 
         return cairo_minigui_surface_create_with_memdc_similar (cd, hdc, width, height);
-    }
 
-    _DBG_PRINTF("hicairo: cairo_minigui_surface_create\n");
     return cairo_minigui_surface_create (cd, hdc);
 }
 
@@ -113,9 +108,6 @@ static HDC create_memdc_from_image_surface (cairo_surface_t* image_surface)
     my_bmp.bits = cairo_image_surface_get_data (image_surface);
     my_bmp.size = my_bmp.pitch * my_bmp.h;
 
-    _WRN_PRINTF("mapped surface info: width (%d), height (%d), pitch (%d), bits (%p)",
-            my_bmp.w, my_bmp.h, my_bmp.pitch, my_bmp.bits);
-
     return CreateMemDCFromMyBitmap(&my_bmp, NULL);
 }
 
@@ -132,18 +124,12 @@ static HDC create_memdc_from_drm_surface(cairo_surface_t* drm_surface,
 
     *image_surface = cairo_drm_surface_map_to_image(drm_surface);
     status = cairo_surface_status (*image_surface);
-    if (status) {
-        _WRN_PRINTF("failed to map DRM surface: status (%d)", status);
-    }
 
     my_bmp.w = cairo_image_surface_get_width (*image_surface);
     my_bmp.h = cairo_image_surface_get_height (*image_surface);
     my_bmp.pitch = cairo_image_surface_get_stride (*image_surface);
     my_bmp.bits = cairo_image_surface_get_data (*image_surface);
     my_bmp.size = my_bmp.pitch * my_bmp.h;
-
-    _WRN_PRINTF("mapped surface info: width (%d), height (%d), pitch (%d), bits (%p)",
-            my_bmp.w, my_bmp.h, my_bmp.pitch, my_bmp.bits);
 
     return CreateMemDCFromMyBitmap(&my_bmp, NULL);
 }
@@ -189,10 +175,8 @@ static void paint(int width, int height)
     int i = 0;
     HDC hdc = HDC_SCREEN;
 
-    if (global_cr == NULL) {
-        _ERR_PRINTF("hicairo: failed to get the cairo context\n");
-        exit (1);
-    }
+    if (global_cr == NULL) 
+        return;
 
     // draw 
     cairo_save(global_cr);
@@ -254,38 +238,28 @@ static void paint(int width, int height)
         cairo_surface_t* target_surface = cairo_get_target(global_cr);
         //cairo_surface_flush (target_surface);
         cairo_surface_type_t cst = cairo_surface_get_type (target_surface);
-        if (cst == CAIRO_SURFACE_TYPE_MINIGUI) {
-            _DBG_PRINTF("hicairo: calling cairo_minigui_surface_get_dc\n");
+        if (cst == CAIRO_SURFACE_TYPE_MINIGUI) 
             csdc = cairo_minigui_surface_get_dc (target_surface);
-        }
-        else if (cst == CAIRO_SURFACE_TYPE_IMAGE) {
-            _DBG_PRINTF("hicairo: calling create_memdc_from_image_surface\n");
+        else if (cst == CAIRO_SURFACE_TYPE_IMAGE) 
             csdc = create_memdc_from_image_surface (target_surface);
-        }
 #ifdef CAIRO_HAS_DRM_SURFACE
-        else if (cst == CAIRO_SURFACE_TYPE_DRM) {
-            _DBG_PRINTF("hicairo: calling cairo_drm_surface_get_minigui_dc\n");
+        else if (cst == CAIRO_SURFACE_TYPE_DRM) 
+        {
             csdc = (HDC)cairo_drm_surface_get_minigui_dc (target_surface);
-            if (csdc == HDC_INVALID) {
-                _DBG_PRINTF("hicairo: calling create_memdc_from_drm_surface\n");
+            if (csdc == HDC_INVALID) 
                 csdc = create_memdc_from_drm_surface (target_surface, &image_surface);
-            }
         }
 #endif
 
-        if (csdc == HDC_INVALID) {
-            _ERR_PRINTF("hicairo: failed to get the DC associated with the target surface\n");
-            exit (1);
-        }
+        if (csdc == HDC_INVALID) 
+            return;
 
-        if (csdc != HDC_SCREEN && csdc != HDC_INVALID) {
-            _DBG_PRINTF("calling BitBlt\n");
+        if (csdc != HDC_SCREEN && csdc != HDC_INVALID) 
             BitBlt(csdc, 0, 0, width, height, hdc, 0, 0, 0);
-        }
 
-        if (image_surface) {
+        if (image_surface) 
+        {
 #ifdef CAIRO_HAS_DRM_SURFACE
-            _DBG_PRINTF("calling destroy_memdc_for_drm_surface\n");
             destroy_memdc_for_drm_surface (csdc, target_surface, image_surface);
 #endif
         }
@@ -308,16 +282,12 @@ int MiniGUIMain (int argc, const char* argv[])
 #endif
 
     surface = create_cairo_surface (HDC_INVALID, g_rcScr.right, g_rcScr.bottom);
-    if (surface == NULL) {
-        _ERR_PRINTF("hicairo: failed when creating surface\n");
+    if (surface == NULL) 
         goto FAIL;
-    }
 
     global_cr = cairo_create (surface);
-    if (global_cr == NULL) {
-        _ERR_PRINTF("hicairo: failed when creating cairo context\n");
+    if (global_cr == NULL) 
         goto FAIL;
-    }
 
     memset(node, 0, MAX_NUMBER * sizeof(NodeInfo));
 
@@ -348,10 +318,9 @@ FAIL:
     if (global_cr) 
         cairo_destroy(global_cr);
 
-    if (surface) {
-        _DBG_PRINTF("calling cairo_surface_finish\n");
+    if (surface) 
+    {
         cairo_surface_finish(surface);
-        _DBG_PRINTF("calling cairo_surface_destroy\n");
         cairo_surface_destroy(surface);
     }
 

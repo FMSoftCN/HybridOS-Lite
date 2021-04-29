@@ -51,7 +51,7 @@ extern Global_Param global_param;
 static void quitApp(hibus_conn* conn, const char* from_endpoint, const char* bubble_name, \
                                                                 const char* bubble_data)
 {
-    fprintf(stderr, "quit gear: %s\n", bubble_data);
+    fprintf(stderr, "quit svgshow: %s\n", bubble_data);
     if(global_param.main_hwnd)
         PostMessage(global_param.main_hwnd, MSG_CLOSE, 0, 0);
     return;
@@ -91,7 +91,7 @@ int start_hibus(hibus_conn ** context, const char * name)
     ret_code = hibus_subscribe_event(hibus_context, endpoint, HIBUS_EVENT_APP_QUIT, quitApp);
     if(ret_code)
     {
-        fprintf(stderr, "gear: Error for subscribe event %s, %s.\n", \
+        fprintf(stderr, "svgshow: Error for subscribe event %s, %s.\n", \
                     HIBUS_EVENT_APP_QUIT, hibus_get_err_message(ret_code));
         return -1;
     }

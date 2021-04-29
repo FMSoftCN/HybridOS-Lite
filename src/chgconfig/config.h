@@ -46,7 +46,7 @@ extern "C" {
 #include <libhirsvg/rsvg.h>
 
 // for strength length
-#define MAX_NAME_LENGTH     64
+#define MAX_NAME_LENGTH     128 
 #define HISHELL_MAX_PATH    256
 
 #define CAPTION_FONT        25 
@@ -54,6 +54,9 @@ extern "C" {
 
 typedef struct tag_Global_Param
 {
+    char config_file[MAX_NAME_LENGTH];
+    char css_file[MAX_NAME_LENGTH];
+
     // caption
     unsigned char caption[MAX_NAME_LENGTH];
 
