@@ -51,10 +51,12 @@
 static int s_mod(int a, int b) 
 {
     assert(b > 0);
-    while (a < 0) {
+    while (a < 0) 
+    {
         a += b;
     }
-    while (a > b) {
+    while (a > b) 
+    {
         a -= b;
     }
     assert(a >= 0 && a < b);

@@ -254,7 +254,7 @@ static void loadSVGFromFile(const char* file)
     RsvgDimensionData dimensions;
     double factor_width = 0.0f;
     double factor_height = 0.0f;
-    int width = RECTWP(&global_param.icon_rect);
+    int width = RECTW(global_param.icon_rect);
     int height = width;
 
     // read file from svg file
@@ -296,7 +296,7 @@ static void loadSVGFromFile(const char* file)
 static void paint_svg(HWND hwnd, HDC hdc)
 {
     float alpha = 1.0;
-    int width = RECTWP(&global_param.icon_rect);
+    int width = RECTW(global_param.icon_rect);
     int height = width;
 
     HDC csdc = create_memdc_from_image_surface(global_param.icon_surface);
@@ -423,7 +423,7 @@ int MiniGUIMain (int argc, const char* argv[])
     }
 
 #ifdef _MGRM_PROCESSES
-    JoinLayer(layer , "gear" , 0 , 0);
+    JoinLayer(layer , "svgshow" , 0 , 0);
 #endif
 
     CreateInfo.dwStyle = WS_VISIBLE;

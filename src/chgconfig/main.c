@@ -273,7 +273,7 @@ static void loadSVGFromFile(const char* file, int index)
     RsvgDimensionData dimensions;
     double factor_width = 0.0f;
     double factor_height = 0.0f;
-    int width = RECTWP(&global_param.icon_rect[index]);
+    int width = RECTW(global_param.icon_rect[index]);
     int height = width;
 
     // read file from svg file
@@ -314,7 +314,7 @@ static void loadSVGFromFile(const char* file, int index)
 static void paint_svg(HWND hwnd, HDC hdc, int index)
 {
     float alpha = 1.0;
-    int width = RECTWP(&global_param.icon_rect[index]);
+    int width = RECTW(global_param.icon_rect[index]);
     int height = width;
 
     HDC csdc = create_memdc_from_image_surface(global_param.icon_surface[index]);
@@ -395,12 +395,12 @@ static LRESULT ChgConfigWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
             if(PtInRect (&global_param.icon_rect[0], x, y))
             {
                 endpoint = hibus_assemble_endpoint_name_alloc(HIBUS_LOCALHOST, HIBUS_HISHELL_NAME, HIBUS_HISHELL_MGINIT_NAME);
-                hibus_call_procedure(global_param.hibus_context, endpoint, HIBUS_PROCEDURE_CONFIG_CHANGE, "{\"device\":\"wlp5s0\"}", 1000, NULL);
+                hibus_call_procedure(global_param.hibus_context, endpoint, HIBUS_PROCEDURE_CONFIG_CHANGE, "{\"name\":\"chgconfig\"}", 1000, NULL);
             }
             else if(PtInRect (&global_param.icon_rect[1], x, y))
             {
                 endpoint = hibus_assemble_endpoint_name_alloc(HIBUS_LOCALHOST, HIBUS_HISHELL_NAME, HIBUS_HISHELL_MGINIT_NAME);
-                hibus_call_procedure(global_param.hibus_context, endpoint, HIBUS_PROCEDURE_CONFIG_CHANGE, "{\"device\":\"wlp5s0\"}", 1000, NULL);
+                hibus_call_procedure(global_param.hibus_context, endpoint, HIBUS_PROCEDURE_CONFIG_CHANGE, "{\"name\":\"chgconfig\"}", 1000, NULL);
             }
         }
             break;

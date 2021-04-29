@@ -61,13 +61,13 @@
 #include "title-description.h"
 
 #define MAX_SQUARE      11
-#define SQUARE_INTERVAL 12
 #define SQUARE_LENGTH   12 
 #define SELECT_COLOR    "#FFFFFF"
 #define UNSELECT_COLOR  "#C0C0C0"
 #define UNSELECT_RATIO  1.5       // select raius / unselect radius
 
 typedef void (* CC_TRANSIT_TO_LAYER) (CompositorCtxt* ctxt, MG_Layer* to_layer);
+static int square_interval = 0;
 
 typedef struct tagIndicator
 {
@@ -335,18 +335,21 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             char path[HISHELL_MAX_PATH] = {0};
             RECT window_rect;
 
+            GetWindowRect(hWnd, &window_rect);
+
+            square_interval = (RECTW(window_rect) * 6 / 10) / MAX_SQUARE;
+
             square_number = __os_global_struct.page_number < MAX_SQUARE ? \
                         __os_global_struct.page_number: MAX_SQUARE;
-            width = square_number * SQUARE_LENGTH + (square_number - 1) * SQUARE_INTERVAL;
+            width = square_number * SQUARE_LENGTH + (square_number - 1) * square_interval;
 
-            GetWindowRect(hWnd, &window_rect);
-            startx = (RECTWP(&window_rect) - width) / 2;
-            starty = (RECTHP(&window_rect) - SQUARE_LENGTH) / 2;
+            startx = (RECTW(window_rect) - width) / 2;
+            starty = (RECTH(window_rect) - SQUARE_LENGTH) / 2;
 
             // calculate rect array.
             for(i = 0; i < square_number; i++)
             {
-                rect[i].left = startx + i * (SQUARE_LENGTH + SQUARE_INTERVAL);
+                rect[i].left = startx + i * (SQUARE_LENGTH + square_interval);
                 rect[i].top = starty;
                 rect[i].right = rect[i].left + SQUARE_LENGTH;
                 rect[i].bottom = rect[i].top + SQUARE_LENGTH;
@@ -383,16 +386,16 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
 
             square_number = __os_global_struct.page_number < MAX_SQUARE ? \
                         __os_global_struct.page_number: MAX_SQUARE;
-            width = square_number * SQUARE_LENGTH + (square_number - 1) * SQUARE_INTERVAL;
+            width = square_number * SQUARE_LENGTH + (square_number - 1) * square_interval;
 
             GetWindowRect(hWnd, &window_rect);
-            startx = (RECTWP(&window_rect) - width) / 2;
-            starty = (RECTHP(&window_rect) - SQUARE_LENGTH) / 2;
+            startx = (RECTW(window_rect) - width) / 2;
+            starty = (RECTH(window_rect) - SQUARE_LENGTH) / 2;
 
             // calculate rect array.
             for(i = 0; i < square_number; i++)
             {
-                rect[i].left = startx + i * (SQUARE_LENGTH + SQUARE_INTERVAL);
+                rect[i].left = startx + i * (SQUARE_LENGTH + square_interval);
                 rect[i].top = starty;
                 rect[i].right = rect[i].left + SQUARE_LENGTH;
                 rect[i].bottom = rect[i].top + SQUARE_LENGTH;
@@ -416,17 +419,17 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             if(square_number == 0)
                 break;
 
-            // 是否是当前范围
+            // whether current range 
             for(i = 0; i < square_number; i++)
             {
                 if(PtInRect ((rect + i), x, y))
                     break;
             }
 
-            if(i < square_number)   // 在当前范围内
+            if(i < square_number)   // in current range
             {
                 pressed = TRUE;
-                if(indicator.select == i)   // 是当前页
+                if(indicator.select == i)   // current page
                 {
                     page = find_page_by_id(__os_global_struct.current_page + 1);
                     layers[0] = mgTopmostLayer;
@@ -443,11 +446,11 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
                         usleep (20 * 1000);
                     }
                 }
-                else                        // 不是当前页
+                else                        // not current page
                 {
                     CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
 
-                    // 当前页缩小
+                    // zoom in current page
                     page = find_page_by_id(__os_global_struct.current_page + 1);
                     layers[0] = mgTopmostLayer;
                     layers[1] = page->layer;
@@ -463,14 +466,14 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
                         usleep (20 * 1000);
                     }
 
-                    // 切换当前页
+                    // switch current page
                     layers[0] = page->layer;
 
                     indicator.select = i;
                     __os_global_struct.current_page = indicator.start + i;
                     page = find_page_by_id(__os_global_struct.current_page + 1);
 
-                    // 动画，page切换，但是page不能恢复原来大小
+                    // animation，switch page
                     if(page)
                     {
                         layers[1] = page->layer;
@@ -493,8 +496,6 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
                         paint(hWnd, hdc, square_number, rect);
                         ReleaseDC(hdc);
 
-                        // 要变化成 0.8 的倍率
-
                         layers[0] = mgTopmostLayer;
                         layers[1] = page->layer;
 
@@ -504,8 +505,6 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
                         fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
                     }
 
-                    // 改变点点，并切换标题
-//                    InvalidateRect(hWnd, NULL, TRUE);
                     if(__os_global_struct.hTitleBar)
                         SendMessage(__os_global_struct.hTitleBar, MSG_MAINWINDOW_CHANGE, 0, 0);
                 }
@@ -527,7 +526,6 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             if(square_number == 0)
                 break;
 
-            // 如故考虑按下动画操作，此处要判断是否在动画状态
             if(!pressed)
                 break;
 
@@ -536,7 +534,6 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             field.right = (rect + square_number - 1)->right + 10;
             field.bottom = (rect + square_number - 1)->bottom;
             
-            // 超出界限，按左键抬起处理
             if(!PtInRect (&field, x, y))
             {
                 CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
@@ -566,7 +563,6 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
                 break;
             }
 
-            // 判断在哪个点点里
             for(i = 0; i < square_number; i++)
             {
                 if(PtInRect ((rect + i), x, y))
@@ -597,7 +593,6 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
                         paint(hWnd, hdc, square_number, rect);
                         ReleaseDC(hdc);
 
-                        // 要变化成 0.8 的倍率，没有下面的，就不对
                         layers[0] = mgTopmostLayer;
                         layers[1] = page->layer;
 
@@ -613,11 +608,9 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             }
             else
             {
-                // 最左边和最右边的都不用管
                 if((x < rect[0].left) || (x > rect[square_number - 1].right))
                     break;
 
-                // 判断在哪两个点之间
                 for(i = 0; i < square_number - 1; i++)
                 {
                     if((x > rect[i].right) && (x < rect[i + 1].left))
@@ -659,11 +652,9 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             if(square_number == 0)
                 break;
 
-            // 如故考虑按下动画操作，此处要判断是否在动画状态
             if(!pressed)
                 break;
 
-            // 判断在哪个点点里
             for(i = 0; i < square_number; i++)
             {
                 if(PtInRect ((rect + i), x, y))

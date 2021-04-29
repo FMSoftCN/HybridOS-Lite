@@ -420,13 +420,13 @@ static runner_struct * get_point_hwnd(int x, int y)
 
 static int MouseHook(void* context, HWND dst_wnd, UINT msg, WPARAM wparam, LPARAM lParam)
 {
-    runner_struct * runner = NULL;
+//    runner_struct * runner = NULL;
 
     if(msg == MSG_LBUTTONDOWN)
     {
         int x = LOSWORD(lParam);
         int y = HISWORD(lParam);
-        runner_struct * runner = NULL;
+//        runner_struct * runner = NULL;
         int cli = 0;
 
         // title 和 indicatior 中的消息，自行处理
@@ -454,6 +454,7 @@ static int MouseHook(void* context, HWND dst_wnd, UINT msg, WPARAM wparam, LPARA
             return HOOK_GOON;
         }
 
+#if 0
         // 在 page 中的消息
         runner = get_point_hwnd(x, y);
         if(runner)
@@ -466,6 +467,8 @@ static int MouseHook(void* context, HWND dst_wnd, UINT msg, WPARAM wparam, LPARA
             msg.wParam = 0;
             Send2Client(&msg, cli);
         }
+#endif
+
         if(mouseinfo.m_speedmeter) 
         {
             mSpeedMeter_destroy(mouseinfo.m_speedmeter);
