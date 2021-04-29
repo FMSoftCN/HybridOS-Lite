@@ -91,7 +91,7 @@
                 {
                     "name": "svgshow6",
                     "type": "exec",
-                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p windcircle.svg -t 摆动风",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p windcircle.svg -t 循环风",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],
@@ -155,7 +155,7 @@
                 {
                     "name": "svgshow13",
                     "type": "exec",
-                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p health.svg -t 智能风",
+                    "entry": "svgshow -d svgshow2.ini -c svgshow2.css -p health.svg -t 健康模式",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],

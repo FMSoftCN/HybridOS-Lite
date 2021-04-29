@@ -430,6 +430,11 @@ int MiniGUIMain (int argc, const char* argv[])
     int fd_hibus = -1;
     int opt;
 
+    if(argc < 3)
+        return 1;
+
+    memset(&global_param, 0, sizeof(Global_Param));
+
     while((opt = getopt(argc, (char *const *)argv, "l:b:d:c:"))!= -1)
     {
         switch(opt)
@@ -448,11 +453,6 @@ int MiniGUIMain (int argc, const char* argv[])
                 break;
         }
     }
-
-    memset(&global_param, 0, sizeof(Global_Param));
-
-    if(argc < 3)
-        return 1;
 
 #ifdef _MGRM_PROCESSES
     JoinLayer(layer , "chgconfig" , 0 , 0);

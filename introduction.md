@@ -20,6 +20,7 @@
 
 **目录**
 
+- [HybridOS Lite 新特性](#hybridos-lite-新特性)
 - [HybridOS Lite 的结构](#hybridos-lite-的结构)
 - [HybridOS Lite 基本概念](#hybridos-lite-基本概念)
    + [屏幕的组成](#屏幕的组成)
@@ -37,6 +38,8 @@
    + [应用程序中的鼠标拖拽](#应用程序中的鼠标拖拽)
 - [附：商标声明](#附商标声明)
 
+
+## HybridOS Lite 新特性
 
 `HybridOS` 具有完备的软件栈，相应也占用了大量的系统资源，所以不适用于系统资源紧张的嵌入式小设备。
 
