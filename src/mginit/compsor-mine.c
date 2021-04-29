@@ -176,6 +176,7 @@ static void animated_cb(MGEFF_ANIMATION handle, HWND hWnd, int id, int *value)
     {
         param->current = *value;
         param->cpf.percent =  *value * 100 / param->end;
+printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2 %f\n", param->cpf.percent);
         param->fallback_ops->composite_layers(cc_context, param->layers, 2, &(param->cpf));
     }
 }
@@ -734,11 +735,12 @@ static int MouseHook(void* context, HWND dst_wnd, UINT msg, WPARAM wparam, LPARA
                 if(mouseinfo.direction == 0)
                     mouseinfo.direction = delt;
 
-                if(cpf.percent >= 0)
+                if((cpf.percent >= 0) && (mouseinfo.percent != cpf.percent))
                 {
                     CompositorOps* fallback_ops = NULL;
                     fallback_ops = (CompositorOps*)ServerGetCompositorOps (COMPSOR_NAME_FALLBACK);
                     fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
+                    mouseinfo.percent = cpf.percent;
                 }
             }
             else

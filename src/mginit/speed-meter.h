@@ -55,6 +55,7 @@ typedef struct tagMoseSpeed
     int direction;
     BOOL goon;
     int cli;
+    float percent;
 
     DWORD m_timePressed;
     BOOL m_bPressed;
