@@ -212,7 +212,9 @@ int MiniGUIMain (int args, const char* arg[])
 
     while (GetMessage(&msg, HWND_DESKTOP)) {
         if(msg.message == MSG_FDEVENT)
+        {
             hibus_read_and_dispatch_packet(__os_global_struct.hibus_context);
+        }
 
         TranslateMessage(&msg);
         DispatchMessage(&msg);

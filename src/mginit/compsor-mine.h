@@ -43,7 +43,6 @@ typedef struct animation_structure_tag
     COMBPARAMS_FALLBACK cpf;
     CompositorOps* fallback_ops;
     int end;
-    int current;
 } animation_param;
 
 

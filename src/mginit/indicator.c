@@ -488,6 +488,7 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
                             fallback_ops->composite_layers(cc_context, layers, 2, &cpf);
                             usleep (20 * 1000);
                         }
+
                         fallback_ops->transit_to_layer = my_transit_to_layer;
                         ServerSetTopmostLayer(page->layer);
                         fallback_ops->transit_to_layer = old_transit_to_lay;

@@ -170,14 +170,16 @@ static void my_transit_to_layer (CompositorCtxt* ctxt, MG_Layer* to_layer)
 // callback function of animation
 static void animated_cb(MGEFF_ANIMATION handle, HWND hWnd, int id, int *value)
 {
+    int percent = 0;
     animation_param * param = (animation_param *)mGEffAnimationGetTarget(handle);
 
-    if(*value != param->current)
+    percent =  *value * 100 / param->end;
+
+    if((float)percent != param->cpf.percent)
     {
-        param->current = *value;
-        param->cpf.percent =  *value * 100 / param->end;
-printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2 %f\n", param->cpf.percent);
+        param->cpf.percent = (float)percent;
         param->fallback_ops->composite_layers(cc_context, param->layers, 2, &(param->cpf));
+printf("======================================== animated_cb, %f\n", param->cpf.percent);
     }
 }
 
@@ -266,7 +268,6 @@ static void show_page(BOOL next, MG_Layer ** layers, int x, int y)
     param->cpf = cpf;
     param->end = end;
     param->fallback_ops = fallback_ops;
-    param->current = -1;
 
     if(next)                 // next layer
     {       
@@ -355,7 +356,6 @@ static void show_current_page(BOOL next, MG_Layer ** layers, int x, int y)
     param->cpf = cpf;
     param->end = end;
     param->fallback_ops = fallback_ops;
-    param->current = -1;
 
     if(next)                 // next layer
     {       
