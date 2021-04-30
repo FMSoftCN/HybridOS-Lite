@@ -49,7 +49,6 @@
 #include "speed-meter.h"
 #include "compsor-mine.h"
 
-typedef void (* CC_TRANSIT_TO_LAYER) (CompositorCtxt* ctxt, MG_Layer* to_layer);
 
 extern OS_Global_struct __os_global_struct;                     // global variable for system
 CompositorCtxt * cc_context = NULL;                             // CompositorCtxt for composite_layers
@@ -170,6 +169,7 @@ static void my_transit_to_layer (CompositorCtxt* ctxt, MG_Layer* to_layer)
 // callback function of animation
 static void animated_cb(MGEFF_ANIMATION handle, HWND hWnd, int id, int *value)
 {
+    int onetime = 0;
     int percent = 0;
     animation_param * param = (animation_param *)mGEffAnimationGetTarget(handle);
 
@@ -178,8 +178,7 @@ static void animated_cb(MGEFF_ANIMATION handle, HWND hWnd, int id, int *value)
     if((float)percent != param->cpf.percent)
     {
         param->cpf.percent = (float)percent;
-        param->fallback_ops->composite_layers(cc_context, param->layers, 2, &(param->cpf));
-printf("======================================== animated_cb, %f\n", param->cpf.percent);
+        onetime = param->fallback_ops->composite_layers(cc_context, param->layers, 2, &(param->cpf));
     }
 }
 

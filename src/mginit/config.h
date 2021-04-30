@@ -51,9 +51,9 @@ extern "C" {
 #define STRING_OS_NAME              "Hybrid OS Lite V1.1.0"
 
 // background color for tile bar, indicator bar and description bar
-#define BK_COLOR_R      140
-#define BK_COLOR_G      140
-#define BK_COLOR_B      140
+#define BK_COLOR_R      0
+#define BK_COLOR_G      0
+#define BK_COLOR_B      0
 #define BK_TRANSPARENT  0xF0
 
 // for catch mouse event
@@ -71,6 +71,8 @@ extern "C" {
 #define APP_NAME_LENGTH             (128)
 #define HISHELL_MAX_PATH            (256)
 #define STYLE_LENGTH                (512)
+
+typedef void (* CC_TRANSIT_TO_LAYER) (CompositorCtxt* ctxt, MG_Layer* to_layer);
 
 typedef enum
 {

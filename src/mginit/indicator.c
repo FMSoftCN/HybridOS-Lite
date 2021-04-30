@@ -760,15 +760,24 @@ HWND create_indicator_bar(void)
     CreateInfo.ty = __os_global_struct.rect_indicator.top;
     CreateInfo.rx = __os_global_struct.rect_indicator.right;
     CreateInfo.by = __os_global_struct.rect_indicator.bottom;
+#if 0
     CreateInfo.iBkColor = RGBA2Pixel(HDC_SCREEN, 0xFF, 0xFF, 0xFF, 0xFF); 
+#else
+    CreateInfo.iBkColor = COLOR_black;
+#endif
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
 
+#if 0
     __os_global_struct.hIndicatorBar = CreateMainWindowEx2 (&CreateInfo, \
                                         0L, NULL, NULL, ST_PIXEL_ARGB8888,
                                         MakeRGBA (BK_COLOR_R, BK_COLOR_G, \
                                                   BK_COLOR_B, BK_TRANSPARENT),\
                                         CT_ALPHAPIXEL, 0xFF);
+#else
+    __os_global_struct.hIndicatorBar = CreateMainWindow(&CreateInfo);
+#endif
+
     if (__os_global_struct.hIndicatorBar == HWND_INVALID)
         return HWND_INVALID;
 

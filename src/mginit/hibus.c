@@ -66,6 +66,10 @@ static char * launchRunner(hibus_conn* conn, const char* from_endpoint, \
     return NULL;
 }
 
+static void my_transit_to_layer (CompositorCtxt* ctxt, MG_Layer* to_layer)
+{
+}
+
 static char * configChange(hibus_conn* conn, const char* from_endpoint, \
         const char* method_name, const char* method_param, int *err_code)
 {
@@ -74,6 +78,9 @@ static char * configChange(hibus_conn* conn, const char* from_endpoint, \
     char temp_path[HISHELL_MAX_PATH] = {0};
     page_struct * page = NULL;
     char layer_name[16];
+    CompositorOps* fallback_ops = NULL;
+    fallback_ops = (CompositorOps*)ServerGetCompositorOps (COMPSOR_NAME_FALLBACK);
+    CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
 
     // change configure file
     readlink("/proc/self/exe", manifest_path, HISHELL_MAX_PATH);
@@ -88,7 +95,9 @@ static char * configChange(hibus_conn* conn, const char* from_endpoint, \
     rename(new_path, manifest_path);
     rename(temp_path, new_path);
 
+    fallback_ops->transit_to_layer = my_transit_to_layer;
     end_apps();
+
     parse_manifest();
     page = __os_global_struct.page;
     while(page)
@@ -99,6 +108,7 @@ static char * configChange(hibus_conn* conn, const char* from_endpoint, \
     }
     page = find_page_by_id(__os_global_struct.current_page + 1);
     ServerSetTopmostLayer(page->layer);
+    fallback_ops->transit_to_layer = old_transit_to_lay;
 
     start_apps();
 

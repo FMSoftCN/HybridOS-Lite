@@ -219,14 +219,22 @@ HWND create_title_bar(void)
     CreateInfo.ty = __os_global_struct.rect_title.top;
     CreateInfo.rx = __os_global_struct.rect_title.right;
     CreateInfo.by = __os_global_struct.rect_title.bottom;
+#if 0
     CreateInfo.iBkColor = RGBA2Pixel(HDC_SCREEN, 0xFF, 0xFF, 0xFF, 0xFF); 
+#else
+    CreateInfo.iBkColor = COLOR_black;
+#endif
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
 
+#if 0
     __os_global_struct.hTitleBar = CreateMainWindowEx2 (&CreateInfo, 0L, \
                     NULL, NULL, ST_PIXEL_ARGB8888,
                     MakeRGBA (BK_COLOR_R, BK_COLOR_G, BK_COLOR_B, BK_TRANSPARENT),
                     CT_ALPHAPIXEL, 0xFF);
+#else
+    __os_global_struct.hTitleBar = CreateMainWindow(&CreateInfo);
+#endif
     if (__os_global_struct.hTitleBar == HWND_INVALID)
         return HWND_INVALID;
 
@@ -250,14 +258,22 @@ HWND create_description_bar(void)
     CreateInfo.ty = __os_global_struct.rect_description.top;
     CreateInfo.rx = __os_global_struct.rect_description.right;
     CreateInfo.by = __os_global_struct.rect_description.bottom;
+#if 0
     CreateInfo.iBkColor = RGBA2Pixel(HDC_SCREEN, 0xFF, 0xFF, 0xFF, 0xFF); 
+#else
+    CreateInfo.iBkColor = COLOR_black;
+#endif
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
 
+#if 0
     __os_global_struct.hDescriptionBar = CreateMainWindowEx2 (&CreateInfo, 0L, \
                     NULL, NULL, ST_PIXEL_ARGB8888,
                     MakeRGBA (BK_COLOR_R, BK_COLOR_G, BK_COLOR_B, BK_TRANSPARENT),
                     CT_ALPHAPIXEL, 0xFF);
+#else
+    __os_global_struct.hDescriptionBar = CreateMainWindow (&CreateInfo);
+#endif
     if (__os_global_struct.hDescriptionBar == HWND_INVALID)
         return HWND_INVALID;
 
