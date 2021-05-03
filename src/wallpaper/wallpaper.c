@@ -143,29 +143,22 @@ static HDC destroy_memdc_for_image_surface(HDC hdc,
 
 static void get_coordinate(int index)
 {
-    int quit = 1;
     int i = 0;
     int x = 0;
     int y = 0;
 
-    while(quit)
-    {
-        node[index].x = rand() % g_rcScr.right;
-        node[index].y = rand() % g_rcScr.bottom;
- 
-        for(i = 0; i < MAX_NUMBER; i++)
-        {
-            if(i == index)
-                continue;
-            x = node[index].x - node[i].x;
-            y = node[index].y - node[i].y;
+    node[index].x = rand() % g_rcScr.right;
+    node[index].y = rand() % g_rcScr.bottom;
 
-            if((abs(x) < FIX_RADIUS / 2) || (abs(y) < FIX_RADIUS / 2))
-                break;
-        }
-        
-        if(i == MAX_NUMBER)
-            quit = 0;
+    for (i = 0; i < MAX_NUMBER; i++) {
+        if (i == index)
+            continue;
+
+        x = node[index].x - node[i].x;
+        y = node[index].y - node[i].y;
+
+        if((abs(x) < FIX_RADIUS / 2) || (abs(y) < FIX_RADIUS / 2))
+            break;
     }
 }
 
