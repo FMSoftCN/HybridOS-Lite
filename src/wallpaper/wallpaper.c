@@ -51,11 +51,11 @@
 #define TIMER_INTERVAL  100
 #define MAX_NUMBER  10 
 #define MAX_STEP    100
-#define FIX_RADIUS  100
 #define RGBA_R      100
 #define RGBA_G      0
 #define RGBA_B      100
 #define RGBA_A      255
+
 
 typedef struct tagNodeInfo
 {
@@ -70,6 +70,7 @@ typedef struct tagNodeInfo
 
 cairo_t* global_cr = NULL;
 NodeInfo node[MAX_NUMBER];
+static int fixed_radius = 0;
 
 static cairo_surface_t *create_cairo_surface (HDC hdc, int width, int height)
 {
@@ -147,9 +148,11 @@ static void get_coordinate(int index)
     int i = 0;
     int x = 0;
     int y = 0;
+    int times = 0;
 
     while(quit)
     {
+        times ++;
         node[index].x = rand() % g_rcScr.right;
         node[index].y = rand() % g_rcScr.bottom;
  
@@ -160,12 +163,15 @@ static void get_coordinate(int index)
             x = node[index].x - node[i].x;
             y = node[index].y - node[i].y;
 
-            if((abs(x) < FIX_RADIUS / 2) || (abs(y) < FIX_RADIUS / 2))
+            if((abs(x) < fixed_radius / 2) || (abs(y) < fixed_radius / 2))
                 break;
         }
         
         if(i == MAX_NUMBER)
             quit = 0;
+
+        if(times > 10)
+            break;
     }
 }
 
@@ -188,6 +194,9 @@ static void paint(int width, int height)
 
     srand(time(NULL));
 
+    i = g_rcScr.right > g_rcScr.bottom ? g_rcScr.bottom : g_rcScr.right;
+    fixed_radius = i / 6;
+    
     for(i = 0; i < MAX_NUMBER; i++)
     {
         if(node[i].direction)
@@ -220,7 +229,7 @@ static void paint(int width, int height)
         node[i].cr = cairo_create(node[i].surface);
 
         cairo_set_source_rgb(node[i].cr, node[i].rgb.r / 255.0, node[i].rgb.g / 255.0,  node[i].rgb.b / 255.0);
-        cairo_arc(node[i].cr, node[i].x, node[i].y, FIX_RADIUS * node[i].step / MAX_STEP, 0, 2 * M_PI);
+        cairo_arc(node[i].cr, node[i].x, node[i].y, fixed_radius * node[i].step / MAX_STEP, 0, 2 * M_PI);
         cairo_fill(node[i].cr);
 
         cairo_set_operator(global_cr, CAIRO_OPERATOR_ADD);
@@ -268,6 +277,7 @@ static void paint(int width, int height)
         }
     }
     SyncUpdateDC(HDC_SCREEN);
+
     return;
 }
 
@@ -302,6 +312,7 @@ int MiniGUIMain (int argc, const char* argv[])
         node[i].rgb.b = RGBA_B;
         node[i].rgb.a = RGBA_A;
     }
+
     SetTimer(HWND_DESKTOP, ID_TIMER, TIMER_INTERVAL);
 
     while (GetMessage(&Msg, HWND_DESKTOP)) 
