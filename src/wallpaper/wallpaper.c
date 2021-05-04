@@ -144,10 +144,10 @@ static HDC destroy_memdc_for_image_surface(HDC hdc,
 
 static void get_coordinate(int index)
 {
-    int quit = 1;
     int i = 0;
     int x = 0;
     int y = 0;
+    int quit = 1;
     int times = 0;
 
     while(quit)
