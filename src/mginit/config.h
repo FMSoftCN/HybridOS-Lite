@@ -54,7 +54,7 @@ extern "C" {
 #define BK_COLOR_R      0
 #define BK_COLOR_G      0
 #define BK_COLOR_B      0
-#define BK_TRANSPARENT  0xF0
+#define BK_TRANSPARENT  0xA0
 
 // for catch mouse event
 #define PRESS_TIMEOUT               (5)

@@ -42,8 +42,8 @@ extern "C" {
 #include <cairo/cairo-drm.h>
 #endif
 
+#include <hisvg.h>
 #include <glib.h>
-#include <libhirsvg/rsvg.h>
 
 // for strength length
 #define MAX_NAME_LENGTH     128 
@@ -70,7 +70,7 @@ typedef struct tag_Global_Param
 
     // for draw icon
     char button_color[32];
-    RsvgStylePair color_pair;
+    char color_style[64];
     cairo_t * icon_cr;
     cairo_surface_t * icon_surface;
 

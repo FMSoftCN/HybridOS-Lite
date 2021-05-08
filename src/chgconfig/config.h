@@ -43,7 +43,7 @@ extern "C" {
 #endif
 
 #include <glib.h>
-#include <libhirsvg/rsvg.h>
+#include <hisvg.h>
 
 // for strength length
 #define MAX_NAME_LENGTH     128 
@@ -66,7 +66,8 @@ typedef struct tag_Global_Param
 
     // for draw icon
     char button_color[2][32];
-    RsvgStylePair color_pair [2];
+    char color_style[2][64];
+
     cairo_t * icon_cr[2];
     cairo_surface_t * icon_surface[2];
 

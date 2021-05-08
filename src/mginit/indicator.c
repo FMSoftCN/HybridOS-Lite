@@ -53,7 +53,7 @@
 #endif
 
 #include <glib.h>
-#include <libhirsvg/rsvg.h>
+#include <hisvg.h>
 
 #include "../include/sysconfig.h"
 #include "config.h"
@@ -81,7 +81,7 @@ static Indicator indicator;
 
 static cairo_t *cr[2];
 static cairo_surface_t *surface[2];
-static RsvgStylePair button_color_pair[2];
+static char button_color_style[2][64];
 
 static void my_transit_to_layer (CompositorCtxt* ctxt, MG_Layer* to_layer)
 {
@@ -260,36 +260,45 @@ static void calculate_pre(BOOL sub)
 
 static void loadSVGFromFile(const char* file, int index)
 {
-    RsvgHandle *handle;
+    HiSVGHandle *handle;
+    HiSVGRect vbox;
+    HiSVGDimension dimensions;
     GError *error = NULL;
-    RsvgDimensionData dimensions;
     double factor_width = 0.0f;
     double factor_height = 0.0f;
 
     // read file from svg file
-    handle = rsvg_handle_new_from_file(file, &error);
+    handle = hisvg_handle_new_from_file(file, &error);
     if(error)
     {
         surface[index] = NULL;
         cr[index] = NULL;
         return;
     }
-    rsvg_handle_get_dimensions(handle, &dimensions);
+    hisvg_handle_get_dimensions(handle, &dimensions);
 
     // create cairo_surface_t and cairo_t for one picture
     if(index == 0)
     {
         surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
                                             SQUARE_LENGTH, SQUARE_LENGTH);
-        factor_width = (double)SQUARE_LENGTH / (double)dimensions.width;
-        factor_height = (double)SQUARE_LENGTH / (double)dimensions.height;
+        factor_width = (double)SQUARE_LENGTH / (double)dimensions.w.length;
+        factor_height = (double)SQUARE_LENGTH / (double)dimensions.h.length;
+        vbox.x = 0;
+        vbox.y = 0;
+        vbox.width = SQUARE_LENGTH;
+        vbox.height = SQUARE_LENGTH;
     }
     else
     {
         surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
             SQUARE_LENGTH / UNSELECT_RATIO, SQUARE_LENGTH / UNSELECT_RATIO);
-        factor_width = (double)SQUARE_LENGTH / (double)dimensions.width / (double)UNSELECT_RATIO;
-        factor_height = (double)SQUARE_LENGTH / (double)dimensions.height / (double)UNSELECT_RATIO;
+        factor_width = (double)SQUARE_LENGTH / (double)dimensions.w.length / (double)UNSELECT_RATIO;
+        factor_height = (double)SQUARE_LENGTH / (double)dimensions.h.length / (double)UNSELECT_RATIO;
+        vbox.x = 0;
+        vbox.y = 0;
+        vbox.width = SQUARE_LENGTH / UNSELECT_RATIO;
+        vbox.height = SQUARE_LENGTH / UNSELECT_RATIO;
     }
     cr[index] = cairo_create(surface[index]);
 
@@ -304,10 +313,11 @@ static void loadSVGFromFile(const char* file, int index)
 
     cairo_set_source_rgb (cr[index],  r * alpha, g * alpha, b * alpha);
     cairo_paint (cr[index]);
-    rsvg_handle_render_cairo_style (handle, cr[index], &button_color_pair[index], 1);
+    hisvg_handle_set_stylesheet(handle, NULL, button_color_style[index], strlen(button_color_style[index]), NULL);
+    hisvg_handle_render_cairo(handle, cr[index], &vbox, NULL, NULL);
     cairo_restore (cr[index]);
 
-    g_object_unref (handle);
+    hisvg_handle_destroy(handle);
 }
 
 // the window proc of indicator bar
@@ -361,17 +371,17 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             surface[0] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, \
                                     (int)SQUARE_LENGTH, (int)SQUARE_LENGTH);
             cr[0] = cairo_create (surface[0]);
-            button_color_pair[0].name = "color";
-            button_color_pair[0].value = SELECT_COLOR;
-            button_color_pair[0].important = 0;
+            strcpy(button_color_style[0], "svg { color:");
+            strcat(button_color_style[0], SELECT_COLOR);
+            strcat(button_color_style[0], "; } ");
             loadSVGFromFile(path, 0);
 
             surface[1] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, \
                                     (int)SQUARE_LENGTH, (int)SQUARE_LENGTH);
             cr[1] = cairo_create (surface[1]);
-            button_color_pair[1].name = "color";
-            button_color_pair[1].value = UNSELECT_COLOR;
-            button_color_pair[1].important = 0;
+            strcpy(button_color_style[1], "svg { color:");
+            strcat(button_color_style[1], UNSELECT_COLOR);
+            strcat(button_color_style[1], "; } ");
             loadSVGFromFile(path, 1);
         }
             break;
@@ -760,20 +770,16 @@ HWND create_indicator_bar(void)
     CreateInfo.ty = __os_global_struct.rect_indicator.top;
     CreateInfo.rx = __os_global_struct.rect_indicator.right;
     CreateInfo.by = __os_global_struct.rect_indicator.bottom;
-#if 0
-    CreateInfo.iBkColor = RGBA2Pixel(HDC_SCREEN, 0xFF, 0xFF, 0xFF, 0xFF); 
-#else
     CreateInfo.iBkColor = COLOR_black;
-#endif
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
 
-#if 0
+#if 1 
     __os_global_struct.hIndicatorBar = CreateMainWindowEx2 (&CreateInfo, \
                                         0L, NULL, NULL, ST_PIXEL_ARGB8888,
                                         MakeRGBA (BK_COLOR_R, BK_COLOR_G, \
                                                   BK_COLOR_B, BK_TRANSPARENT),\
-                                        CT_ALPHAPIXEL, 0xFF);
+                                        CT_ALPHAPIXEL, COLOR_BLEND_LEGACY);
 #else
     __os_global_struct.hIndicatorBar = CreateMainWindow(&CreateInfo);
 #endif

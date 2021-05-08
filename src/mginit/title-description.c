@@ -102,9 +102,9 @@ static LRESULT TitleBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM l
             return 0;
 
         case MSG_CREATE:
-            font_title = CreateLogFont (FONT_TYPE_NAME_SCALE_TTF, "ttf-Source", "UTF-8",
+            font_title = CreateLogFontEx (FONT_TYPE_NAME_SCALE_TTF, "Serif", "UTF-8",
                         FONT_WEIGHT_BOOK, FONT_SLANT_ROMAN, FONT_FLIP_NIL,
-                        FONT_OTHER_AUTOSCALE, FONT_UNDERLINE_NONE, FONT_STRUCKOUT_NONE,
+                        FONT_OTHER_AUTOSCALE, FONT_UNDERLINE_NONE, FONT_RENDER_SUBPIXEL,
                         15, 0);
             break;
 
@@ -169,9 +169,9 @@ static LRESULT DescriptionBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LP
             rect[1].right = window_rect.right - 10;
             rect[1].bottom = window_rect.bottom;
 
-            font_time = CreateLogFont (FONT_TYPE_NAME_SCALE_TTF, "ttf-Source", "UTF-8",
+            font_time = CreateLogFontEx (FONT_TYPE_NAME_SCALE_TTF, "Serif", "UTF-8",
                         FONT_WEIGHT_BOOK, FONT_SLANT_ROMAN, FONT_FLIP_NIL,
-                        FONT_OTHER_AUTOSCALE, FONT_UNDERLINE_NONE, FONT_STRUCKOUT_NONE,
+                        FONT_OTHER_AUTOSCALE, FONT_UNDERLINE_NONE, FONT_RENDER_SUBPIXEL,
                         15, 0);
 
             SetTimer(hWnd, ID_TIMER_BAR, 100);
@@ -219,19 +219,15 @@ HWND create_title_bar(void)
     CreateInfo.ty = __os_global_struct.rect_title.top;
     CreateInfo.rx = __os_global_struct.rect_title.right;
     CreateInfo.by = __os_global_struct.rect_title.bottom;
-#if 0
-    CreateInfo.iBkColor = RGBA2Pixel(HDC_SCREEN, 0xFF, 0xFF, 0xFF, 0xFF); 
-#else
     CreateInfo.iBkColor = COLOR_black;
-#endif
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
 
-#if 0
+#if 1
     __os_global_struct.hTitleBar = CreateMainWindowEx2 (&CreateInfo, 0L, \
                     NULL, NULL, ST_PIXEL_ARGB8888,
                     MakeRGBA (BK_COLOR_R, BK_COLOR_G, BK_COLOR_B, BK_TRANSPARENT),
-                    CT_ALPHAPIXEL, 0xFF);
+                    CT_ALPHAPIXEL, COLOR_BLEND_LEGACY);
 #else
     __os_global_struct.hTitleBar = CreateMainWindow(&CreateInfo);
 #endif
@@ -258,19 +254,15 @@ HWND create_description_bar(void)
     CreateInfo.ty = __os_global_struct.rect_description.top;
     CreateInfo.rx = __os_global_struct.rect_description.right;
     CreateInfo.by = __os_global_struct.rect_description.bottom;
-#if 0
-    CreateInfo.iBkColor = RGBA2Pixel(HDC_SCREEN, 0xFF, 0xFF, 0xFF, 0xFF); 
-#else
     CreateInfo.iBkColor = COLOR_black;
-#endif
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
 
-#if 0
+#if 1
     __os_global_struct.hDescriptionBar = CreateMainWindowEx2 (&CreateInfo, 0L, \
                     NULL, NULL, ST_PIXEL_ARGB8888,
                     MakeRGBA (BK_COLOR_R, BK_COLOR_G, BK_COLOR_B, BK_TRANSPARENT),
-                    CT_ALPHAPIXEL, 0xFF);
+                    CT_ALPHAPIXEL, COLOR_BLEND_LEGACY);
 #else
     __os_global_struct.hDescriptionBar = CreateMainWindow (&CreateInfo);
 #endif

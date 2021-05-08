@@ -127,18 +127,18 @@ static BOOL parse_config(int width, int height)
         if(GetValueFromEtcFile(file_path, "AppConfigData", "icon0_color", \
                                     global_param.button_color[0], 32) == ETC_OK)
         {
-            global_param.color_pair[0].name = "color";
-            global_param.color_pair[0].value = global_param.button_color[0];
-            global_param.color_pair[0].important = 0;
+            strcpy(global_param.color_style[0], "svg { color:");
+            strcat(global_param.color_style[0], global_param.button_color[0]);
+            strcat(global_param.color_style[0], "; } ");
         }
 
         memset(global_param.button_color[1], 0, 32);
         if(GetValueFromEtcFile(file_path, "AppConfigData", "icon1_color", \
                                     global_param.button_color[1], 32) == ETC_OK)
         {
-            global_param.color_pair[1].name = "color";
-            global_param.color_pair[1].value = global_param.button_color[1];
-            global_param.color_pair[1].important = 1;
+            strcpy(global_param.color_style[1], "svg { color:");
+            strcat(global_param.color_style[1], global_param.button_color[1]);
+            strcat(global_param.color_style[1], "; } ");
         }
     }
 
@@ -244,7 +244,7 @@ static cairo_surface_t *create_cairo_surface (HDC hdc, int width, int height)
 static HDC create_memdc_from_image_surface (cairo_surface_t* image_surface)
 {
     MYBITMAP my_bmp = {
-        flags: MYBMP_TYPE_RGB | MYBMP_FLOW_DOWN,
+        flags: MYBMP_TYPE_RGB | MYBMP_FLOW_DOWN | MYBMP_ALPHA,
         frames: 1,
         depth: 32,
     };
@@ -266,60 +266,59 @@ static HDC destroy_memdc_for_image_surface(HDC hdc,
 
 static void loadSVGFromFile(const char* file, int index)
 {
-    RsvgHandle *handle;
+    HiSVGHandle *handle;
+    HiSVGRect vbox;
+    HiSVGDimension dimensions;
     GError *error = NULL;
-    RsvgDimensionData dimensions;
     double factor_width = 0.0f;
     double factor_height = 0.0f;
     int width = RECTW(global_param.icon_rect[index]);
     int height = width;
 
     // read file from svg file
-    handle = rsvg_handle_new_from_file(file, &error);
+    handle = hisvg_handle_new_from_file(file, &error);
     if(error)
     {
         global_param.icon_surface[index] = NULL;
         global_param.icon_cr[index] = NULL;
         return;
     }
-    rsvg_handle_get_dimensions(handle, &dimensions);
+    hisvg_handle_get_dimensions(handle, &dimensions);
 
     // create cairo_surface_t and cairo_t for one picture
     global_param.icon_surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
                                                                         width, height);
-    factor_width = (double)width / (double)dimensions.width;
-    factor_height = (double)height / (double)dimensions.height;
+    vbox.x = 0;
+    vbox.y = 0;
+    vbox.width = width;
+    vbox.height = height;
+
+    factor_width = (double)width / (double)dimensions.w.length;
+    factor_height = (double)height / (double)dimensions.h.length;
     global_param.icon_cr[index] = cairo_create(global_param.icon_surface[index]);
 
     cairo_save(global_param.icon_cr[index]);
     factor_width = (factor_width > factor_height) ? factor_width : factor_height;
     cairo_scale(global_param.icon_cr[index], factor_width, factor_width);
 
-    float r = 0.0;
-    float g = 0.0;
-    float b = 0.0;
-    float alpha = 1.0;
-
-    cairo_set_source_rgb(global_param.icon_cr[index],  r * alpha, g * alpha, b * alpha);
+    cairo_set_source_rgba(global_param.icon_cr[index],  0.0, 0.0, 0.0, 0.0);
     cairo_paint(global_param.icon_cr[index]);
-    rsvg_handle_render_cairo_style(handle, global_param.icon_cr[index], \
-                                            &global_param.color_pair[index], 1);
+    hisvg_handle_set_stylesheet(handle, NULL, global_param.color_style[index], strlen(global_param.color_style[index]), NULL);
+    hisvg_handle_render_cairo(handle, global_param.icon_cr[index], &vbox, NULL, NULL);
     cairo_restore(global_param.icon_cr[index]);
 
-    g_object_unref (handle);
+    hisvg_handle_destroy(handle);
 }
 
 static void paint_svg(HWND hwnd, HDC hdc, int index)
 {
-    float alpha = 1.0;
     int width = RECTW(global_param.icon_rect[index]);
     int height = width;
 
     HDC csdc = create_memdc_from_image_surface(global_param.icon_surface[index]);
     if (csdc != HDC_SCREEN && csdc != HDC_INVALID)
     {
-        SetMemDCColorKey(csdc, MEMDC_FLAG_SRCCOLORKEY,
-                MakeRGB(255 * alpha, 255 * alpha, 255 * alpha));
+        SetMemDCAlpha (csdc, MEMDC_FLAG_SRCPIXELALPHA, 0);
         BitBlt(csdc, 0, 0, width, height, hdc, \
                     global_param.icon_rect[index].left, global_param.icon_rect[index].top, 0);
     }
@@ -374,9 +373,9 @@ static LRESULT ChgConfigWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
                 global_param.font_size = CAPTION_FONT;
 
             // create font
-            font_caption = CreateLogFont (FONT_TYPE_NAME_SCALE_TTF, "ttf-Source", "UTF-8",
+            font_caption = CreateLogFontEx (FONT_TYPE_NAME_SCALE_TTF, "Serif", "UTF-8",
                         FONT_WEIGHT_BOOK, FONT_SLANT_ROMAN, FONT_FLIP_NIL,
-                        FONT_OTHER_AUTOSCALE, FONT_UNDERLINE_NONE, FONT_STRUCKOUT_NONE,
+                        FONT_OTHER_AUTOSCALE, FONT_UNDERLINE_NONE, FONT_RENDER_SUBPIXEL,
                         global_param.font_size, 0);
 
             // do not use getsture
@@ -473,7 +472,10 @@ int MiniGUIMain (int argc, const char* argv[])
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
     
-    hMainWnd = CreateMainWindow (&CreateInfo);
+    hMainWnd = CreateMainWindowEx2 (&CreateInfo, \
+                                        0L, NULL, NULL, ST_PIXEL_ARGB8888,
+                                        MakeRGBA (0x00, 0x00, 0x00, 0xA0),\
+                                        CT_ALPHAPIXEL, COLOR_BLEND_LEGACY);
     
     if (hMainWnd == HWND_INVALID)
         return -1;
