@@ -104,12 +104,6 @@ static HDC create_memdc_from_image_surface (cairo_surface_t* image_surface)
     return CreateMemDCFromMyBitmap(&my_bmp, NULL);
 }
 
-static HDC destroy_memdc_for_image_surface(HDC hdc,
-        cairo_surface_t* image_surface)
-{
-    DeleteMemDC (hdc);
-}
-
 static void paint(HWND hwnd, HDC hdc, int square_number, RECT * rect)
 {
     int i = 0;

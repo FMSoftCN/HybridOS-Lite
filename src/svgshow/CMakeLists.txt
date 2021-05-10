@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(svgshow)
 aux_source_directory(. DIR_SRCS)
-add_executable(svgshow ${DIR_SRCS})
+add_executable(svgshow ${DIR_SRCS} ../common/svgpaint.c)
 target_link_libraries(svgshow gobject-2.0 hicairo)
 if(PLATFORM_PX30)
 include_directories(${GLIB_INCLUDE_DIRS} ${HISVG_INCLUDE_DIR} ${MINIGUI_INCLUDE_DIRS} ${MGEFF_INCLUDE_DIRS})

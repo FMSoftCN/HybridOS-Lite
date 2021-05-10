@@ -11,7 +11,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 /*
-** config.h: It defines some strutures and micro for program.
+** sysconfig.h: It defines some strutures and micro for all applications.
 **
 ** Copyright (C) 2021 FMSoft (http://www.fmsoft.cn).
 **
@@ -28,12 +28,8 @@
 ** limitations under the License.
 */
 
-#ifndef _CONFIG_H
-#define _CONFIG_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
+#ifndef _SYSTEM_SVG_COMMON
+#define _SYSTEM_SVG_COMMON
 
 #include <cairo/cairo.h>
 #include <cairo/cairo-minigui.h>
@@ -42,50 +38,21 @@ extern "C" {
 #include <cairo/cairo-drm.h>
 #endif
 
-#include <glib.h>
 #include <hisvg.h>
+#include <glib.h>
 
-// for strength length
-#define MAX_NAME_LENGTH     128 
-#define HISHELL_MAX_PATH    256
+#ifdef __cplusplus
+extern "C" {
+#endif  /* __cplusplus */
 
-// for font size
-#define CAPTION_FONT        25 
-
-// for transparent
-#define BK_TRANSPARENT      0xA0
-
-typedef struct tag_Global_Param
-{
-    char config_file[MAX_NAME_LENGTH];
-    char css_file[MAX_NAME_LENGTH];
-
-    // caption
-    unsigned char caption[MAX_NAME_LENGTH];
-
-    // rect for element
-    RECT         caption_rect;
-    RECT         icon_rect[2];
-
-    // for draw icon
-    char button_color[2][32];
-    char color_style[2][64];
-
-    cairo_t * icon_cr[2];
-    cairo_surface_t * icon_surface[2];
-
-    // for hibus
-    hibus_conn * hibus_context;
-    HWND         main_hwnd;
-
-    // font size
-    int          font_size;
-} Global_Param;
-
+// svg fucntions
+HDC create_memdc_from_image_surface (cairo_surface_t *);
+void loadSVGFromFile(const char *, cairo_t **, cairo_surface_t **, char *, RECT);
+void paint_svg(HWND, HDC, RECT, cairo_surface_t *);
 
 
 #ifdef __cplusplus
 }
 #endif  /* __cplusplus */
 
-#endif /* _CONFIG_h */
+#endif /* _SYSTEM_SVG_COMMON */

@@ -49,11 +49,11 @@ extern "C" {
 #define MAX_NAME_LENGTH     128 
 #define HISHELL_MAX_PATH    256
 
+// for font size
 #define CAPTION_FONT        25 
 
-// for hibus
-#define SOCKET_PATH                 "/var/tmp/hibus.sock"
-#define HIBUS_HISHELL_NAME          "cn.fmsoft.hybridos.hishell"
+// for transparent
+#define BK_TRANSPARENT      0xA0
 
 typedef struct tag_Global_Param
 {

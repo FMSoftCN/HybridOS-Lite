@@ -45,6 +45,7 @@
 #include <hibus.h>
 
 #include "../include/sysconfig.h"
+#include "../include/svgpaint.h"
 #include "config.h"
 #include "hibus.h"
 #include "hidomlayout.h"
@@ -208,106 +209,6 @@ static BOOL parse_config(int width, int height)
     return TRUE;
 }
 
-// for cairo
-static cairo_surface_t *create_cairo_surface (HDC hdc, int width, int height)
-{
-    static cairo_device_t* cd = NULL;
-
-    if (hdc == HDC_INVALID) 
-        return cairo_minigui_surface_create_with_memdc (cd, CAIRO_FORMAT_RGB24, width, height);
-    else if (hdc != HDC_SCREEN && width > 0 && height > 0) 
-        return cairo_minigui_surface_create_with_memdc_similar (cd, hdc, width, height);
-    return cairo_minigui_surface_create (cd, hdc);
-}
-
-// for svg file
-static HDC create_memdc_from_image_surface (cairo_surface_t* image_surface)
-{
-    MYBITMAP my_bmp = {
-        flags: MYBMP_TYPE_RGB | MYBMP_FLOW_DOWN | MYBMP_ALPHA,
-        frames: 1,
-        depth: 32,
-    };
-
-    my_bmp.w = cairo_image_surface_get_width (image_surface);
-    my_bmp.h = cairo_image_surface_get_height (image_surface);
-    my_bmp.pitch = cairo_image_surface_get_stride (image_surface);
-    my_bmp.bits = cairo_image_surface_get_data (image_surface);
-    my_bmp.size = my_bmp.pitch * my_bmp.h;
-
-    return CreateMemDCFromMyBitmap(&my_bmp, NULL);
-}
-
-static HDC destroy_memdc_for_image_surface(HDC hdc,
-        cairo_surface_t* image_surface)
-{
-    DeleteMemDC (hdc);
-}
-
-static void loadSVGFromFile(const char* file)
-{
-    HiSVGHandle *handle;
-    HiSVGRect vbox;
-    HiSVGDimension dimensions;
-
-    GError *error = NULL;
-    double factor_width = 0.0f;
-    double factor_height = 0.0f;
-    int width = RECTW(global_param.icon_rect);
-    int height = width;
-
-    // read file from svg file
-    handle = hisvg_handle_new_from_file(file, &error);
-    if(error)
-    {
-        global_param.icon_surface = NULL;
-        global_param.icon_cr = NULL;
-        return;
-    }
-    hisvg_handle_get_dimensions(handle, &dimensions);
-
-    // create cairo_surface_t and cairo_t for one picture
-    global_param.icon_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
-                                                                        width, height);
-    vbox.x = 0;
-    vbox.y = 0;
-    vbox.width = width;
-    vbox.height = height;
-
-    factor_width = (double)width / (double)dimensions.w.length;
-    factor_height = (double)height / (double)dimensions.h.length;
-    global_param.icon_cr = cairo_create(global_param.icon_surface);
-
-    cairo_save(global_param.icon_cr);
-    factor_width = (factor_width > factor_height) ? factor_width : factor_height;
-    cairo_scale(global_param.icon_cr, factor_width, factor_width);
-
-    cairo_set_source_rgba(global_param.icon_cr,  0.0, 0.0, 0.0, 0.0);
-    cairo_paint(global_param.icon_cr);
-    hisvg_handle_set_stylesheet(handle, NULL, global_param.color_style, strlen(global_param.color_style), NULL);
-    hisvg_handle_render_cairo(handle, global_param.icon_cr, &vbox, NULL, NULL);
-    cairo_restore(global_param.icon_cr);
-
-    hisvg_handle_destroy(handle);
-}
-
-
-static void paint_svg(HWND hwnd, HDC hdc)
-{
-    int width = RECTW(global_param.icon_rect);
-    int height = width;
-
-    HDC csdc = create_memdc_from_image_surface(global_param.icon_surface);
-    if (csdc != HDC_SCREEN && csdc != HDC_INVALID)
-    {
-        SetMemDCAlpha (csdc, MEMDC_FLAG_SRCPIXELALPHA, 0);
-        BitBlt(csdc, 0, 0, width, height, hdc, \
-                    global_param.icon_rect.left, global_param.icon_rect.top, 0);
-    }
-    DeleteMemDC(csdc);
-    return;
-}
-
 static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
@@ -327,7 +228,7 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
                 DrawText (hdc, global_param.caption, strlen((char *)global_param.caption), \
                         &global_param.caption_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
-            paint_svg(hWnd, hdc);
+            paint_svg(hWnd, hdc, global_param.icon_rect, global_param.icon_surface);
 
             EndPaint (hWnd, hdc);
             return 0;
@@ -346,7 +247,8 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
                 sprintf(path, "%s/res/%s", dirname(path), global_param.svg_file);
             else
                 sprintf(path, "%s/res/gear.svg", dirname(path));
-            loadSVGFromFile(path);
+            loadSVGFromFile(path, &global_param.icon_cr, &global_param.icon_surface, \
+                                    global_param.color_style, global_param.icon_rect);
 
             if(global_param.font_size == 0)
                 global_param.font_size = CAPTION_FONT;
@@ -388,6 +290,8 @@ int MiniGUIMain (int argc, const char* argv[])
     char hibus_name[MAX_NAME_LENGTH] = {0};
     int fd_hibus = -1;
     int opt;
+    int compos_type = CT_OPAQUE;
+    DWORD bkgnd_color = MakeRGBA (0x00, 0x00, 0x00, 0xFF); 
 
     if(argc < 3)
         return 1;
@@ -438,10 +342,13 @@ int MiniGUIMain (int argc, const char* argv[])
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
     
-    hMainWnd = CreateMainWindowEx2 (&CreateInfo, \
-                                        0L, NULL, NULL, ST_PIXEL_ARGB8888,
-                                        MakeRGBA (0x00, 0x00, 0x00, 0xA0), \
-                                        CT_ALPHAPIXEL, COLOR_BLEND_LEGACY);
+#ifdef TRANSPARENT_BK
+    compos_type = CT_ALPHAPIXEL;
+    bkgnd_color = MakeRGBA (0x00, 0x00, 0x00, BK_TRANSPARENT); 
+#endif
+
+    hMainWnd = CreateMainWindowEx2 (&CreateInfo, 0L, NULL, NULL, ST_PIXEL_ARGB8888,
+                                    bkgnd_color, compos_type, COLOR_BLEND_LEGACY);
     
     if (hMainWnd == HWND_INVALID)
         return -1;

@@ -5,6 +5,12 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/include" "/usr/local/include/librsvg-2.0" "/usr/local/include/cairo")
 LINK_DIRECTORIES("/usr/lib" "/usr/local/lib")
 
+OPTION(TRANSPARENT_BK "Whether background of application is transparent" OFF)
+if(TRANSPARENT_BK)
+  MESSAGE(STATUS "The background of applications is transparent.")
+  ADD_DEFINITIONS(-DTRANSPARENT_BK)
+endif()
+
 find_package(MiniGUI 5.0.2 REQUIRED)
 find_package(mGEff 1.5.0 REQUIRED)
 find_package(GLIB 2.0 REQUIRED)

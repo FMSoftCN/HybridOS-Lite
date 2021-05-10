@@ -71,6 +71,7 @@ typedef struct tagReplyInfo
     unsigned int request3;
 } ReplyInfo;
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif  /* __cplusplus */
