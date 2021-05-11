@@ -37,6 +37,7 @@
 #include <libgen.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/time.h>
 
 #include <minigui/common.h>
 #include <minigui/minigui.h>

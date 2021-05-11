@@ -311,7 +311,7 @@ void start_apps()
             {
                 sprintf(layer, "layer%d", id - 1);
                 runner->pid = exec_lite_runner(runner->entry, runner->name, layer);
-
+printf("============================================================================================== start app: %s\n", runner->entry);
                 if(runner->pid > 0)
                     runner->status = RS_RUN;
                 else

@@ -7,7 +7,7 @@ fi
 source myconfig.sh
 
 build_libraries() {
-    for comp in hicairo hirsvg; do
+    for comp in hicairo hisvg; do
         echo "BUILDING '$comp'"
         cd $comp
         ./autogen.sh && ./configure && make clean && make -j$NR_JOBS && sudo make install

@@ -14,8 +14,8 @@ for comp in minigui-res minigui mgeff; do
     git clone $MINIGUI_REPO_URL/$comp.git -b $MINIGUI_BRANCH_NAME
 done
 
-# hicairo, hirsvg library
-for comp in hicairo hirsvg; do
+# hicairo, hisvg library
+for comp in hicairo hisvg; do
     git clone $LIB_REPO_URL/$comp.git -b $RENDER_BRANCH_NAME
 done
 
