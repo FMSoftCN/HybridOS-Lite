@@ -117,6 +117,7 @@ static int format_request(int cli, int clifd, void* buff, size_t len)
     return 0;
 }
 
+
 int MiniGUIMain (int args, const char* arg[])
 {
     struct sigaction siga;                      // for process quit
@@ -126,6 +127,8 @@ int MiniGUIMain (int args, const char* arg[])
     page_struct * page = NULL;
 
     int fd_hibus = -1;
+    CompositorOps* fallback_ops = (CompositorOps*)ServerGetCompositorOps (COMPSOR_NAME_FALLBACK);
+    CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
 
     // clean global structure
     memset(&__os_global_struct, 0, sizeof(OS_Global_struct));
@@ -171,7 +174,10 @@ int MiniGUIMain (int args, const char* arg[])
         page = page->next;
     }
     page = find_page_by_id(__os_global_struct.current_page + 1);
+    // no animation
+    fallback_ops->transit_to_layer = NULL;
     ServerSetTopmostLayer(page->layer);
+    fallback_ops->transit_to_layer = old_transit_to_lay;
 
     
     // step 6: start wallpaper and 3 windows

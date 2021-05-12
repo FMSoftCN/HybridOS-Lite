@@ -1,10 +1,6 @@
-# Building Samples for HybridOS Lite
-
-本文档假设用户使用的是 `Ubuntu Linux 18.04/20.04 LTS`。
 
 为支持丰富的功能，`HybridOS` 具有庞大的软件栈。但是对于诸如 `IoT` 这样的嵌入式设备而言，由于硬件条件的限制，使其无法支撑 `HybridOS` 的资源开销。为了能在这些设备中使用 `HybridOS`，我们在 `HybridOS` 软件协议栈中，挑选了一些体积小、适用范围广的软件库，组成了 `HybridOS Lite`。`HybridOS Lite` 特别适用于成本敏感的嵌入式设备。通常情况下，这些设备最多只有 64M RAM，以及 64M 存储空间。
 
-本文档将告诉读者，如何使用 `HybridOS Lite` 进行编程。
 
 ## HybridOS Lite 的技术特点  
 
@@ -97,6 +93,8 @@ hybridos-lite/
 ## 编译步骤  
 
 ### 前置条件
+
+本文档假设用户使用的是 `Ubuntu Linux 18.04/20.04 LTS`。
 
 在 `Ubuntu Linux` 中，用户使用 `apt install <package_name>` 命令，用以安装下面的软件包。
 
