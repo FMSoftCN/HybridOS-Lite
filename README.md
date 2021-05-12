@@ -10,7 +10,7 @@
 
 - 体积小巧，更少的系统开销：
 
-下面是对 `HybridOS Lite` 主要依赖库的统计（`arm v7` 版本）：
+下面是对 `HybridOS Lite` 主要依赖库的统计（`arm` 版本）：
 
 ``` bash
 libhibox.so          110576 
