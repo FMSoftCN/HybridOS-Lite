@@ -46,7 +46,7 @@ liblibmgeff.so        31104
 `MiniGUI` 做为国内最成功的多窗口图形系统，此次推出 `HybridOS Lite`，不但继承了多窗口管理系统，并在绘制中，引入了 `cairo` 矢量图形库接口。使用 `cairo`，可以轻松进行缩放、旋转、变换，极大降低了开发难度；使用矢量图形，不但减少了图形的存储空间，而且在缩放中消除了锯齿。做为开发者，不但可以使用 `MiniGUI API` 编程，同时也可使用 `Cairo API` 进行编程。流行新技术的引入，丰富了开发者的编程手段，增强了人机的界面的流畅度、友好性，极大的提高了用户体验。
 
 
-## Architecture of this directory  
+## 本代码的目录结构  
 
 ```
 hybridos-lite/
@@ -121,7 +121,7 @@ hybridos-lite/
    * libxml2-dev
    * libssl1.0-dev
 
-在 `Ubuntu 18.04/20.04` 下，可适用下面的命令，编译并安装 'HybridOS Lite`：
+在 `Ubuntu 18.04/20.04` 下，可使用下面的命令，编译并安装 'HybridOS Lite`：
 
 1. 获得源代码
 
