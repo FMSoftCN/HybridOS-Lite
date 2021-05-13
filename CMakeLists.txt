@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/include" "/usr/local/include/librsvg-2.0" "/usr/local/include/cairo")
-LINK_DIRECTORIES("/usr/lib" "/usr/local/lib")
+INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/include" "/${CMAKE_SYSROOT}usr/local/include/cairo")
+LINK_DIRECTORIES("${CMAKE_SYSROOT}/usr/lib" "${CMAKE_SYSROOT}/usr/local/lib")
 
 OPTION(TRANSPARENT_BK "Whether background of application is transparent" OFF)
 if(TRANSPARENT_BK)
