@@ -1,5 +1,5 @@
-【主题】HybridOS Lite 介绍   
-【摘要】本文描述了 `HybridOS Lite` 的基本概念，并讲述了编程的基本方法和思路  
+【主题】HybridOS Lite 简介  
+【摘要】本文对 `HybridOS Lite` 进行了概要介绍
 【版本】1.0  
 【作者】耿岳  
 【日期】2021 年 05 月  
@@ -12,28 +12,17 @@
 
 此文档不受合璧操作系统相关软件开源许可证的管辖。
 
-飞漫软件公开此文档的目标，用于向开发者解释 `HybridOS Lite` 的基本概念和编程方法。在未获得飞漫软件书面许可之前，任何人不得复制或者分发本文档的全部或部分内容，或利用本文档描绘的技术思路申请专利、撰写学术论文等。
+飞漫软件公开此文档的目标，用于向开发者介绍 `HybridOS Lite`。在未获得飞漫软件书面许可之前，任何人不得复制或者分发本文档的全部或部分内容，或利用本文档描绘的技术思路申请专利、撰写学术论文等。
 
 本文涉及到的飞漫软件或其合作伙伴的注册商标或商标，有关其详细列表，请查阅文档末尾。
 
 **目录**
 
-- [HybridOS Lite 新特性](#hybridos-lite-新特性)
-- [HybridOS Lite 的结构](#hybridos-lite-的结构)
-- [HybridOS Lite 基本概念](#hybridos-lite-基本概念)
-   + [屏幕的组成](#屏幕的组成)
-   + [页的构成与组织](#页的构成与组织)
-   + [MiniGUI 的层（Layer）](#minigui-的层（layyer）)
-   + [MiniGUI 的合成器（Compositor）](#minigui-的合成器（compositor）)
-   + [HybridOS Lite 的编程思路与步骤](#hybridos-lite-的编程思路与步骤)
-- [配置文件](#配置文件)
-   + [manifest.json 文件](#manifest.json-文件)
-   + [用户 CSS 文件](#用户-css-文件)
-   + [其他配置文件](#其他配置文件)
-- [HybridOS Lite 应用开发](#hybridos-lite-应用开发)
-   + [应用程序的启动参数](#应用程序的启动参数)
-   + [应用程序的布局](#应用程序的布局)
-   + [应用程序中的鼠标拖拽](#应用程序中的鼠标拖拽)
+- [HybridOS Lite 的技术特点](#hybridos-Lite-的技术特点)
+- [HybridOS Lite 的架构](#hybridos-Lite-的架构)
+- [代码的的目录结构](#代码的目录结构)
+- [编译步骤](#编译步骤)
+- [运行 HybridOS Lite](#运行-HybridOS-Lite)
 - [附：商标声明](#附商标声明)
 
 
@@ -65,7 +54,7 @@ liblibmgeff.so        32 KB
 
 - 数据驱动，连接云端的 `HiBus` 总线：
 
-数据驱动，是 `HybridOS Lite` 的核心思想之一。功能解耦，界面与数据逻辑分离后，`Hibus` 总线将所有模块串联起来，使之成为一个有机的整体。与传统的消息驱动机制相比，`Hibus` 总线做了几点重要改进：使用 `Json` 格式的数据传递，增强数据传输的灵活性；提供不同进程之间的事件订阅与远程调用，`Hibus` 总线不但是数据传输的通道，还是逻辑功能的载体；提供跨平台的网络接口，打通不同设备之间、本机业务与云服务之间的壁垒，为嵌入式设备参与云服务提供了有效的技术支持；
+数据驱动，是 `HybridOS Lite` 的核心思想之一。功能解耦，界面与数据逻辑分离后，`hibus` 总线将所有模块串联起来，使之成为一个有机的整体。与传统的消息驱动机制相比，`hibus` 总线做了几点重要改进：使用 `Json` 格式的数据传递，增强数据传输的灵活性；提供不同进程之间的事件订阅与远程调用，`hibus` 总线不但是数据传输的通道，还是逻辑功能的载体；提供跨平台的网络接口，打通不同设备之间、本机业务与云服务之间的壁垒，为嵌入式设备参与云服务提供了有效的技术支持；
 
 - 布局文件，模块组合易如反掌：
 
@@ -80,7 +69,42 @@ liblibmgeff.so        32 KB
 `MiniGUI` 做为国内最成功的多窗口图形系统，此次推出 `HybridOS Lite`，不但继承了多窗口管理系统，并在绘制中，引入了 `cairo` 矢量图形库接口。使用 `cairo`，可以轻松进行缩放、旋转、变换，极大降低了开发难度；使用矢量图形，不但减少了图形的存储空间，而且在缩放中消除了锯齿。做为开发者，不但可以使用 `MiniGUI API` 编程，同时也可使用 `Cairo API` 进行编程。流行新技术的引入，丰富了开发者的编程手段，增强了人机的界面的流畅度、友好性，极大的提高了用户体验。
 
 
-## 本代码的目录结构  
+## HybridOS Lite 的构架  
+
+下图给出了 `HybridOS Lite` 的架构：
+
+```
+ ---------------------------------------------------------------------------------
+| DockerBar, StatusBar,   |                  |                 |                  |
+| IndicatorBar,           |     GUI app1     |     GUI app2    |    GUI app ...   |        - main windows
+| DescriptionBar ...      |                  |                 |                  |____
+ ---------------------------------------------------------------------------------     |
+|  mginit w/ compositor   |                        Wallpaper                      |____| 
+ ---------------------------------------------------------------------------------     |
+|                                                                                 |    |
+|                 MiniGUI, hiCairo, hisvg, hibox, hibus, hidomlayout ...          |    | hiBus
+|                                                                                 |    |
+ ---------------------------------------------------------------------------------     |
+|                                hibusd and user daemons                          |____|
+ ---------------------------------------------------------------------------------
+|                               C/C++ runtime environment                         |
+ ---------------------------------------------------------------------------------
+|                               Linux Kernel/Drivers                              |
+ ---------------------------------------------------------------------------------
+```
+
+其中：
+- `hibusd`：`hibus` 守护进程，负责 `hibus` 
+- `libhibus`：
+- `libhicairo`：
+- `libhidomlayout`：
+- `libhisvg`：
+
+基础软件的重构
+hisvg：对原有的hirsvg进行了重构，去掉了不必要的部分（panggo)，增加了对 css 的支持
+hidomlayout：css解析部分使用的是，可以让非浏览器应用，使用CSS进行布局。
+
+## 代码的目录结构  
 
 ```
 hybridos-lite/
@@ -212,3 +236,43 @@ $ ./mginit
 
 - 用鼠标在屏幕上拖动，或者点击屏幕下方的 `indicator bar` 时，屏幕将在不同层间切换。
 ![SUMMER 2021](summer2021/figures/drag.png)
+
+
+## 附：商标声明
+
+本文提到的产品、技术或者术语名称，涉及北京飞漫软件技术有限公司在中国或其他地区注册的如下商标：
+
+1) 飛漫
+
+![飛漫](https://www.fmsoft.cn/application/files/cache/thumbnails/87f47bb9aeef9d6ecd8e2ffa2f0e2cb6.jpg)
+
+2) FMSoft
+
+![FMSoft](https://www.fmsoft.cn/application/files/cache/thumbnails/44a50f4b2a07e2aef4140a23d33f164e.jpg)
+
+3) 合璧
+
+![合璧](https://www.fmsoft.cn/application/files/4716/1180/1904/256132.jpg)
+![合璧](https://www.fmsoft.cn/application/files/cache/thumbnails/9c57dee9df8a6d93de1c6f3abe784229.jpg)
+![合壁](https://www.fmsoft.cn/application/files/cache/thumbnails/f59f58830eccd57e931f3cb61c4330ed.jpg)
+
+4) HybridOS
+
+![HybridOS](https://www.fmsoft.cn/application/files/cache/thumbnails/5a85507f3d48cbfd0fad645b4a6622ad.jpg)
+
+5) HybridRun
+
+![HybridRun](https://www.fmsoft.cn/application/files/cache/thumbnails/84934542340ed662ef99963a14cf31c0.jpg)
+
+6) MiniGUI
+
+![MiniGUI](https://www.fmsoft.cn/application/files/cache/thumbnails/54e87b0c49d659be3380e207922fff63.jpg)
+
+6) xGUI
+
+![xGUI](https://www.fmsoft.cn/application/files/cache/thumbnails/7fbcb150d7d0747e702fd2d63f20017e.jpg)
+
+7) miniStudio
+
+![miniStudio](https://www.fmsoft.cn/application/files/cache/thumbnails/82c3be63f19c587c489deb928111bfe2.jpg)
+

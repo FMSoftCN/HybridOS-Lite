@@ -53,12 +53,12 @@
  ---------------------------------------------------------------------------------
 | DockerBar, StatusBar,   |                  |                 |                  |
 | IndicatorBar,           |     GUI app1     |     GUI app2    |    GUI app ...   |        - main windows
-| DescriptionBar ...      |                  |                 |                  |
- ---------------------------------------------------------------------------------
-|  mginit w/ compositor   |                        Wallpaper                      |____ 
+| DescriptionBar ...      |                  |                 |                  |____
+ ---------------------------------------------------------------------------------     |
+|  mginit w/ compositor   |                        Wallpaper                      |____|
  ---------------------------------------------------------------------------------     |
 |                                                                                 |    |
-|   MiniGUI, hiCairo, hirsvg, hibox, hibus, hidomlayout, LibPNG, LibJPEG, ...     |    | hiBus
+|    MiniGUI, hiCairo, hisvg, hibox, hibus, hidomlayout, LibPNG, LibJPEG, ...     |    | hiBus
 |                                                                                 |    |
  ---------------------------------------------------------------------------------     |
 |                                hibusd and user daemons                          |____|
