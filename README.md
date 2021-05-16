@@ -23,6 +23,7 @@
 - [代码的的目录结构](#代码的目录结构)
 - [编译步骤](#编译步骤)
 - [运行 HybridOS Lite](#运行-HybridOS-Lite)
+- [HybridOS Lite 编程介绍](#HybridOS-Lite-编程介绍)
 
 
 `HybridOS` 拥有丰富的功能，也就具有了庞大的软件栈。对于诸如 `IoT` 这样的嵌入式设备而言，出于硬件条件的限制，使其无法负担 `HybridOS` 的资源开销。为了能在这些设备中使用 `HybridOS`，我们在 `HybridOS` 软件栈中，挑选了一些体积小、适用范围广的软件库，形成了 `HybridOS Lite`，从而特别适用于成本敏感的嵌入式设备。通常情况下，这些设备最多只有 64 MB RAM，以及 64 MB 存储空间。
@@ -300,7 +301,6 @@ $ ./mginit
 - 用鼠标在屏幕上拖动，或者点击屏幕下方的 `indicator bar` 时，屏幕将在不同层间切换。
 ![SUMMER 2021](summer2021/figures/drag.png)
 
-## `HybridOS Lite` 如何编程
+## HybridOS Lite 编程介绍
 
-在 `HybridOS Lite` 中，如何编程，请看
-![HybridOS Lite 编程介绍 ](program-introduce.md)
+在 `HybridOS Lite` 中，如何编程，请看![HybridOS Lite 编程介绍 ](program-introduce.md)
