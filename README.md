@@ -303,4 +303,4 @@ $ ./mginit
 
 ## HybridOS Lite 编程介绍
 
-在 `HybridOS Lite` 中，如何编程，请看![HybridOS Lite 编程介绍 ](program-introduce.md)
+在 `HybridOS Lite` 中，如何编程，请看[HybridOS Lite 编程介绍](program-introduce.md)
