@@ -23,50 +23,114 @@
 - [代码的的目录结构](#代码的目录结构)
 - [编译步骤](#编译步骤)
 - [运行 HybridOS Lite](#运行-HybridOS-Lite)
-- [附：商标声明](#附商标声明)
 
 
-为支持丰富的功能，`HybridOS` 具有庞大的软件栈。但是对于诸如 `IoT` 这样的嵌入式设备而言，由于硬件条件的限制，使其无法支撑 `HybridOS` 的资源开销。为了能在这些设备中使用 `HybridOS`，我们在 `HybridOS` 软件协议栈中，挑选了一些体积小、适用范围广的软件库，组成了 `HybridOS Lite`。`HybridOS Lite` 特别适用于成本敏感的嵌入式设备。通常情况下，这些设备最多只有 64 MB RAM，以及 64 MB 存储空间。
-
+`HybridOS` 拥有丰富的功能，也就具有了庞大的软件栈。对于诸如 `IoT` 这样的嵌入式设备而言，出于硬件条件的限制，使其无法负担 `HybridOS` 的资源开销。为了能在这些设备中使用 `HybridOS`，我们在 `HybridOS` 软件栈中，挑选了一些体积小、适用范围广的软件库，形成了 `HybridOS Lite`，从而特别适用于成本敏感的嵌入式设备。通常情况下，这些设备最多只有 64 MB RAM，以及 64 MB 存储空间。
 
 ## HybridOS Lite 的技术特点  
 
-- 体积小巧，更少的系统开销：
+- 更小的体积，更少的系统开销：
 
 下面是对 `HybridOS Lite` 主要依赖库的统计（`arm` 版本）：
 
 ``` bash
-libhibox.so          111 KB
-libhibus.so          435 KB
-libhicairo           788 KB
-libhidomlayout.so    848 KB
-libhisvg.so          243 KB
+// for openssl
+libcrypto.so           2083 KB         // 能否去掉 hibusd 中对 openssl的依赖
+libssl.so               457 KB
 
-libminigui_procs.so 3001 KB
-liblibmgeff.so        32 KB
+// for libpcre
+libpcre.so              108 KB
+libpcreposix.so          10 KB
+libpcrecpp.so            30 KB
+
+// for libgerror
+libgpg-error.so         113 KB
+libgcrypt.so            879 KB
+libgfortran.so          855 KB
+
+// libffi for gobject
+libffi.so                31 KB
+
+// for glib
+libglib-2.0.so         1044 KB
+libgio-2.0.so          1400 KB
+libgmodule-2.0.so        14 KB
+libgobject-2.0.so       302 KB
+libgthread-2.0.so         5 KB
+libgomp.so              162 KB
+
+// for libinput
+libusb-1.0.so            96 KB
+libmtdev.so              18 KB
+libkmod.so               76 KB
+libevdev.so              67 KB
+libudev.so              117 KB
+libinput.so             335 KB
+
+// essential libraries
+libjpeg.so              305 KB
+libz.so                 100 KB
+libpng16.so             170 KB
+
+// essential libraries for MiniGUI
+libxml2.so             1221 KB
+libpixman-1.so          575 KB
+libexslt.so              76 KB
+libxslt.so              224 KB
+libharfbuzz.so          839 KB
+libharfbuzz-subset.so   112 KB
+libfreetype.so          530 KB
+libfontconfig.so        219 KB
+libminigui_procs.so    2724 KB
+libmgeff.so              73 KB
+
+// essential libraries for HybridOS Lite
+libhicairo.so           794 KB
+libhicairo-script-interpreter.so    102 KB
+libhicairo-gobject.so    26 KB
+libhibox.so             109 KB
+libhibus.so              39 KB
+libhidomlayout.so       814 KB
+libhisvg.so             257 KB
 ```
 
-除去操作系统内核，以及必要的基础库，`HybridOS Lite` 主要依赖库仅占用 5 MB 左右的存储空间。如果考虑使用中文 `Truetype` 字体，则还需大概 `10 MB` 左右存储空间（视字体大小而定）。
+以上全部统计为 15 MB。也即除去操作系统启动代码、内核，以及系统启动必需的基础库，`HybridOS Lite` 全部依赖库占用 `15 MB` 左右的存储空间。如果考虑使用中文 `Truetype` 字体，则还需大概 `10 MB` 左右存储空间（视字体大小而定）。
+
+下面是对本例代码，交叉编译为 `ARM` 版本，运行后内存使用状况的统计。在本例中，`HybridOS Lite` 共启动了 20 个应用，其中包含：mginit（必须）、hibusd（必须），以及 18 个用户应用：
+
+``` bash
+// 启动前
+MemTotal:         110744 kB
+MemFree:           89292 kB
+MemAvailable:      91720 kB
+
+// 启动后
+Memotal:          110744 kB
+MemFree:           35520 KB
+MemvaIlable:       54248 kB
+```
+
+从数据可以看出，`HybridOS Lite` 启动了 `20` 个应用，一共适用了 `54 MB` 内存。然后通过 `top` 命令查询各个应用的 `CPU` 占用率，其中`mginit` 和 `hibusd` 一共占用 `CPU` 百分比为 `1%`。剩余 `CPU` 均可为空闲或者为应用程序使用。
 
 - 功能解耦，多进程的编程模式：
 
-`HybridOS Lite` 编程思路是：将系统需求分离成若干个功能单一的独立模块，每个模块用一个单独进程实现。使得不同功能之间解耦，人机界面与数据逻辑的分隔。与传统嵌入式大进程、多线程的编程方式比，降低了系统的耦合度，减少了各个功能之间的干涉，增加了系统的稳定性。`HybridOS Lite` 可以监听到各个模块的工作状态，当某一模块发生异常时，`HybridOS Lite` 能够自动重启或者重新初始化该某块，使单一模块对系统的不良影响，降到最低；
+与传统嵌入式大进程、多线程的编程方式比，`HybridOS Lite` 采用了多进程的编程模式。将系统需求分解成若干个功能单一的独立模块，每个模块用一个单独进程实现。通过功能解耦的方式，数据的展现与数据的逻辑，也实现了分离。由于降低了系统的耦合度，从而减少了各个功能之间的干涉，增加了系统的稳定性。`HybridOS Lite` 还可以监听到各个模块的工作状态，当某一模块发生异常时，`HybridOS Lite` 能够自动重启或者重新初始化该某块，使单一模块对系统的不良影响，降到最低；
 
-- 数据驱动，连接云端的 `HiBus` 总线：
+- 数据驱动，跨越平台的 `HiBus` 总线：
 
-数据驱动，是 `HybridOS Lite` 的核心思想之一。功能解耦，界面与数据逻辑分离后，`hibus` 总线将所有模块串联起来，使之成为一个有机的整体。与传统的消息驱动机制相比，`hibus` 总线做了几点重要改进：使用 `Json` 格式的数据传递，增强数据传输的灵活性；提供不同进程之间的事件订阅与远程调用，`hibus` 总线不但是数据传输的通道，还是逻辑功能的载体；提供跨平台的网络接口，打通不同设备之间、本机业务与云服务之间的壁垒，为嵌入式设备参与云服务提供了有效的技术支持；
+数据驱动，是 `HybridOS Lite` 的核心思想之一。功能解耦，界面与数据逻辑分离后，`hibus` 总线负责将所有模块连接起来，使之成为一个有机的整体。与传统的消息驱动机制相比，`hibus` 总线做了几点重要改进：使用 `Json` 格式数据传递，增强数据传输的灵活性；提供不同进程之间的事件订阅与远程调用，`hibus` 总线不但是数据传输的通道，还是逻辑功能的载体；提供跨平台的网络接口，打通不同设备之间、本机业务与云服务之间的壁垒，为嵌入式设备参与云服务，提供了有效的技术支持；
 
 - 布局文件，模块组合易如反掌：
 
-在 `HybridOS Lite` 的编程思维中，功能解耦后形成若干功能模块，功能模块可以进行任意组合。功能模块如何组合，如何显示，则由布局文件 `manifest.json` 决定。在诸如工业控制面板、家用电器、智能门锁、智能音箱等产品中，多以屏为单位组织应用。因此 `HybridOS Lite` 使用了这样的应用组织方式。在布局文件中，指定了每屏所包含的应用、各个应用的位置、应用之间的通信关系等。同时提供了动态切换布局的机制，使得同一产品能轻易展示出不同的系统样貌；
+在 `HybridOS Lite` 的编程思想中，功能解耦后形成若干功能模块，功能模块可以类似组态软件，对其进行任意组合。功能模块如何组合，如何显示，则由布局文件 `manifest.json` 决定。在诸如工业控制面板、家用电器、智能门锁、智能音箱等产品中，多以屏为单位组织应用。因此 `HybridOS Lite` 使用了这样的应用组织方式。在布局文件中，指定了每屏所包含的应用、各个应用的位置、应用之间的通信关系等。同时提供了动态切换布局的机制，使得同一产品能轻易展示出不同的系统样貌；
 
-- 使用 `css`，应用界面随意调整：
+- 使用 `CSS`，应用界面随意调整：
 
-传统编程方式中，界面元素的调整，无外乎两种方式：修改代码、重新编译；写一个私有的配置文件，指定界面元素的属性。但是这两种方式，在 `HybridOS Lite` 中得到了彻底改变。`HybridOS Lite` 借鉴了 `Web` 开发中的 `css` 规范，利用其指定界面元素的诸多属性。由于有 `CSS` 规范可循，任一了解 `CSS` 规范的开发者，都可以在不了解渲染逻辑的情况下，通过修改 `css` 属性对界面元素进行修改。有规可循，极大的提高了代码迭代速度，降低了代码维护难度，也极大的降低了对二次开发者的要求；
+传统编程方式中，界面元素的调整，无外乎两种方式：修改代码、重新编译；写一个私有的配置文件，指定界面元素的属性。但是这两种方式，在 `HybridOS Lite` 中得到了彻底改变。`HybridOS Lite` 借鉴了 `Web` 开发中的 `CSS` 规范，利用其指定界面元素的诸多属性。由于有 `CSS` 规范可循，任一了解 `CSS` 规范的开发者，都可以在不了解渲染逻辑的情况下，通过修改 `CSS` 文件对界面元素进行修改，而非修改源代码。有规可循，极大的提高了代码迭代速度，降低了代码维护难度，也降低了对二次开发者的要求；
 
-- 技术为王，`MiniGUI` 与时俱进：
+- 博采众长，`MiniGUI` 的扩展与创新：
 
-`MiniGUI` 做为国内最成功的多窗口图形系统，此次推出 `HybridOS Lite`，不但继承了多窗口管理系统，并在绘制中，引入了 `cairo` 矢量图形库接口。使用 `cairo`，可以轻松进行缩放、旋转、变换，极大降低了开发难度；使用矢量图形，不但减少了图形的存储空间，而且在缩放中消除了锯齿。做为开发者，不但可以使用 `MiniGUI API` 编程，同时也可使用 `Cairo API` 进行编程。流行新技术的引入，丰富了开发者的编程手段，增强了人机的界面的流畅度、友好性，极大的提高了用户体验。
+`MiniGUI` 做为国内最成功的多窗口图形系统，此次推出 `HybridOS Lite`，不但继承了原有的多窗口管理系统，还在绘制中引入了 `cairo` 矢量图形库接口。使得开发者在编写 `MiniGUI API` 程序的时候，依然能够使用 `Cairo API`，极大的丰富了开发者的编程手段。与此同时，`MiniGUI 5.0` 版本推出了合成图式（`compositing schema`），这是增强界面用户友好度的一大利器。开发者通过修改默认合成器(`compositor`)的属性，或者创建自己的合成器，能够灵活的控制主窗口的位置、大小、层叠关系，进而在应用、层等切换时，实现动画效果。在嵌入式系统资源有限的情况下，产生不亚于 `PC` 桌面系统的用户体验。
 
 
 ## HybridOS Lite 的构架  
@@ -93,16 +157,15 @@ liblibmgeff.so        32 KB
  ---------------------------------------------------------------------------------
 ```
 
-其中：
-- `hibusd`：`hibus` 守护进程，负责 `hibus` 
-- `libhibus`：
-- `libhicairo`：
-- `libhidomlayout`：
-- `libhisvg`：
+其中核心的应用和库，解释说明如下：
+- `mginit`：`MiniGUI` 多进程版的核心程序，其负责多窗口图形系统的管理与消息的分发，合成器的创建与层之间的切换。并提供了多个公用 `bar`，方便用户操作；
+- `hibusd`：`hibus` 守护进程，负责 `hibus` 总线上数据的传输与分发；
+- `hibox`：提供了对 `json` 格式文本的解析处理；
+- `hibus`：向应用程序提供 `hibus` 总线功能，包括：事件的订阅与发送、远程过程调用的请求与执行结果的返回；
+- `hicairo`：用于图形元素的渲染。该库是对基础软件库 `libcairo` 的扩展，添加了 `MiniGUI` 的接口，可以在 `MiniGUI` 应用中直接使用 `Cairo API` 进行渲染； 
+- `hisvg`：用于 `svg` 图像元素的渲染。该库是对基础软件库 `librsvg` 的重构，去掉了诸如 `pango` 等不需要的部分，增添了对 `CSS` 的支持； 
+- `hidomlayout`：用于多窗口的布局，以及同一窗口中图形、图像元素的布局处理。通过对 `CSS` 样式的解析，获得各个窗口及界面元素的大小、位置、字体等诸多属性。其使非浏览器应用，能够利用 `CSS` 样式，对界面进行布局处理。
 
-基础软件的重构
-hisvg：对原有的hirsvg进行了重构，去掉了不必要的部分（panggo)，增加了对 css 的支持
-hidomlayout：css解析部分使用的是，可以让非浏览器应用，使用CSS进行布局。
 
 ## 代码的目录结构  
 
@@ -148,9 +211,9 @@ hybridos-lite/
   - `layout/`：包含了布局文件；
     - `manifest.json`：最重要的布局文件，其定义了每屏显示哪些应用程序，以及这些应用程序的布局；
     - `newconfig.json`：另外一个布局文件，用于展示如何动态切换布局；
-    - `default_layout.css`：默认的 `css` 文件。其为每个重要的 `dom` 元素设置了默认的布局样式；
-    - `svgshowx.css`：`svgshow` 应用的 `css` 文件。同一个应用显示在屏幕不同位置，大小不同时，需要不同的布局文件来指定各个元素的位置与大小；
-    - `chgconfigx.css`：`chgconfig` 应用的 `css` 文件。
+    - `default_layout.css`：默认的 `CSS` 文件。其为每个重要的 `dom` 元素设置了默认的布局样式；
+    - `svgshowx.css`：`svgshow` 应用的 `CSS` 文件。同一个应用显示在屏幕不同位置，大小不同时，需要不同的布局文件来指定各个元素的位置与大小；
+    - `chgconfigx.css`：`chgconfig` 应用的 `CSS` 文件。
 
 ## 编译步骤  
 
@@ -237,42 +300,7 @@ $ ./mginit
 - 用鼠标在屏幕上拖动，或者点击屏幕下方的 `indicator bar` 时，屏幕将在不同层间切换。
 ![SUMMER 2021](summer2021/figures/drag.png)
 
+## `HybridOS Lite` 如何编程
 
-## 附：商标声明
-
-本文提到的产品、技术或者术语名称，涉及北京飞漫软件技术有限公司在中国或其他地区注册的如下商标：
-
-1) 飛漫
-
-![飛漫](https://www.fmsoft.cn/application/files/cache/thumbnails/87f47bb9aeef9d6ecd8e2ffa2f0e2cb6.jpg)
-
-2) FMSoft
-
-![FMSoft](https://www.fmsoft.cn/application/files/cache/thumbnails/44a50f4b2a07e2aef4140a23d33f164e.jpg)
-
-3) 合璧
-
-![合璧](https://www.fmsoft.cn/application/files/4716/1180/1904/256132.jpg)
-![合璧](https://www.fmsoft.cn/application/files/cache/thumbnails/9c57dee9df8a6d93de1c6f3abe784229.jpg)
-![合壁](https://www.fmsoft.cn/application/files/cache/thumbnails/f59f58830eccd57e931f3cb61c4330ed.jpg)
-
-4) HybridOS
-
-![HybridOS](https://www.fmsoft.cn/application/files/cache/thumbnails/5a85507f3d48cbfd0fad645b4a6622ad.jpg)
-
-5) HybridRun
-
-![HybridRun](https://www.fmsoft.cn/application/files/cache/thumbnails/84934542340ed662ef99963a14cf31c0.jpg)
-
-6) MiniGUI
-
-![MiniGUI](https://www.fmsoft.cn/application/files/cache/thumbnails/54e87b0c49d659be3380e207922fff63.jpg)
-
-6) xGUI
-
-![xGUI](https://www.fmsoft.cn/application/files/cache/thumbnails/7fbcb150d7d0747e702fd2d63f20017e.jpg)
-
-7) miniStudio
-
-![miniStudio](https://www.fmsoft.cn/application/files/cache/thumbnails/82c3be63f19c587c489deb928111bfe2.jpg)
-
+在 `HybridOS Lite` 中，如何编程，请看
+![HybridOS Lite 编程介绍 ](program-introduce.md)

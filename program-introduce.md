@@ -1,6 +1,6 @@
-# HybridOS Lite 介绍 
+# HybridOS Lite 编程介绍 
 
-【主题】HybridOS Lite 介绍   
+【主题】HybridOS Lite 编程介绍   
 【摘要】本文描述了 `HybridOS Lite` 的基本概念，并讲述了编程的基本方法和思路  
 【版本】1.0  
 【作者】耿岳  
