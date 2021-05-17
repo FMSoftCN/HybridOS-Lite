@@ -721,7 +721,9 @@ int parse_manifest(void)
     printf("tileBoxStyle:%s, %d, %d, %d, %d\n", __os_global_struct.tile_style, \
             __os_global_struct.rect_title.left, __os_global_struct.rect_title.top, \
             __os_global_struct.rect_title.right, __os_global_struct.rect_title.bottom);
-    printf("pageBoxStyle:%s\n", __os_global_struct.page_style);
+    printf("pageBoxStyle:%s, %d, %d, %d, %d\n", __os_global_struct.page_style, \
+            __os_global_struct.rect_page.left, __os_global_struct.rect_page.top, \
+            __os_global_struct.rect_page.right, __os_global_struct.rect_page.bottom);
     printf("indicatorBoxStyle:%s, %d, %d, %d, %d\n", __os_global_struct.indicator_style, \
             __os_global_struct.rect_indicator.left, __os_global_struct.rect_indicator.top, \
             __os_global_struct.rect_indicator.right, __os_global_struct.rect_indicator.bottom);

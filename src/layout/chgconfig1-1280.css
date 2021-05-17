@@ -1,0 +1,30 @@
+#caption
+{
+    display:block; 
+    position: relative; 
+    left: 20%; 
+    top: 20%; 
+    width: 60%; 
+    height: 10%; 
+    font-size:30px;
+}
+
+#icon0
+{
+    display:inline-block; 
+    position: relative; 
+    left: 38%; 
+    top: 35%; 
+    width: 8%; 
+    height: 8%;
+}
+
+#icon1
+{
+    display:inline-block; 
+    position: relative; 
+    left: 46%; 
+    top: 35%; 
+    width: 8%; 
+    height: 8%;
+}
