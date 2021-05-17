@@ -1,10 +1,26 @@
 # HybridOS Lite
 
-HybridOS Lite 是 HybridOS 的精简版本，适用于对成本敏感的嵌入式设备，可运行在基于 Linux 内核，但只有 64MB RAM 的设备上。
+HybridOS Lite 是 HybridOS 的精简版本，适用于对成本敏感的嵌入式设备，可运行在基于 Linux 内核，但只有 64MB RAM 或更低配置的设备上。
 
 本仓库包含了 HybridOS Lite 的一个典型应用，以及相应的构建脚本。
 
 **目录**
+
+- [HybridOS Lite 的架构](#hybridos-lite-的架构)
+- [HybridOS Lite 的技术特点](#hybridos-lite-的技术特点)
+   + [多进程模式，解耦功能](#多进程模式解耦功能)
+   + [数据驱动](#数据驱动)
+   + [模块重组易如反掌](#模块重组易如反掌)
+   + [使用 CSS，应用界面随意调整](#使用-css应用界面随意调整)
+   + [更小的体积，更少的系统开销](#更小的体积更少的系统开销)
+- [目录结构](#目录结构)
+- [构建](#构建)
+   + [前置条件](#前置条件)
+- [运行 HybridOS Lite 示例应用](#运行-hybridos-lite-示例应用)
+- [系统开销统计](#系统开销统计)
+- [版权声明](#版权声明)
+   + [Special Statement](#special-statement)
+
 
 ## HybridOS Lite 的架构
 
@@ -47,7 +63,7 @@ HybridOS Lite 是 HybridOS 的精简版本，适用于对成本敏感的嵌入�
 
 有关 HybridOS Lite 上的应用开发，可进一步阅读[《HybridOS Lite 应用开发指南》](hybridos-lite-app-developing-guide.md)。
 
-## HybridOS Lite 的技术特点  
+## HybridOS Lite 的技术特点
 
 ### 多进程模式，解耦功能
 
@@ -75,7 +91,7 @@ HybridOS Lite 是 HybridOS 的精简版本，适用于对成本敏感的嵌入�
 
 文后的[系统开销统计](#系统开销统计) 给出了 HybridOS Lite 函数库大小以及运行 20 个应用进程情况下的系统资源占用情况。整体上，HybridOS Lite 可在拥有 64MB Flash 和 64MB RAM 的系统中运行。
 
-## 目录结构  
+## 目录结构
 
 ```
 hybridos-lite/
