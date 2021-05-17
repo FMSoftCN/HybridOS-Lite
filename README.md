@@ -1,8 +1,8 @@
 # HybridOS Lite
 
-HybridOS Lite 是 HybridOS 的精简版本，适用于对成本敏感的嵌入式设备，可运行在基于 Linux 内核，但只有 64MB RAM 或更低配置的设备上。
+HybridOS Lite 是 HybridOS（合壁操作系统）的精简版本，适用于对成本敏感的嵌入式设备，可运行在基于 Linux 内核，但只有 64MB RAM 或更低配置的设备上。
 
-本仓库包含了 HybridOS Lite 的一个典型应用，以及相应的构建脚本。
+本仓库包含了 HybridOS Lite 的一个典型示例应用，以及相应的构建脚本。
 
 **目录**
 
@@ -64,13 +64,13 @@ HybridOS Lite 是 HybridOS 的精简版本，适用于对成本敏感的嵌入�
 
 ## HybridOS Lite 的技术特点
 
-### 多进程模式，解耦功能
+### 多进程模式，解耦模块
 
 与传统的嵌入式开发中，开发者通常会编写一个应用程序把所有事儿都做了。而 HybridOS Lite 鼓励开发者采用多进程模式，将系统分解成若干个功能单一的独立程序，然后通过 hiBus 数据总线将这些程序对应的进程连接在一起。这样，图形界面应用不直接操作硬件，而只提供人机交互能力。这种设计，可大幅度降低系统的耦合度，尤其在底层功能不变，而界面经常变动的情形下，可大幅降低维护工作量。
 
 这种设计是 UNIX 哲学的具体体现：每个程序都短小精悍，功能单一，但组合起来可以完成复杂的功能。
 
-另外，这种设计还可以增加系统的稳定性。HybridOS Lite 还可以监听到各个模块的工作状态，当某一模块发生异常时，HybridOS Lite 能够自动重启或者重新初始化该模块，使该模块对系统的不良影响降到最低。
+另外，这种设计还可以增加系统的稳定性。HybridOS Lite 可以监听到各个模块的工作状态，当某一模块发生异常时，HybridOS Lite 能够自动重启或者重新初始化该模块，使该模块对系统的不良影响降到最低。
 
 在 HybrdiOS Lite 的架构中，MiniGUI 扮演了重要的角色。MiniGUI 的多进程运行模式，为模块解耦提供了技术支撑。MiniGUI 5.0 的合成图式（`compositing schema`），则是创建酷炫界面和交互能力的一大利器。开发者通过修改默认合成器（compositor）一些方法，或者创建定制的合成器，就能够灵活地控制窗口的位置、大小、层叠关系，进而在应用、屏幕等切换时，实现动画效果。最终，在嵌入式系统资源有限的情况下，我们可以获得不亚于桌面系统的用户交互体验。
 
@@ -119,7 +119,7 @@ hybridos-lite/
 └── cmake 
 ```
 
-如上图所示，显示了仓库中的主要目录，它们的是：
+如上图所示，显示了仓库中的主要目录，它们是：
 
 - `cmake/` ：包含 `Find<Package>.cmake` 文件，用于检查软件包的依赖性及获得编译参数；
 - `build-lib/`：包含了编译依赖库的脚本文件；
@@ -129,7 +129,7 @@ hybridos-lite/
   - `mginit/`：`mginit` 程序。展示了如何解析 `manifest.json` 文件，如何布局以及如何使用合成器，是 HybridOS Lite 的关键组件；
   - `wallpaper/`：动态壁纸应用；
   - `chgconfig/`：动态切换配置文件应用程序；
-  - `svgshow/`：展示在应用程序中如何使用 `svg` 图片；
+  - `svgshow/`：展示在应用程序中如何使用 SVG 图片；
   - `config`：包含了用户自定义的、与业务相关的数据文件；
   - `layout/`：包含了布局文件；
     - `manifest.json`：最重要的布局文件，其定义了每屏显示哪些应用程序，以及这些应用程序的布局；
@@ -138,9 +138,9 @@ hybridos-lite/
     - `svgshowx.css`：`svgshow` 应用的 CSS 文件。同一个应用显示在屏幕不同位置，大小不同时，需要不同的布局文件来指定各个元素的位置与大小；
     - `chgconfigx.css`：`chgconfig` 应用的 CSS 文件。
 
-## 构建
+## 在 PC 上构建开发环境
 
-我们假设用户使用的是 Ubuntu Linux 18.04/20.04 LTS。
+我们假设您使用的是 Ubuntu Linux 18.04/20.04 LTS。
 
 在 Ubuntu Linux 中，使用 `apt install <package_name>` 命令安装下面的软件包：
 
@@ -169,21 +169,21 @@ hybridos-lite/
 
 1. 获得源代码
 
-```
+```shell
 $ cd hybridos-lite/build-lib
 $ ./fetch-all.sh
 ```
 
 1. 编译 HybridOS Lite 依赖库
 
-```
+```shell
 $ ./build-all.sh
 $ cd ..
 ```
 
 1. 编译 HybridOS Lite
 
-```
+```shell
 $ mkdir build
 $ cd build
 $ cmake ../
@@ -196,13 +196,14 @@ $ make
 
 打开一个终端，执行下面的命令：
 
-```
+```shell
 $ cd hybridos-lite/build-lib/hibus/src 
 $ sudo hibusd -d
 ```
 
 在另外一个终端，执行下面的命令：
-```
+
+```shell
 $ cd hybridos-lite/bin 
 $ ./mginit
 ```
@@ -225,7 +226,7 @@ $ ./mginit
 
 下面是对 HybridOS Lite 主要依赖库的统计（除系统 C/C++ 库之外，ARM A8 架构）：
 
-```bash
+```
 
 libffi.so                31 KB
 libglib-2.0.so         1044 KB
