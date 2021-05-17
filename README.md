@@ -58,7 +58,7 @@ HybridOS Lite 是 HybridOS 的精简版本，适用于对成本敏感的嵌入�
    - <https://gitlab.fmsoft.cn/hybridos/hicairo>
 - `hiSVG`：该函数库提供了对 SVG 的解析和渲染能力。这个函数库基于 `librsvg`，但做了重构，去除了不必要的接口，去除了对 Pango 的依赖，并基于 hiDOMLayout 增强了对 CSS 的支持。
    - <https://gitlab.fmsoft.cn/hybridos/hisvg>
-- `hiDOMLayout`：该函数库提供了 DOM 树的维护功能以及 CSS 样式的解析功能，并可对 DOM 树执行基于 CSS 的风格化和布局。使用这个函数库，使得非 Web 前端应用，也可以利用 CSS 样式定义界面元素的样式及布局。
+- `hiDOMLayout`：该函数库提供了 DOM 树的维护功能以及 CSS 样式的解析功能，并可对 DOM 树执行基于 CSS 的风格化处理和布局处理。使用这个函数库，使得非 Web 前端应用，也可以利用 CSS 样式定义界面元素的样式及布局。
    - <https://gitlab.fmsoft.cn/hybridos/hidomlayout>
 
 有关 HybridOS Lite 上的应用开发，可进一步阅读[《HybridOS Lite 应用开发指南》](hybridos-lite-app-developing-guide.md)。
@@ -85,11 +85,11 @@ HybridOS Lite 是 HybridOS 的精简版本，适用于对成本敏感的嵌入�
 
 ### 使用 CSS，应用界面随意调整
 
-传统编程方式中，界面元素的调整，无外乎两种方式：第一，修改代码、重新编译；第二，写一个私有的配置文件，指定界面元素的属性。但是这两种方式，在 HybridOS Lite 中得到了彻底改变。HybridOS Lite 借鉴了 `Web` 前端开发中的 CSS 规范，利用其指定界面元素的诸多属性。由于有 CSS 规范可循，任一了解 CSS 规范的开发者，都可以在不了解渲染逻辑的情况下，通过修改 CSS 文件对界面元素进行修改，而非修改源代码。有规可循，极大地提高了代码迭代速度，降低了代码维护难度，也降低了对开发者的要求。
+传统编程方式中，界面元素的调整，无外乎两种方式：第一，修改代码、重新编译；第二，写一个私有的配置文件，指定界面元素的属性。但是这两种方式，在 HybridOS Lite 中得到了彻底改变。HybridOS Lite 借鉴了 Web 前端开发中的 CSS 规范，利用其指定界面元素的诸多属性。由于有 CSS 规范可循，任一了解 CSS 规范的开发者，都可以在不了解渲染逻辑的情况下，通过修改 CSS 文件对界面元素进行修改，而非修改源代码。有规可循，极大地提高了代码迭代速度，降低了代码维护难度，也降低了对开发者的要求。
 
-### 更小的体积，更少的系统开销
+### 小体积，大能力
 
-文后的[系统开销统计](#系统开销统计) 给出了 HybridOS Lite 函数库大小以及运行 20 个应用进程情况下的系统资源占用情况。整体上，HybridOS Lite 可在拥有 64MB Flash 和 64MB RAM 的系统中运行。
+文后的[系统开销统计](#系统开销统计) 给出了 HybridOS Lite 函数库大小以及运行 20 个应用进程情况下的系统资源占用情况。整体上，HybridOS Lite 可在拥有 64MB Flash 和 64MB RAM （或更低）的系统中运行。
 
 ## 目录结构
 
@@ -141,13 +141,11 @@ hybridos-lite/
 
 ## 构建
 
-### 前置条件
+我们假设用户使用的是 Ubuntu Linux 18.04/20.04 LTS。
 
-本文档假设用户使用的是 `Ubuntu Linux 18.04/20.04 LTS`。
+在 Ubuntu Linux 中，使用 `apt install <package_name>` 命令安装下面的软件包：
 
-在 `Ubuntu Linux` 中，用户使用 `apt install <package_name>` 命令，用以安装下面的软件包。
-
-* 编译工具：
+* 开发工具：
    * git
    * gcc/g++
    * binutils
@@ -160,7 +158,7 @@ hybridos-lite/
 * 依赖库：
    * libgtk2.0-dev
    * libjpeg-dev
-   * libpng-dev (libpng12-dev on Ubuntu Linux 16.04 instead)
+   * libpng-dev
    * libfreetype6-dev
    * libinput-dev
    * libdrm-dev
@@ -230,7 +228,6 @@ $ ./mginit
 
 ```bash
 
-// for glib
 libffi.so                31 KB
 libglib-2.0.so         1044 KB
 libgio-2.0.so          1400 KB
@@ -239,12 +236,10 @@ libgobject-2.0.so       302 KB
 libgthread-2.0.so         5 KB
 libgomp.so              162 KB
 
-// essential libraries
+// essential libraries for MiniGUI
 libjpeg.so              305 KB
 libz.so                 100 KB
 libpng16.so             170 KB
-
-// essential libraries for MiniGUI
 libpixman-1.so          575 KB
 libharfbuzz.so          839 KB
 libharfbuzz-subset.so   112 KB
@@ -281,7 +276,7 @@ MemvaIlable:       54248 kB
 
 ## 版权声明
 
-Copyright (C) 2019 Beijing FMSoft Technologies Co., Ltd.
+Copyright (C) 2021 Beijing FMSoft Technologies Co., Ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
