@@ -9,7 +9,7 @@ else()
     include_directories(${MINIGUI_INCLUDE_DIRS} ${MGEFF_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} ${HISVG_INCLUDE_DIRS} ${HICairo_INCLUDE_DIRS})
 endif()
 
-target_link_libraries(mginit ${MINIGUI_LIBRARIES} ${MGEFF_LIBRARIES} ${HISVG_LIBRARIES} ${GLIB_LIBRARIES} hibus hibox hidomlayout)
+target_link_libraries(mginit ${MINIGUI_LIBRARIES} ${MGEFF_LIBRARIES} ${HISVG_LIBRARIES} ${GLIB_LIBRARIES} hibus hibox hidomlayout common)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "-g ${CMAKE_CXX_FLAGS}")

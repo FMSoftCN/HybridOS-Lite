@@ -56,6 +56,7 @@
 #include <hisvg.h>
 
 #include "../include/sysconfig.h"
+#include "../include/svgpaint.h"
 #include "config.h"
 #include "tools.h"
 #include "title-description.h"
@@ -79,29 +80,11 @@ extern OS_Global_struct __os_global_struct;
 extern CompositorCtxt * cc_context;
 static Indicator indicator;
 
-static cairo_t *cr[2];
-static cairo_surface_t *surface[2];
-static char button_color_style[2][64];
+static HiSVGHandle * icon_handle[2];
+static char color_style[2][64];
 
 static void my_transit_to_layer (CompositorCtxt* ctxt, MG_Layer* to_layer)
 {
-}
-
-static HDC create_memdc_from_image_surface (cairo_surface_t* image_surface)
-{
-    MYBITMAP my_bmp = {
-        flags: MYBMP_TYPE_RGB | MYBMP_FLOW_DOWN,
-        frames: 1,
-        depth: 32,
-    };
-
-    my_bmp.w = cairo_image_surface_get_width (image_surface);
-    my_bmp.h = cairo_image_surface_get_height (image_surface);
-    my_bmp.pitch = cairo_image_surface_get_stride (image_surface);
-    my_bmp.bits = cairo_image_surface_get_data (image_surface);
-    my_bmp.size = my_bmp.pitch * my_bmp.h;
-
-    return CreateMemDCFromMyBitmap(&my_bmp, NULL);
 }
 
 static void paint(HWND hwnd, HDC hdc, int square_number, RECT * rect)
@@ -109,6 +92,8 @@ static void paint(HWND hwnd, HDC hdc, int square_number, RECT * rect)
     int i = 0;
     int select = 0;
     float alpha = BK_TRANSPARENT / 255.0;
+    int index = 0;
+    RECT draw_rect;
 
     for(i = 0; i < square_number; i++)
     {
@@ -117,40 +102,30 @@ static void paint(HWND hwnd, HDC hdc, int square_number, RECT * rect)
         else
             select = 1;
 
-        HDC csdc = create_memdc_from_image_surface(surface[select]);
-        if (csdc != HDC_SCREEN && csdc != HDC_INVALID)
-        {
-            SetBrushColor (hdc, RGB2Pixel (hdc, BK_COLOR_R, BK_COLOR_G, \
-                                                            BK_COLOR_B));
-            FillBox(hdc, (rect + i)->left, (rect + i)->top, \
-                           RECTWP(rect + i), RECTHP(rect + i));
+        SetBrushColor (hdc, RGB2Pixel (hdc, BK_COLOR_R, BK_COLOR_G, \
+                    BK_COLOR_B));
+        FillBox(hdc, (rect + i)->left, (rect + i)->top, \
+                RECTWP(rect + i), RECTHP(rect + i));
 
-            if(select == 0)
-            {
-                SetMemDCColorKey(csdc, MEMDC_FLAG_SRCCOLORKEY,
-                                        MakeRGB(BK_COLOR_R * alpha, \
-                                                BK_COLOR_G * alpha, \
-                                                BK_COLOR_B * alpha));
-                BitBlt(csdc, 0, 0, SQUARE_LENGTH, SQUARE_LENGTH, hdc, \
-                                    (rect + i)->left, (rect + i)->top, 0);
-            }
-            else
-            {
-                SetMemDCColorKey(csdc, MEMDC_FLAG_SRCCOLORKEY,
-                                        MakeRGB(BK_COLOR_R * alpha, \
-                                                BK_COLOR_G * alpha, \
-                                                BK_COLOR_B * alpha));
-                BitBlt(csdc, 0, 0, SQUARE_LENGTH / UNSELECT_RATIO, \
-                                SQUARE_LENGTH / UNSELECT_RATIO, hdc, \
-                                (rect + i)->left + SQUARE_LENGTH  * (1.0 - (1.0 / (float)UNSELECT_RATIO)) / 2.0, \
-                                (rect + i)->top + SQUARE_LENGTH *  (1.0 - (1.0 / (float)UNSELECT_RATIO)) / 2.0, 0);
-            }
+        if(select == 0)
+        {
+            draw_rect.left = (rect + i)->left;
+            draw_rect.top = (rect + i)->top;
+            draw_rect.right = (rect + i)->right;
+            draw_rect.bottom = (rect + i)->bottom;
         }
-        DeleteMemDC(csdc);
+        else
+        {
+            draw_rect.left = (rect + i)->left + SQUARE_LENGTH  * (1.0 - (1.0 / (float)UNSELECT_RATIO)) / 2.0;
+            draw_rect.top = (rect + i)->top + SQUARE_LENGTH *  (1.0 - (1.0 / (float)UNSELECT_RATIO)) / 2.0;
+            draw_rect.right = draw_rect.left + SQUARE_LENGTH / UNSELECT_RATIO;
+            draw_rect.bottom = draw_rect.top + SQUARE_LENGTH / UNSELECT_RATIO;
+        }
+        paint_svg(hwnd, hdc, draw_rect, icon_handle[select], color_style[select]);
     }
+
     return;
 }
-
 static void calculate_points(void)
 {
     if(__os_global_struct.page_number <= MAX_SQUARE)
@@ -252,68 +227,6 @@ static void calculate_pre(BOOL sub)
     }
 }
 
-static void loadSVGFromFile(const char* file, int index)
-{
-    HiSVGHandle *handle;
-    HiSVGRect vbox;
-    HiSVGDimension dimensions;
-    GError *error = NULL;
-    double factor_width = 0.0f;
-    double factor_height = 0.0f;
-
-    // read file from svg file
-    handle = hisvg_handle_new_from_file(file, &error);
-    if(error)
-    {
-        surface[index] = NULL;
-        cr[index] = NULL;
-        return;
-    }
-    hisvg_handle_get_dimensions(handle, &dimensions);
-
-    // create cairo_surface_t and cairo_t for one picture
-    if(index == 0)
-    {
-        surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
-                                            SQUARE_LENGTH, SQUARE_LENGTH);
-        factor_width = (double)SQUARE_LENGTH / (double)dimensions.w.length;
-        factor_height = (double)SQUARE_LENGTH / (double)dimensions.h.length;
-        vbox.x = 0;
-        vbox.y = 0;
-        vbox.width = SQUARE_LENGTH;
-        vbox.height = SQUARE_LENGTH;
-    }
-    else
-    {
-        surface[index] = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, \
-            SQUARE_LENGTH / UNSELECT_RATIO, SQUARE_LENGTH / UNSELECT_RATIO);
-        factor_width = (double)SQUARE_LENGTH / (double)dimensions.w.length / (double)UNSELECT_RATIO;
-        factor_height = (double)SQUARE_LENGTH / (double)dimensions.h.length / (double)UNSELECT_RATIO;
-        vbox.x = 0;
-        vbox.y = 0;
-        vbox.width = SQUARE_LENGTH / UNSELECT_RATIO;
-        vbox.height = SQUARE_LENGTH / UNSELECT_RATIO;
-    }
-    cr[index] = cairo_create(surface[index]);
-
-    cairo_save(cr[index]);
-    factor_width = (factor_width > factor_height) ? factor_width : factor_height;
-    cairo_scale(cr[index], factor_width, factor_width);
-
-    float r = (float)BK_COLOR_R / 255.0;
-    float g = (float)BK_COLOR_G / 255.0;
-    float b = (float)BK_COLOR_B / 255.0;
-    float alpha = BK_TRANSPARENT / 255.0;
-
-    cairo_set_source_rgb (cr[index],  r * alpha, g * alpha, b * alpha);
-    cairo_paint (cr[index]);
-    hisvg_handle_set_stylesheet(handle, NULL, button_color_style[index], strlen(button_color_style[index]), NULL);
-    hisvg_handle_render_cairo(handle, cr[index], &vbox, NULL, NULL);
-    cairo_restore (cr[index]);
-
-    hisvg_handle_destroy(handle);
-}
-
 // the window proc of indicator bar
 static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -362,21 +275,15 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             readlink("/proc/self/exe", path, HISHELL_MAX_PATH);
             sprintf(path, "%s/res/circle.svg", dirname(path));
 
-            surface[0] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, \
-                                    (int)SQUARE_LENGTH, (int)SQUARE_LENGTH);
-            cr[0] = cairo_create (surface[0]);
-            strcpy(button_color_style[0], "svg { color:");
-            strcat(button_color_style[0], SELECT_COLOR);
-            strcat(button_color_style[0], "; } ");
-            loadSVGFromFile(path, 0);
+            strcpy(color_style[0], "svg { color:");
+            strcat(color_style[0], SELECT_COLOR);
+            strcat(color_style[0], "; } ");
+            loadSVGFromFile(path, &icon_handle[0]);
 
-            surface[1] = cairo_image_surface_create (CAIRO_FORMAT_RGB24, \
-                                    (int)SQUARE_LENGTH, (int)SQUARE_LENGTH);
-            cr[1] = cairo_create (surface[1]);
-            strcpy(button_color_style[1], "svg { color:");
-            strcat(button_color_style[1], UNSELECT_COLOR);
-            strcat(button_color_style[1], "; } ");
-            loadSVGFromFile(path, 1);
+            strcpy(color_style[1], "svg { color:");
+            strcat(color_style[1], UNSELECT_COLOR);
+            strcat(color_style[1], "; } ");
+            loadSVGFromFile(path, &icon_handle[1]);
         }
             break;
 
@@ -733,10 +640,10 @@ static LRESULT IndicatorBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPAR
             break;
 
         case MSG_CLOSE:
-            cairo_surface_destroy(surface[0]);
-            cairo_destroy(cr[0]);
-            cairo_surface_destroy(surface[1]);
-            cairo_destroy(cr[1]);
+            if(icon_handle[0])
+               hisvg_handle_destroy(icon_handle[0]);
+            if(icon_handle[1])
+               hisvg_handle_destroy(icon_handle[1]);
 
             DestroyAllControls (hWnd);
             DestroyMainWindow (hWnd);
