@@ -228,10 +228,10 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
                 DrawText (hdc, global_param.caption, strlen((char *)global_param.caption), \
                         &global_param.caption_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
-            paint_svg(hWnd, hdc, global_param.icon_rect, global_param.icon_surface);
+//            paint_svg(hWnd, hdc, global_param.icon_rect, global_param.icon_surface);
+            paint_svg(hWnd, hdc, global_param.icon_rect, global_param.svg_handle, global_param.color_style);
 
             EndPaint (hWnd, hdc);
-            return 0;
 
         case MSG_CREATE:
         {
@@ -247,8 +247,9 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
                 sprintf(path, "%s/res/%s", dirname(path), global_param.svg_file);
             else
                 sprintf(path, "%s/res/gear.svg", dirname(path));
-            loadSVGFromFile(path, &global_param.icon_cr, &global_param.icon_surface, \
-                                    global_param.color_style, global_param.icon_rect);
+//            loadSVGFromFile(path, &global_param.icon_cr, &global_param.icon_surface, \
+//                                    global_param.color_style, global_param.icon_rect);
+            loadSVGFromFile(path, &global_param.svg_handle);
 
             if(global_param.font_size == 0)
                 global_param.font_size = CAPTION_FONT;
@@ -268,8 +269,8 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
             if(hmapdc)
                 DeleteMemDC(hmapdc);
 
-            cairo_surface_destroy(global_param.icon_surface);
-            cairo_destroy(global_param.icon_cr);
+            if(global_param.svg_handle)
+                hisvg_handle_destroy(global_param.svg_handle);
 
             DestroyLogFont(font_caption);
 
@@ -347,7 +348,7 @@ int MiniGUIMain (int argc, const char* argv[])
     bkgnd_color = MakeRGBA (0x00, 0x00, 0x00, BK_TRANSPARENT); 
 #endif
 
-    hMainWnd = CreateMainWindowEx2 (&CreateInfo, 0L, NULL, NULL, ST_PIXEL_ARGB8888,
+    hMainWnd = CreateMainWindowEx2 (&CreateInfo, 0L, NULL, NULL, ST_PIXEL_XRGB565,
                                     bkgnd_color, compos_type, COLOR_BLEND_LEGACY);
     
     if (hMainWnd == HWND_INVALID)

@@ -46,10 +46,13 @@ extern "C" {
 #endif  /* __cplusplus */
 
 // svg fucntions
-HDC create_memdc_from_image_surface (cairo_surface_t *);
-void loadSVGFromFile(const char *, cairo_t **, cairo_surface_t **, char *, RECT);
-void paint_svg(HWND, HDC, RECT, cairo_surface_t *);
+//HDC create_memdc_from_image_surface (cairo_surface_t *);
+//void loadSVGFromFile(const char *, cairo_t **, cairo_surface_t **, char *, RECT);
+//void paint_svg(HWND, HDC, RECT, cairo_surface_t *);
 
+
+BOOL loadSVGFromFile(const char* file, HiSVGHandle ** svg_handle);
+void paint_svg(HWND hwnd, HDC hdc, RECT rect, HiSVGHandle * svg_handle, char * color_style);
 
 #ifdef __cplusplus
 }

@@ -248,8 +248,10 @@ static LRESULT ChgConfigWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
                 DrawText (hdc, global_param.caption, strlen((char *)global_param.caption), \
                         &global_param.caption_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
-            paint_svg(hWnd, hdc, global_param.icon_rect[0], global_param.icon_surface[0]);
-            paint_svg(hWnd, hdc, global_param.icon_rect[1], global_param.icon_surface[1]);
+//            paint_svg(hWnd, hdc, global_param.icon_rect[0], global_param.icon_surface[0]);
+//            paint_svg(hWnd, hdc, global_param.icon_rect[1], global_param.icon_surface[1]);
+            paint_svg(hWnd, hdc, global_param.icon_rect[0], global_param.svg_handle[0], global_param.color_style[0]);
+            paint_svg(hWnd, hdc, global_param.icon_rect[1], global_param.svg_handle[1], global_param.color_style[1]);
 
             EndPaint (hWnd, hdc);
             return 0;
@@ -265,14 +267,16 @@ static LRESULT ChgConfigWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
             // load svg file
             readlink("/proc/self/exe", path, HISHELL_MAX_PATH);
             sprintf(path, "%s/res/single.svg", dirname(path));
-            loadSVGFromFile(path, &global_param.icon_cr[0], &global_param.icon_surface[0], \
-                                    global_param.color_style[0], global_param.icon_rect[0]);
+//            loadSVGFromFile(path, &global_param.icon_cr[0], &global_param.icon_surface[0], \
+//                                    global_param.color_style[0], global_param.icon_rect[0]);
+            loadSVGFromFile(path, &global_param.svg_handle[0]);
 
             memset(path, 0, HISHELL_MAX_PATH);
             readlink("/proc/self/exe", path, HISHELL_MAX_PATH);
             sprintf(path, "%s/res/multiple.svg", dirname(path));
-            loadSVGFromFile(path, &global_param.icon_cr[1], &global_param.icon_surface[1], \
-                                    global_param.color_style[1], global_param.icon_rect[1]);
+//            loadSVGFromFile(path, &global_param.icon_cr[1], &global_param.icon_surface[1], \
+//                                    global_param.color_style[1], global_param.icon_rect[1]);
+            loadSVGFromFile(path, &global_param.svg_handle[1]);
 
             if(global_param.font_size == 0)
                 global_param.font_size = CAPTION_FONT;
@@ -309,10 +313,11 @@ static LRESULT ChgConfigWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         case MSG_CLOSE:
             if(hmapdc)
                 DeleteMemDC(hmapdc);
-            cairo_surface_destroy(global_param.icon_surface[0]);
-            cairo_surface_destroy(global_param.icon_surface[1]);
-            cairo_destroy(global_param.icon_cr[0]);
-            cairo_destroy(global_param.icon_cr[1]);
+            if(global_param.svg_handle[0])
+                hisvg_handle_destroy(global_param.svg_handle[0]);
+            if(global_param.svg_handle[1])
+                hisvg_handle_destroy(global_param.svg_handle[1]);
+
             DestroyLogFont(font_caption);
 
             DestroyMainWindow (hWnd);
@@ -383,7 +388,7 @@ int MiniGUIMain (int argc, const char* argv[])
     bkgnd_color = MakeRGBA (0x00, 0x00, 0x00, BK_TRANSPARENT); 
 #endif
 
-    hMainWnd = CreateMainWindowEx2 (&CreateInfo, 0L, NULL, NULL, ST_PIXEL_ARGB8888,
+    hMainWnd = CreateMainWindowEx2 (&CreateInfo, 0L, NULL, NULL, ST_PIXEL_XRGB565,
                                     bkgnd_color, compos_type, COLOR_BLEND_LEGACY);
     
     if (hMainWnd == HWND_INVALID)

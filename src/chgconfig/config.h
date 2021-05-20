@@ -71,8 +71,7 @@ typedef struct tag_Global_Param
     char button_color[2][32];
     char color_style[2][64];
 
-    cairo_t * icon_cr[2];
-    cairo_surface_t * icon_surface[2];
+    HiSVGHandle *svg_handle[2];
 
     // for hibus
     hibus_conn * hibus_context;

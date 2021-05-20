@@ -48,48 +48,135 @@
 #include "../include/svgpaint.h"
 
 
-// for svg file
-HDC create_memdc_from_image_surface (cairo_surface_t* image_surface)
+static cairo_surface_t *create_direct_image_surface (HDC hdc, const RECT* rc)
 {
-    MYBITMAP my_bmp = {
-        flags: MYBMP_TYPE_RGB | MYBMP_FLOW_DOWN | MYBMP_ALPHA,
-        frames: 1,
-        depth: 32,
-    };
+    cairo_surface_t *surface;
+    Uint8* bits;
+    int width, height, pitch;
 
-    my_bmp.w = cairo_image_surface_get_width (image_surface);
-    my_bmp.h = cairo_image_surface_get_height (image_surface);
-    my_bmp.pitch = cairo_image_surface_get_stride (image_surface);
-    my_bmp.bits = cairo_image_surface_get_data (image_surface);
-    my_bmp.size = my_bmp.pitch * my_bmp.h;
+    bits = LockDC (hdc, rc, &width, &height, &pitch);
 
-    return CreateMemDCFromMyBitmap(&my_bmp, NULL);
+    if (bits == NULL || width <= 0 || height <= 0 || pitch <= 0) {
+        _ERR_PRINTF("hicairo: failed LockDC()\n");
+        goto FAIL;
+    }
+
+    // format here must be CAIRO_FORMAT_RGB16_565.
+    // See call of CreateMainWindowEx2.
+    surface = cairo_image_surface_create_for_data (bits,
+            CAIRO_FORMAT_RGB16_565, width, height, pitch);
+    if (surface == NULL) {
+        _ERR_PRINTF("hicairo: failed when creating direct image surface\n");
+        goto FAIL;
+    }
+
+    return surface;
+
+FAIL:
+    return NULL;
 }
 
-void loadSVGFromFile(const char* file, cairo_t ** cr, cairo_surface_t ** surface, \
-                                                        char * color_style, RECT rect)
+static cairo_surface_t *finish_direct_image_surface (cairo_surface_t *surface, HDC hdc)
 {
-    HiSVGHandle *handle;
+    _DBG_PRINTF("calling finish_direct_image_surface\n");
+
+    cairo_surface_finish(surface);
+    cairo_surface_destroy(surface);
+
+    UnlockDC (hdc);
+    return NULL;
+}
+
+BOOL loadSVGFromFile(const char* file, HiSVGHandle ** svg_handle)
+{
+    GError *error = NULL;
+    struct stat buf;
+    int fd = 0;
+    int length = 0;
+    BOOL ret = FALSE;
+
+    * svg_handle = NULL;
+
+    if((access(file, F_OK | R_OK)) != 0)
+        goto FAIL;
+
+    if(stat(file, &buf) < 0)
+        goto FAIL;
+
+    fd = open(file, O_RDONLY);
+    if(fd == -1)
+        goto FAIL;
+
+    if(buf.st_size <= 4096)
+    {
+        unsigned char buffer[4096];
+        length = read(fd, buffer, buf.st_size);
+        close(fd);
+
+        if(length == 0)
+            goto FAIL;
+
+        *svg_handle = hisvg_handle_new_from_data(buffer, buf.st_size, &error);
+        if(error)
+        {
+            *svg_handle = NULL;
+            goto FAIL;
+        }
+        ret = TRUE;
+    }
+    else
+    {
+        char *buffer = malloc(buf.st_size);
+        if(buffer)
+        {
+            length = read(fd, buffer, buf.st_size);
+            close(fd);
+
+            if(length == 0)
+                goto FAIL;
+
+            *svg_handle = hisvg_handle_new_from_data(buffer, buf.st_size, &error);
+            free(buffer);
+            if(error)
+            {
+                *svg_handle = NULL;
+                goto FAIL;
+            }
+            ret = TRUE;
+        }
+    }
+
+FAIL:
+    return ret;
+}
+
+void paint_svg(HWND hwnd, HDC hdc, RECT rect, HiSVGHandle * svg_handle, char * color_style)
+{
+    cairo_t *cr = NULL;
+    cairo_surface_t * surface = NULL;
     HiSVGRect vbox;
     HiSVGDimension dimensions;
     GError *error = NULL;
+
     double factor_width = 0.0f;
     double factor_height = 0.0f;
     int width = RECTW(rect);
+    //int height = RECTH(rect);
     int height = width;
+    RECT draw_rect;
 
-    // read file from svg file
-    handle = hisvg_handle_new_from_file(file, &error);
-    if(error)
-    {
-        * surface = NULL;
-        * cr = NULL;
+    if(svg_handle == NULL)
         return;
-    }
-    hisvg_handle_get_dimensions(handle, &dimensions);
+
+    draw_rect.left = rect.left;
+    draw_rect.top = rect.top;
+    draw_rect.right = draw_rect.left + width;
+    draw_rect.bottom = draw_rect.top + height;
+
+    hisvg_handle_get_dimensions(svg_handle, &dimensions);
 
     // create cairo_surface_t and cairo_t for one picture
-    * surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
+    surface = create_direct_image_surface(hdc, &draw_rect);
     vbox.x = 0;
     vbox.y = 0;
     vbox.width = width;
@@ -97,33 +184,25 @@ void loadSVGFromFile(const char* file, cairo_t ** cr, cairo_surface_t ** surface
 
     factor_width = (double)width / (double)dimensions.w.length;
     factor_height = (double)height / (double)dimensions.h.length;
-    *cr = cairo_create(*surface);
+    cr = cairo_create(surface);
 
-    cairo_save(*cr);
+    cairo_save(cr);
     factor_width = (factor_width > factor_height) ? factor_width : factor_height;
-    cairo_scale(*cr, factor_width, factor_width);
+    cairo_scale(cr, factor_width, factor_width);
 
-    cairo_set_source_rgba(*cr,  0.0, 0.0, 0.0, 0.0);
-    cairo_paint(*cr);
-    hisvg_handle_set_stylesheet(handle, NULL, color_style, strlen(color_style), NULL);
-    hisvg_handle_render_cairo(handle, *cr, &vbox, NULL, NULL);
-    cairo_restore(*cr);
+    cairo_set_source_rgba(cr,  0.0, 0.0, 0.0, 0.0);
+    cairo_paint(cr);
+    hisvg_handle_set_stylesheet(svg_handle, NULL, color_style, strlen(color_style), NULL);
+    hisvg_handle_render_cairo(svg_handle, cr, &vbox, NULL, NULL);
 
-    hisvg_handle_destroy(handle);
-}
+    cairo_restore(cr);
 
-
-void paint_svg(HWND hwnd, HDC hdc, RECT rect, cairo_surface_t * surface)
-{
-    int width = RECTW(rect);
-    int height = width;
-
-    HDC csdc = create_memdc_from_image_surface(surface);
-    if (csdc != HDC_SCREEN && csdc != HDC_INVALID)
+    if(cr)
     {
-        SetMemDCAlpha (csdc, MEMDC_FLAG_SRCPIXELALPHA, 0);
-        BitBlt(csdc, 0, 0, width, height, hdc, rect.left, rect.top, 0);
+        cairo_destroy(cr);
+        finish_direct_image_surface(surface, hdc);
     }
-    DeleteMemDC(csdc);
+
     return;
 }
+
