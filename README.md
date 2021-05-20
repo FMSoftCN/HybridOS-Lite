@@ -227,7 +227,6 @@ $ ./mginit
 下面是对 HybridOS Lite 主要依赖库的统计（除系统 C/C++ 库之外，ARM A8 架构）：
 
 ```
-
 libffi.so                31 KB
 libglib-2.0.so         1044 KB
 libgio-2.0.so          1400 KB
@@ -260,19 +259,19 @@ libhisvg.so             257 KB
 
 下面是对本例代码，交叉编译为 ARM 版本，在运行前对后内存使用状况的统计。在本例中，HybridOS Lite 共启动了 20 个应用，其中包含：mginit（必须）、hibusd（必须），以及 18 个用户应用进程：
 
-``` bash
+```
 // 启动前
 MemTotal:         110744 kB
 MemFree:           89292 kB
 MemAvailable:      91720 kB
 
 // 启动后
-Memotal:          110744 kB
+MemTotal:         110744 kB
 MemFree:           35520 KB
-MemvaIlable:       54248 kB
+MemAvailable:      54248 kB
 ```
 
-从数据可以看出，目标开发板一共拥有 `128 MB RAM`。HybridOS Lite 启动 20 个应用之后，一共使用了 54 MB 内存，每个应用大致占用 2.5MB RAM 空间。通过 `top` 命令查询各个应用的 CPU 占用率，其中`mginit` 和 `hibusd` 一共占用 CPU 百分比为 1%。
+从数据可以看出，目标开发板一共拥有 128 MB RAM。HybridOS Lite 启动 20 个应用进程之后，一共使用了 54 MB 内存。通过 `top` 命令查询各个应用的 CPU 占用率，其中`mginit` 和 `hibusd` 一共占用 CPU 百分比为 1%。
 
 ## 版权声明
 
