@@ -61,6 +61,7 @@ file(COPY "${PROJECT_SOURCE_DIR}/src/layout/chgconfig2.css" DESTINATION ${PROJEC
 file(COPY "${PROJECT_SOURCE_DIR}/src/layout/newconfig.json" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
 file(COPY "${PROJECT_SOURCE_DIR}/src/layout/svgshow1.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
 file(COPY "${PROJECT_SOURCE_DIR}/src/layout/svgshow2.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
+file(COPY "${PROJECT_SOURCE_DIR}/src/layout/wheel1.css" DESTINATION ${PROJECT_SOURCE_DIR}/bin/layout)
 file(COPY "${PROJECT_SOURCE_DIR}/src/config" DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
 
 # set output path

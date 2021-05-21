@@ -171,7 +171,6 @@ static BOOL parse_config(int width, int height)
     HLDomElementNode* icon = hilayout_element_node_create("div");
     hilayout_element_node_set_id(icon, "icon");
 
-
     hilayout_element_node_append_as_last_child(caption, root);
     hilayout_element_node_append_as_last_child(icon, root);
 
@@ -228,10 +227,11 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
                 DrawText (hdc, global_param.caption, strlen((char *)global_param.caption), \
                         &global_param.caption_rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
-//            paint_svg(hWnd, hdc, global_param.icon_rect, global_param.icon_surface);
             paint_svg(hWnd, hdc, global_param.icon_rect, global_param.svg_handle, global_param.color_style);
 
             EndPaint (hWnd, hdc);
+
+            return 0;
 
         case MSG_CREATE:
         {
@@ -247,8 +247,7 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
                 sprintf(path, "%s/res/%s", dirname(path), global_param.svg_file);
             else
                 sprintf(path, "%s/res/gear.svg", dirname(path));
-//            loadSVGFromFile(path, &global_param.icon_cr, &global_param.icon_surface, \
-//                                    global_param.color_style, global_param.icon_rect);
+
             loadSVGFromFile(path, &global_param.svg_handle);
 
             if(global_param.font_size == 0)
@@ -265,6 +264,32 @@ static LRESULT GearWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
         }
             break;
 
+        case MSG_LBUTTONDOWN:
+        {
+            int x = LOSWORD(lParam);
+            int y = HISWORD(lParam);
+
+            if(PtInRect(&global_param.icon_rect, x, y))
+            {
+                int r = 0;
+                int g = 0;
+                int b = 0;
+                char color[64] = {0};
+
+                srand(time(NULL));
+                r = rand() & 0xFF;
+                g = rand() & 0xFF;
+                b = rand() & 0xFF;
+
+                strcpy(global_param.color_style, "svg { color:");
+                sprintf(color, "#%02x%02x%02x", r, g, b);
+                strcat(global_param.color_style, color);
+                strcat(global_param.color_style, "; } ");
+
+                InvalidateRect(hWnd, &global_param.icon_rect, TRUE);
+            }
+        }
+            break;
         case MSG_CLOSE:
             if(hmapdc)
                 DeleteMemDC(hmapdc);
@@ -348,7 +373,7 @@ int MiniGUIMain (int argc, const char* argv[])
     bkgnd_color = MakeRGBA (0x00, 0x00, 0x00, BK_TRANSPARENT); 
 #endif
 
-    hMainWnd = CreateMainWindowEx2 (&CreateInfo, 0L, NULL, NULL, ST_PIXEL_XRGB565,
+    hMainWnd = CreateMainWindowEx2 (&CreateInfo, 0L, NULL, NULL, ST_PIXEL_ARGB8888,
                                     bkgnd_color, compos_type, COLOR_BLEND_LEGACY);
     
     if (hMainWnd == HWND_INVALID)

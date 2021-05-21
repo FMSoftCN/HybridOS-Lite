@@ -1,0 +1,41 @@
+#caption
+{
+    display:block; 
+    position: relative; 
+    left: 10%; 
+    top: 20%; 
+    width: 80%; 
+    height: 15%; 
+    font-size:40px;
+}
+
+#icon
+{
+    display:inline-block; 
+    position: relative; 
+    left: 30%; 
+    top: 30%; 
+    width: 16%; 
+    height: 16%;
+}
+
+#name
+{
+    display:inline-block; 
+    position: relative; 
+    left: 50%; 
+    top: 5%; 
+    width: 40%; 
+    height: 40%;
+    font-size:60px;
+}
+
+#list
+{
+    display:block; 
+    position: relative; 
+    left: 25%; 
+    top: 20%; 
+    width: 50%; 
+    height: 60%; 
+}

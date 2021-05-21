@@ -55,6 +55,8 @@ extern "C" {
 // for transparent
 #define BK_TRANSPARENT      0xA0
 
+#define ID_ROTATE           101
+
 typedef struct tag_Global_Param
 {
     char config_file[MAX_NAME_LENGTH];

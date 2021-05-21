@@ -426,7 +426,7 @@ static int MouseHook(void* context, HWND dst_wnd, UINT msg, WPARAM wparam, LPARA
     {
         int x = LOSWORD(lParam);
         int y = HISWORD(lParam);
-//        runner_struct * runner = NULL;
+        runner_struct * runner = NULL;
         int cli = 0;
 
         // title 和 indicatior 中的消息，自行处理
@@ -454,7 +454,7 @@ static int MouseHook(void* context, HWND dst_wnd, UINT msg, WPARAM wparam, LPARA
             return HOOK_GOON;
         }
 
-#if 0
+#if 1 
         // 在 page 中的消息
         runner = get_point_hwnd(x, y);
         if(runner)

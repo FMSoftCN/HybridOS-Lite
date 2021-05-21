@@ -677,7 +677,7 @@ HWND create_indicator_bar(void)
 
 #if 1 
     __os_global_struct.hIndicatorBar = CreateMainWindowEx2 (&CreateInfo, \
-                                        0L, NULL, NULL, ST_PIXEL_XRGB565,
+                                        0L, NULL, NULL, ST_PIXEL_ARGB8888,
                                         MakeRGBA (BK_COLOR_R, BK_COLOR_G, \
                                                   BK_COLOR_B, BK_TRANSPARENT),\
                                         CT_ALPHAPIXEL, COLOR_BLEND_LEGACY);

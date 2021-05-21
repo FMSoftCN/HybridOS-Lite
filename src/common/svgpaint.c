@@ -48,7 +48,7 @@
 #include "../include/svgpaint.h"
 
 
-static cairo_surface_t *create_direct_image_surface (HDC hdc, const RECT* rc)
+cairo_surface_t *create_direct_image_surface (HDC hdc, const RECT* rc)
 {
     cairo_surface_t *surface;
     Uint8* bits;
@@ -64,7 +64,8 @@ static cairo_surface_t *create_direct_image_surface (HDC hdc, const RECT* rc)
     // format here must be CAIRO_FORMAT_RGB16_565.
     // See call of CreateMainWindowEx2.
     surface = cairo_image_surface_create_for_data (bits,
-            CAIRO_FORMAT_RGB16_565, width, height, pitch);
+//            CAIRO_FORMAT_RGB16_565, width, height, pitch);
+            CAIRO_FORMAT_ARGB32, width, height, pitch);
     if (surface == NULL) {
         _ERR_PRINTF("hicairo: failed when creating direct image surface\n");
         goto FAIL;
@@ -76,7 +77,7 @@ FAIL:
     return NULL;
 }
 
-static cairo_surface_t *finish_direct_image_surface (cairo_surface_t *surface, HDC hdc)
+cairo_surface_t *finish_direct_image_surface (cairo_surface_t *surface, HDC hdc)
 {
     _DBG_PRINTF("calling finish_direct_image_surface\n");
 
