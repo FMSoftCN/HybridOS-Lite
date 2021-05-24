@@ -49,6 +49,7 @@ list(APPEND HISHELL_RES_FILES
     "${PROJECT_SOURCE_DIR}/src/svgshow/res/speedlow.svg"
     "${PROJECT_SOURCE_DIR}/src/svgshow/res/left.svg"
     "${PROJECT_SOURCE_DIR}/src/svgshow/res/up.svg"
+    "${PROJECT_SOURCE_DIR}/src/wheel/res/list.svg"
 )
 
 file(COPY ${HISHELL_RES_FILES} DESTINATION ${PROJECT_SOURCE_DIR}/bin/res)

@@ -53,7 +53,7 @@
                 {
                     "name": "wheel",
                     "type": "exec",
-                    "entry": "wheel -d wheel1.ini -c wheel1.css -p gear.svg",
+                    "entry": "wheel -d wheel1.ini -c wheel1.css -p list.svg",
                     "runas": "window, default",
                     "class": "",
                     "dependencies": ["hibusd"],

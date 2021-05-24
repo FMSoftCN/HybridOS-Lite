@@ -561,7 +561,7 @@ static LRESULT WheelWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
             if(global_param.svg_file[0])
                 sprintf(path, "%s/res/%s", dirname(path), global_param.svg_file);
             else
-                sprintf(path, "%s/res/gear.svg", dirname(path));
+                sprintf(path, "%s/res/list.svg", dirname(path));
             loadSVGFromFile(path, &global_param.svg_handle);
 
             // create the fonts
