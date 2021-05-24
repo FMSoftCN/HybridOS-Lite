@@ -121,6 +121,8 @@ extern "C" {
 #define SOCKET_PATH                 "/var/tmp/hibus.sock"
 #define HIBUS_HISHELL_NAME          "cn.fmsoft.hybridos.hishell"
 
+// for transparent
+#define BK_TRANSPARENT      0xA0
 
 typedef struct tag_Global_Param
 {

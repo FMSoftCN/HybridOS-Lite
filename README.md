@@ -102,6 +102,7 @@ hybridos-lite/
 │   ├── wallpaper
 │   ├── chgconfig
 │   ├── svgshow 
+│   ├── wheel 
 │   ├── include 
 │   ├── layout
 │   │     ├── manifest.json
@@ -130,12 +131,14 @@ hybridos-lite/
   - `wallpaper/`：动态壁纸应用；
   - `chgconfig/`：动态切换配置文件应用程序；
   - `svgshow/`：展示在应用程序中如何使用 SVG 图片；
+  - `wheel/`：展示在应用程序中处理鼠标滑动消息，是一个滚轮控件的例子；
   - `config`：包含了用户自定义的、与业务相关的数据文件；
   - `layout/`：包含了布局文件；
     - `manifest.json`：最重要的布局文件，其定义了每屏显示哪些应用程序，以及这些应用程序的布局；
     - `newconfig.json`：另外一个布局文件，用于展示如何动态切换布局；
     - `default_layout.css`：默认的 CSS 文件。其为每个重要的 `dom` 元素设置了默认的布局样式；
     - `svgshowx.css`：`svgshow` 应用的 CSS 文件。同一个应用显示在屏幕不同位置，大小不同时，需要不同的布局文件来指定各个元素的位置与大小；
+    - `wheel.css`：`wheel` 应用的 CSS 文件；
     - `chgconfigx.css`：`chgconfig` 应用的 CSS 文件。
 
 ## 在 PC 上构建开发环境
