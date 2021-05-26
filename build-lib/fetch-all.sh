@@ -14,15 +14,21 @@ for comp in minigui-res minigui mgeff; do
     git clone $MINIGUI_REPO_URL/$comp.git -b $MINIGUI_BRANCH_NAME
 done
 
-# hicairo, hisvg library
-for comp in hicairo hisvg; do
+# hicairo library
+for comp in hicairo; do
     git clone $LIB_REPO_URL/$comp.git -b $RENDER_BRANCH_NAME
 done
 
-# hibox, hidomlayout library
-for comp in hibox hidomlayout; do
+# hibox, hisvg library
+for comp in hibox hisvg; do
     git clone $LIB_REPO_URL/$comp.git
 done
+
+# hidomlayout
+for comp in hidomlayout; do
+    git clone $LIB_REPO_URL/$comp.git -b $HIDOMLAYOUT_BRANCH_NAME
+done
+
 
 # hibus
 git clone $LIB_REPO_URL/hibus.git -b $HIBUS_BRANCH_NAME
