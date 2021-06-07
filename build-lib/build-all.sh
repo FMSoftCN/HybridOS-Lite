@@ -7,7 +7,7 @@ fi
 source myconfig.sh
 
 build_libraries() {
-    for comp in hicairo hisvg; do
+    for comp in hicairo; do
         echo "BUILDING '$comp'"
         cd $comp
         ./autogen.sh && ./configure && make clean && make -j$NR_JOBS && sudo make install
@@ -20,7 +20,7 @@ build_libraries() {
         cd ..
     done
 
-    for comp in hibox hidomlayout gvfb; do
+    for comp in hibox hidomlayout gvfb hisvg; do
         echo "BUILDING '$comp'"
         cd $comp
         cmake . && make clean && make -j$NR_JOBS && sudo make install

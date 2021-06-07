@@ -31,9 +31,13 @@ RENDER_BRANCH_NAME=minigui-backend
 HIBUS_BRANCH_NAME=rel-1-0
 
 #
+# The branch name for hidomlayout
+HIDOMLAYOUT_BRANCH_NAME=dev
+
+#
 # configuration options for MiniGUI Core.
 # GOPTS="--enable-develmode"
-MINIGUI_OPTS="--enable-procs --enable-compositing --enable-virtualwindow --disable-Werror --disable-static --enable-videodrm"
+MINIGUI_OPTS="--enable-procs --enable-compositing --enable-virtualwindow --disable-Werror --disable-static --enable-videodrm --enable-pixman"
 
 #
 # configuration options for mgeff
