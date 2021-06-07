@@ -223,7 +223,7 @@ HWND create_title_bar(void)
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
 
-#if 1
+#if 1 
     __os_global_struct.hTitleBar = CreateMainWindowEx2 (&CreateInfo, 0L, \
                     NULL, NULL, ST_PIXEL_ARGB8888,
                     MakeRGBA (BK_COLOR_R, BK_COLOR_G, BK_COLOR_B, BK_TRANSPARENT),

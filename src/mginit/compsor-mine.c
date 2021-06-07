@@ -167,17 +167,17 @@ static void my_transit_to_layer (CompositorCtxt* ctxt, MG_Layer* to_layer)
 }
 
 // callback function of animation
-static void animated_cb(MGEFF_ANIMATION handle, HWND hWnd, int id, int *value)
+static void animated_cb(MGEFF_ANIMATION handle, HWND hWnd, int id, float *value)
 {
     int onetime = 0;
-    int percent = 0;
+    float percent = 0;
     animation_param * param = (animation_param *)mGEffAnimationGetTarget(handle);
 
-    percent =  *value * 100 / param->end;
+    percent =  *value * 100.0 / param->end;
 
-    if((float)percent != param->cpf.percent)
+    if(percent != param->cpf.percent)
     {
-        param->cpf.percent = (float)percent;
+        param->cpf.percent = percent;
         onetime = param->fallback_ops->composite_layers(cc_context, param->layers, 2, &(param->cpf));
     }
 }
@@ -193,7 +193,7 @@ static void animated_end(MGEFF_ANIMATION handle)
         free(param);
 }
 
-static void create_animation(animation_param * param, int start, int end)
+static void create_animation(animation_param * param, float start, float end)
 {
     if(animation)
     {
@@ -201,7 +201,7 @@ static void create_animation(animation_param * param, int start, int end)
         animation = NULL;
     }
 
-    animation = mGEffAnimationCreate((void *)param, (void *)animated_cb, 1, MGEFF_INT);
+    animation = mGEffAnimationCreate((void *)param, (void *)animated_cb, 1, MGEFF_FLOAT);
     if (animation)
     {
         int duration = 0;
@@ -270,7 +270,7 @@ static void show_page(BOOL next, MG_Layer ** layers, int x, int y)
 
     if(next)                 // next layer
     {       
-        create_animation(param, start, 0);
+        create_animation(param, (float)start, (float)0);
 #if 0
         for(; start > 0; start -= step)
         {   
@@ -283,7 +283,7 @@ static void show_page(BOOL next, MG_Layer ** layers, int x, int y)
     }
     else                        // prev layer
     {
-        create_animation(param, start, end);
+        create_animation(param, (float)start, (float)end);
 #if 0
         for(; start < end; start += step)
         {
@@ -358,7 +358,7 @@ static void show_current_page(BOOL next, MG_Layer ** layers, int x, int y)
 
     if(next)                 // next layer
     {       
-        create_animation(param, start, end);
+        create_animation(param, (float)start, (float)end);
 #if 0
         for(; start < end; start += step)
         {   
@@ -371,7 +371,7 @@ static void show_current_page(BOOL next, MG_Layer ** layers, int x, int y)
     }
     else                        // prev layer
     {
-        create_animation(param, start, 0);
+        create_animation(param, (float)start, (float)0);
 #if 0
         for(; start > 0; start -= step)
         {

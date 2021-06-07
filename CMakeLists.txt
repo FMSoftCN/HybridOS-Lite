@@ -11,6 +11,12 @@ if(TRANSPARENT_BK)
   ADD_DEFINITIONS(-DTRANSPARENT_BK)
 endif()
 
+OPTION(PLATFORM_R818 "Compiled for platform R818" OFF)
+if(PLATFORM_R818)
+  MESSAGE(STATUS "Compiled for platform R818")
+  ADD_DEFINITIONS(-DPLATFORM_R818)
+endif()
+
 find_package(MiniGUI 5.0.2 REQUIRED)
 find_package(mGEff 1.5.0 REQUIRED)
 find_package(GLIB 2.0 REQUIRED)

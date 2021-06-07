@@ -38,6 +38,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/time.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
 
 #include <minigui/common.h>
 #include <minigui/minigui.h>
@@ -117,7 +120,6 @@ static int format_request(int cli, int clifd, void* buff, size_t len)
     return 0;
 }
 
-
 int MiniGUIMain (int args, const char* arg[])
 {
     struct sigaction siga;                      // for process quit
@@ -129,6 +131,24 @@ int MiniGUIMain (int args, const char* arg[])
     int fd_hibus = -1;
     CompositorOps* fallback_ops = (CompositorOps*)ServerGetCompositorOps (COMPSOR_NAME_FALLBACK);
     CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
+
+#ifdef PLATFORM_R818
+    int fd = -1;
+    fd = open("/dev/fb0", O_RDWR, 0);
+    if (fd < 0) 
+    {
+        fprintf(stderr, "Unable to open /dev/fb0\n");
+        return(-1);
+    }
+
+    uintptr_t args1[2] = { 1, 0 };
+    if (ioctl(fd, FBIO_ENABLE_CACHE, args1) < 0) 
+    {
+        fprintf(stderr, "Unable to ioctl /dev/fb0\n");
+        return -1;
+    }
+    close(fd);
+#endif
 
     // clean global structure
     memset(&__os_global_struct, 0, sizeof(OS_Global_struct));
