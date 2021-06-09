@@ -54,11 +54,6 @@
 #define MSG_MAINWINDOW_CHANGE           (MSG_USER + 1)
 #define MSG_CONFIG_CHANGE               (MSG_USER + 2)
 
-#ifdef PLATFORM_R818
-    #define FBIO_CACHE_SYNC             0x4630
-    #define FBIO_ENABLE_CACHE           0x4631
-#endif
-
 typedef struct tagRequestInfo 
 {
     int id;                             // sub request ID

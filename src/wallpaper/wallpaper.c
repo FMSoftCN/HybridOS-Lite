@@ -56,6 +56,9 @@
 #define RGBA_B      100
 #define RGBA_A      255
 
+#ifdef PLATFORM_ANYKA_UCLINUX
+    #define M_PI        3.1415926
+#endif
 
 typedef struct tagNodeInfo
 {

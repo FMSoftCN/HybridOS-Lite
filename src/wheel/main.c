@@ -40,6 +40,9 @@
 #include <libgen.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#ifdef PLATFORM_ANYKA_UCLINUX
+    #include <bits/getopt.h>
+#endif
 
 #include <minigui/common.h>
 #include <minigui/minigui.h>

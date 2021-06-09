@@ -122,7 +122,9 @@ static int format_request(int cli, int clifd, void* buff, size_t len)
 
 int MiniGUIMain (int args, const char* arg[])
 {
+#ifndef PLATFORM_ANYKA_UCLINUX
     struct sigaction siga;                      // for process quit
+#endif
     MSG msg;
 
     char layer_name[16];
@@ -132,7 +134,7 @@ int MiniGUIMain (int args, const char* arg[])
     CompositorOps* fallback_ops = (CompositorOps*)ServerGetCompositorOps (COMPSOR_NAME_FALLBACK);
     CC_TRANSIT_TO_LAYER old_transit_to_lay = fallback_ops->transit_to_layer;
 
-#ifdef PLATFORM_R818
+#if 0
     int fd = -1;
     fd = open("/dev/fb0", O_RDWR, 0);
     if (fd < 0) 
@@ -154,11 +156,12 @@ int MiniGUIMain (int args, const char* arg[])
     memset(&__os_global_struct, 0, sizeof(OS_Global_struct));
 
     // step 1: for prcess exception
+#ifndef PLATFORM_ANYKA_UCLINUX
     siga.sa_handler = child_wait;
     siga.sa_flags  = 0;
     memset (&siga.sa_mask, 0, sizeof(sigset_t));
     sigaction (SIGCHLD, &siga, NULL);
-
+#endif
 
     // step 2: start MiniGUI server
     mGEffInit();
