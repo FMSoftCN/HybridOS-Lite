@@ -15,4 +15,5 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 target_link_libraries(wheel ${MINIGUI_LIBRARIES} ${MGEFF_LIBRARIES} ${HISVG_LIBRARIES} ${GLIB_LIBRARIES} hicairo hibus hibox hidomlayout common)
+install(TARGETS wheel DESTINATION ${CMAKE_INSTALL_PREFIX}/libexec/)
 
